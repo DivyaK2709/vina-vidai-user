@@ -11,7 +11,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "deploy": "npm run build && npx gh-pages -d www"
- },
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "^20.0.0",
