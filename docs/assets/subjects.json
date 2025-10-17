@@ -1,0 +1,10 @@
+[
+  { "name": "General Studies", "icon": "assets/icon/general.png" },
+  { "name": "Tamil & English", "icon": "assets/icon/tamil.png" },
+  { "name": "Current Affairs", "icon": "assets/icon/current.png" },
+  { "name": "Past Year Question", "icon": "assets/icon/pastyear.png" },
+  { "name": "Geography", "icon": "assets/icon/globe.png" },
+  { "name": "Economics", "icon": "assets/icon/economic-growth.png" },
+  { "name": "Social Science", "icon": "assets/icon/development.png" },
+  { "name": "History", "icon": "assets/icon/history.png" }
+]
