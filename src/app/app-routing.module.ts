@@ -50,7 +50,11 @@ const routes: Routes = [
     path: 'progress',
     loadComponent: () => import('./progress/progress.page').then( m => m.ProgressPage)
   },
-  
+  {
+  path: 'question',
+  loadComponent: () => import('./question/question.page').then(m => m.QuestionPage)
+  },
+
      
       {
         path: '',

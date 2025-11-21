@@ -1,110 +1,116 @@
-<ion-content class="ion-padding">
+<ion-content class="signup-bg">
   <div class="signup-container">
-    <div class="header">
-      <h1 class="logo">QUIZER</h1>
-    </div>
-
     <div class="signup-card">
-      <h2 class="title">Welcome To Quizer</h2>
+
+      <h1 class="logo">QUIZER</h1>
+      <h2 class="title">Create Account</h2>
       <p class="subtitle">Create an account to continue</p>
 
-      <form (ngSubmit)="onSubmit()" #signupForm="ngForm">
+      <form (ngSubmit)="onSubmit()" #signupForm="ngForm" autocomplete="off" novalidate>
 
-        <!-- Username -->
-        <ion-item lines="none" class="input-item">
-          <ion-label position="floating">Username</ion-label>
-          <ion-input
-            type="text"
-            [(ngModel)]="username"
-            name="username"
-            required
-            (ionInput)="updateIcon('username')">
-          </ion-input>
-          <ion-icon
-            name="person-outline"
-            slot="end"
-            [style.color]="icons.username && isUsernameValid() ? 'green' : '#888'">
-          </ion-icon>
-        </ion-item>
-        <p *ngIf="username && !isUsernameValid()" class="error-msg">
-          Username must contain only alphabets
-        </p>
+        <!-- USERNAME FIELD -->
+        <div class="input-wrapper">
+          <ion-item lines="none" class="input-item">
+            <ion-label position="floating">Username</ion-label>
+            <ion-input
+              type="text"
+              [(ngModel)]="username"
+              name="username"
+              required
+              placeholder="e.g. johnsmith"
+              (ionInput)="updateIcon('username')">
+            </ion-input>
+          </ion-item>
 
-        <!-- Email -->
-        <ion-item lines="none" class="input-item">
-          <ion-label position="floating">Email</ion-label>
-          <ion-input
-            type="email"
-            [(ngModel)]="email"
-            name="email"
-            required
-            (ionInput)="updateIcon('email')">
-          </ion-input>
-          <ion-icon
-            name="mail-outline"
-            slot="end"
-            [style.color]="icons.email && isEmailValid() ? 'green' : '#888'">
-          </ion-icon>
-        </ion-item>
-        <p *ngIf="email && !isEmailValid()" class="error-msg">
-          Please enter a valid email address
-        </p>
+          <img class="field-icon"
+            [src]="icons.username ? 'assets/icon/user_click.png' : 'assets/icon/user.png'">
+        </div>
 
-        <!-- Password -->
-        <ion-item lines="none" class="input-item">
-          <ion-label position="floating">Password</ion-label>
-          <ion-input
-            type="password"
-            [(ngModel)]="password"
-            name="password"
-            required
-            minlength="6"
-            (ionInput)="updateIcon('password')">
-          </ion-input>
-          <ion-icon
-            name="lock-closed-outline"
-            slot="end"
-            [style.color]="icons.password && isPasswordValid() ? 'green' : '#888'">
-          </ion-icon>
-        </ion-item>
-        <p *ngIf="password && !isPasswordValid()" class="error-msg">
-          Password must be at least 6 characters
-        </p>
+        <p *ngIf="username && !isUsernameValid()" class="error-msg">Username must contain only alphabets</p>
 
-        <!-- Confirm Password -->
-        <ion-item lines="none" class="input-item">
-          <ion-label position="floating">Confirm Password</ion-label>
-          <ion-input
-            type="password"
-            [(ngModel)]="confirmPassword"
-            name="confirmPassword"
-            required
-            (ionInput)="updateIcon('confirmPassword')">
-          </ion-input>
-          <ion-icon
-            name="lock-closed-outline"
-            slot="end"
-            [style.color]="icons.confirmPassword && isConfirmPasswordValid() ? 'green' : '#888'">
-          </ion-icon>
-        </ion-item>
+
+        <!-- EMAIL FIELD -->
+        <div class="input-wrapper">
+          <ion-item lines="none" class="input-item">
+            <ion-label position="floating">Email</ion-label>
+            <ion-input
+              type="email"
+              [(ngModel)]="email"
+              name="email"
+              required
+              placeholder="e.g. john@example.com"
+              (ionInput)="updateIcon('email')">
+            </ion-input>
+          </ion-item>
+
+          <img class="field-icon"
+            [src]="isEmailValid() ? 'assets/icon/email_click.png' : 'assets/icon/email.png'">
+        </div>
+
+        <p *ngIf="email && !isEmailValid()" class="error-msg">Please enter a valid email address</p>
+
+
+        <!-- PASSWORD FIELD -->
+        <div class="input-wrapper">
+          <ion-item lines="none" class="input-item">
+            <ion-label position="floating">Password</ion-label>
+            <ion-input
+              type="password"
+              [(ngModel)]="password"
+              name="password"
+              required
+              minlength="6"
+              placeholder="At least 6 characters"
+              (ionInput)="updateIcon('password')">
+            </ion-input>
+          </ion-item>
+
+          <img class="field-icon"
+            [src]="isPasswordValid() ? 'assets/icon/password_click.png' : 'assets/icon/password.png'">
+        </div>
+
+        <p *ngIf="password && !isPasswordValid()" class="error-msg">Password must be at least 6 characters</p>
+
+
+        <!-- CONFIRM PASSWORD -->
+        <div class="input-wrapper">
+          <ion-item lines="none" class="input-item">
+            <ion-label position="floating">Confirm Password</ion-label>
+            <ion-input
+              type="password"
+              [(ngModel)]="confirmPassword"
+              name="confirmPassword"
+              required
+              placeholder="Repeat password"
+              (ionInput)="updateIcon('confirmPassword')">
+            </ion-input>
+          </ion-item>
+
+          <img class="field-icon"
+            [src]="isConfirmPasswordValid() ? 'assets/icon/password_click.png' : 'assets/icon/password.png'">
+        </div>
+
         <p *ngIf="confirmPassword && !isConfirmPasswordValid()" class="error-msg">
           Passwords do not match
         </p>
 
-        <!-- Register Button -->
+
+        <!-- REGISTER BUTTON -->
         <div class="signup-button-wrapper">
-          <ion-button type="submit" class="signup-button" 
+          <ion-button expand="block" type="submit"
+            class="signup-button"
             [disabled]="!signupForm.valid || !isFormValid()">
             Register
           </ion-button>
         </div>
+
       </form>
 
-      <!-- Signin Redirect -->
       <div class="signin-link">
-        <ion-text color="medium">Already a User?</ion-text>
+        <ion-text>Already a User?</ion-text>
         <span class="signin-text" (click)="goToSignin()"> Sign In</span>
       </div>
+
     </div>
   </div>
 </ion-content>

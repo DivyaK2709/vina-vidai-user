@@ -1,59 +1,65 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { FirebaseService } from '../../services/firebaseauth.service';
+
+type FieldName = 'username' | 'email' | 'password' | 'confirmPassword';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, IonicModule, FormsModule],
   templateUrl: './login.page.html',
-  styleUrls: ['./login.page.scss'],
+  styleUrls: ['./login.page.scss']
 })
 export class LoginPage {
-  username: string = '';
-  email: string = '';
-  password: string = '';
-  confirmPassword: string = '';
 
-  emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  username = '';
+  email = '';
+  password = '';
+  confirmPassword = '';
 
   icons = {
     username: false,
     email: false,
     password: false,
-    confirmPassword: false,
+    confirmPassword: false
   };
+
+  emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   constructor(
     private firebaseService: FirebaseService,
-    private router: Router
+    private router: Router,
+    private toastCtrl: ToastController
   ) {}
 
-  updateIcon(field: 'username' | 'email' | 'password' | 'confirmPassword') {
-    this.icons[field] = this[field].trim().length > 0;
+  // FIXED 100% — no TS errors
+  updateIcon(field: FieldName) {
+    const value = this[field as keyof LoginPage] as string;
+    this.icons[field] = value.trim().length > 0;
   }
 
-  // ✅ validation helpers
-  isUsernameValid(): boolean {
+  // validations
+  isUsernameValid() {
     return /^[A-Za-z]+$/.test(this.username);
   }
 
-  isEmailValid(): boolean {
+  isEmailValid() {
     return this.emailPattern.test(this.email);
   }
 
-  isPasswordValid(): boolean {
+  isPasswordValid() {
     return this.password.length >= 6;
   }
 
-  isConfirmPasswordValid(): boolean {
+  isConfirmPasswordValid() {
     return this.password === this.confirmPassword;
   }
 
-  isFormValid(): boolean {
+  isFormValid() {
     return (
       this.isUsernameValid() &&
       this.isEmailValid() &&
@@ -62,19 +68,27 @@ export class LoginPage {
     );
   }
 
+  async showToast(msg: string, color: string = 'danger') {
+    const t = await this.toastCtrl.create({
+      message: msg,
+      duration: 2500,
+      color
+    });
+    t.present();
+  }
+
   async onSubmit() {
     if (!this.isFormValid()) {
-      alert('❌ Please fix validation errors before submitting.');
+      this.showToast('Please fix all errors before submitting', 'warning');
       return;
     }
 
     try {
       await this.firebaseService.signUp(this.email, this.password, this.username);
-      console.log('✅ Signed up successfully!');
+      this.showToast('Signup successful!', 'success');
       this.router.navigate(['/signin']);
     } catch (error: any) {
-      console.error('Signup error:', error);
-      console.log(`❌ Sign-up failed: ${error.message}`);
+      this.showToast(error.message || 'Signup failed');
     }
   }
 

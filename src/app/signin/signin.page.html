@@ -1,37 +1,50 @@
-<ion-content>
+<ion-content class="signin-bg">
   <div class="signin-container">
-
-    <!-- Logo/Title -->
-    <div class="header">
-      <h1 class="logo">QUIZER</h1>
-    </div>
-
-    <!-- Card Section -->
     <div class="signin-card">
+
+      <h1 class="logo">QUIZER</h1>
       <h2 class="title">Welcome Back</h2>
-      <p class="subtitle">Log In to Continue</p>
+      <p class="subtitle">Login using Username or Email</p>
 
-      <form (ngSubmit)="onSignIn()" #signinForm="ngForm">
+      <form
+        #signinForm="ngForm"
+        (ngSubmit)="onSignIn()"
+        autocomplete="off"
+        id="disable-autofill"
+        novalidate>
 
-        <!-- Email/Username -->
-        <ion-item lines="none" class="input-item">
-          <ion-label position="floating">Email / Username</ion-label>
-          <ion-input
-            type="text"
-            [(ngModel)]="emailOrUsername"
-            name="emailOrUsername"
-            required
-            (ionInput)="updateIcon('emailOrUsername')">
-          </ion-input>
-          <ion-icon
-            [name]="'mail-outline'"
-            slot="end"
-            [style.color]="icons.emailOrUsername ? 'green' : '#888'">
-          </ion-icon>
-        </ion-item>
+        <!-- Hidden autofill breakers -->
+        <input type="text" style="display:none" autocomplete="off">
+        <input type="password" style="display:none" autocomplete="new-password">
 
-        <!-- Password -->
-        <ion-item lines="none" class="input-item">
+        <!-- EMAIL FIELD with ICON -->
+        <div class="input-wrapper">
+          <ion-item class="input-item" lines="none">
+            <ion-label position="floating">Email or Username</ion-label>
+
+            <ion-input
+              type="text"
+              [(ngModel)]="emailOrUsername"
+              name="emailOrUsername"
+              required
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+              (ionInput)="validateEmail()"
+              placeholder="john@example.com or johnsmith">
+            </ion-input>
+          </ion-item>
+
+          <!-- ICON -->
+          <img
+            class="field-icon"
+            [src]="isEmailValid ? 'assets/icon/email_click.png' : 'assets/icon/email.png'"
+            alt="email icon">
+        </div>
+
+        <!-- PASSWORD -->
+        <ion-item class="input-item" lines="none">
           <ion-label position="floating">Password</ion-label>
           <ion-input
             type="password"
@@ -39,32 +52,29 @@
             name="password"
             required
             minlength="6"
-            (ionInput)="updateIcon('password')">
+            autocomplete="new-password"
+            placeholder="At least 6 characters">
           </ion-input>
-          <ion-icon
-            [name]="'lock-closed-outline'"
-            slot="end"
-            [style.color]="icons.password ? 'green' : '#888'">
-          </ion-icon>
         </ion-item>
 
-        <!-- Validation message -->
         <p *ngIf="password && password.length < 6" class="error-msg">
           Password must be at least 6 characters
         </p>
 
-        <div class="links">
-          <span class="create" (click)="goToSignup()">Create an Account</span>
-          
-        </div>
-
-        <!-- Button -->
         <div class="signin-button-wrapper">
-          <ion-button type="submit" class="signin-button" [disabled]="!signinForm.valid">
+          <ion-button expand="block" class="signin-button" type="submit" [disabled]="!signinForm.valid">
             Sign In
           </ion-button>
         </div>
+
       </form>
+
+      <div class="signup-link">
+  <ion-text>Don't have an account?</ion-text>
+  <ion-text class="signup-text" (click)="goToSignup()"> Create one</ion-text>
+</div>
+
+
     </div>
   </div>
 </ion-content>

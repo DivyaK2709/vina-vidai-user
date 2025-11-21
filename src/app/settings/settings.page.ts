@@ -21,7 +21,8 @@ export class SettingsPage {
     // sessionStorage.clear();
 
     // ✅ Navigate to login page
-    this.router.navigateByUrl('/signin', { replaceUrl: true });
+    this.router.navigate(['/signin'], { replaceUrl: true });
+
   }
 }
 

@@ -1,148 +1,101 @@
-ion-content {
-  --background: linear-gradient(180deg, #0f766e, #023030);
-  height: 100%;
-  width: 100%;
+/* Background */
+.signin-bg {
+  --background: linear-gradient(180deg, #f2fbf8, #f6fff9);
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
-/* Container */
+/* Center container */
 .signin-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
   width: 100%;
-  
-}
-
-/* Header */
-.header {
-  text-align: center;
-  margin-top: 40px;
-}
-
-.logo {
-  font-size: 34px;
-  font-weight: 900;
-  letter-spacing: 2px;
-  color: #00c9a7;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
- 
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+  align-items: center;
 }
 
 /* Card */
 .signin-card {
-  background: #fff;
-  padding: 28px 20px;
-  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.15);
-  border-radius: 0;
+  width: 92%;
+  max-width: 430px;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 26px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  text-align: center;
 }
 
+/* Logo */
+.logo {
+  font-size: 28px;
+  color: #00c9a7;
+  font-weight: 800;
+}
+
+/* Title text */
 .title {
-  font-size: 22px;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 6px;
-  color: #000;
+  font-size: 20px;
+  color: #222;
 }
 
 .subtitle {
-  text-align: center;
-  font-size: 14px;
   color: #666;
-  margin-bottom: 20px;
-}
-
-/* Input */
-.input-item {
-  --background: #f9f9f9;
-  --border-radius: 12px;
-  margin-bottom: 14px;
-  padding: 0 8px;
-  border: 1px solid #ddd;
-  align-items: center;
-}
-
-ion-label {
   font-size: 14px;
+}
+
+/* INPUT WRAPPER WITH ICON */
+.input-wrapper {
+  position: relative;
+  margin-top: 12px;
+}
+
+/* Icon inside input */
+.field-icon {
+  width: 22px;
+  position: absolute;
+  right: 16px;
+  top: 18px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Input item style */
+.input-item {
+  --background: #fff;
+  border-radius: 10px;
+  margin: 10px 0;
+  padding: 6px;
+  border: 1px solid #eee;
+  overflow: visible !important;   /* IMPORTANT FIX */
 }
 
 ion-input {
-  font-size: 15px;
-  color: #333;
+  color: #222;
 }
 
-ion-icon {
-  font-size: 18px;
-  transition: color 0.3s ease;
-}
-
-/* Error message */
+/* Error text */
 .error-msg {
-  color: red;
+  color: #e53935;
   font-size: 12px;
-  margin: -10px 0 10px 4px;
+  text-align: left;
+  margin: -4px 0 10px 6px;
 }
 
-/* Links */
-.links {
-  display: flex;
-  justify-content: space-between;
-  font-size: 13px;
-  margin: 8px 0 18px 0;
-}
-
-.create {
-  color: #00c9a7;
-  font-weight: 600;
-  text-align: center;
-  justify-items: center;
-}
-
-
-/* Button */
-.signin-button-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-  position: relative;
-}
-
+/* Sign-in button */
 .signin-button {
-  --background: #00c9a7;
-  --background-hover: #00b092;
+  --background: linear-gradient(90deg, #a8e063, #56ab2f);
   --color: #fff;
-  font-weight: bold;
-  text-transform: uppercase;
-
-  /* Proper size */
-  height: 20px;
-  width: 60%;
-
-  border-radius: 12px;
-  box-shadow: none;
-  position: relative;
-  z-index: 1;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 14px;
-  letter-spacing: 1px;
+  border-radius: 10px;
+  height: 46px;
+  font-weight: 700;
+  font-size: 15px;
 }
-
-/* ✅ Create the notch effect */
-.signin-button::before {
-  content: '';
-  position: absolute;
-  top: -18px; /* how high the notch goes */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: 30px;
-  background: #00c9a7;
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
-  z-index: -1;
+.signup-text {
+  color: #00c9a7;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 4px;
+  text-decoration: underline;
 }
