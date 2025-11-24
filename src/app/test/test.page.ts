@@ -1,170 +1,250 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Firestore, collection, getDocs } from '@angular/fire/firestore';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, AlertController, ToastController } from '@ionic/angular';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import {
+  Firestore,
+  collection,
+  getDocs,
+  query as firestoreQuery,
+  where
+} from '@angular/fire/firestore';
 
+interface HistoryItem {
+  id?: string;
+  title?: string;
+  subject?: string;
+  questionsCount?: number;
+  timeSeconds?: number;
+  score?: number;
+  attemptNumber?: number;
+}
+
+interface SeriesItem {
+  id?: string;
+  title?: string;
+  description?: string;
+  subject?: string;
+  questionsCount?: number;
+  timeSeconds?: number;
+  icon?: string;
+}
 
 @Component({
   selector: 'app-test',
   standalone: true,
+  imports: [CommonModule, IonicModule, FormsModule],
   templateUrl: './test.page.html',
   styleUrls: ['./test.page.scss'],
-  imports: [CommonModule, IonicModule],
 })
-export class TestPage implements OnInit, OnDestroy {
-  questions: any[] = [];
-  currentQuestionIndex = 0;
-  timer: number = 0;
-  timerInterval: any;
-  duration: number = 0;
+export class TestPage implements OnInit {
 
-  answered = false;
-  selectedOption: string | null = null;
+  selectedSegment: 'history' | 'series' = 'history';
 
-  // ✅ State
-  correctCount: number = 0;
-  showResult: boolean = false;
-  reviewMode: boolean = false;
-  resultColor: string = '';
-  userAnswers: any = {};
+  testHistory: HistoryItem[] = [];
+  testSeries: SeriesItem[] = [];
+
+  selectedSubject: string | null = null;
+  selectedQuestions: number | null = null;
+  selectedTime: number | null = null;
+
+  loadingHistory = false;
+  loadingSeries = false;
+  loadingStart = false;
 
   constructor(
-    private route: ActivatedRoute,
     private firestore: Firestore,
-    private router: Router,
-    
+    private alertCtrl: AlertController,
+    private toastCtrl: ToastController,
+    private router: Router
   ) {}
 
-  async ngOnInit() {
-  // ✅ Read params exactly as sent
-  const numQuestions =
-    Number(this.route.snapshot.queryParamMap.get('questions')) || 5;
-  this.duration =
-    Number(this.route.snapshot.queryParamMap.get('time')) || 600; // seconds
-
-  // ✅ Timer directly uses user-given seconds
-  this.timer = this.duration;
-
-  await this.loadQuestions(numQuestions);
-}
-
-
-  ngOnDestroy() {
-    this.stopTimer();
+  ngOnInit() {
+    this.loadHistory();
+    this.loadSeries();
   }
 
-  ionViewWillEnter() {
-    this.startTimer();
+  onSegmentChange(ev: any) {
+    this.selectedSegment = ev.detail.value;
   }
 
-  ionViewWillLeave() {
-    this.stopTimer();
-  }
-
-  startTimer() {
-    if (this.timerInterval) return;
-    this.timerInterval = setInterval(() => {
-      if (this.timer > 0) {
-        this.timer--;
-      } else {
-        this.stopTimer();
-      }
-    }, 1000);
-  }
-
-  stopTimer() {
-    if (this.timerInterval) {
-      clearInterval(this.timerInterval);
-      this.timerInterval = null;
+  async loadHistory() {
+    this.loadingHistory = true;
+    try {
+      const ref = collection(this.firestore, 'testHistory');
+      const snap = await getDocs(ref);
+      const arr: HistoryItem[] = [];
+      snap.forEach((d) => {
+        const data = d.data() as any;
+        arr.push({
+          id: d.id,
+          title: data.title,
+          subject: data.subject,
+          questionsCount: data.questionsCount ?? data.questions,
+          timeSeconds: data.timeSeconds ?? data.time,
+          score: data.score,
+          attemptNumber: data.attemptNumber
+        });
+      });
+      this.testHistory = arr.sort((a,b) => (b.attemptNumber||0) - (a.attemptNumber||0));
+    } catch (err) {
+      console.error('loadHistory error', err);
+      this.showToast('Failed to load history', 'danger');
+    } finally {
+      this.loadingHistory = false;
     }
   }
 
-  formatTime(seconds: number): string {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m}:${s < 10 ? '0' + s : s}`;
+  async loadSeries() {
+    this.loadingSeries = true;
+    try {
+      const ref = collection(this.firestore, 'testSeries');
+      const snap = await getDocs(ref);
+      const arr: SeriesItem[] = [];
+      snap.forEach((d) => {
+        const data = d.data() as any;
+        arr.push({
+          id: d.id,
+          title: data.title || 'Series',
+          description: data.description || '',
+          subject: data.subject || 'General',
+          questionsCount: data.questionsCount || data.questions || 10,
+          timeSeconds: data.timeSeconds || data.time || 600,
+          icon: data.icon || 'assets/icon/test.png',
+        });
+      });
+      this.testSeries = arr;
+    } catch (err) {
+      console.error('loadSeries error', err);
+      this.showToast('Failed to load series', 'danger');
+    } finally {
+      this.loadingSeries = false;
+    }
   }
 
-  async loadQuestions(numQuestions: number) {
-    const colRef = collection(this.firestore, 'questions');
-    const snapshot = await getDocs(colRef);
+private async fetchQuestionsBySubject(subject: string, limit: number): Promise<any[]> {
+  try {
+    const ref = collection(this.firestore, 'questions');
 
-    let allQuestions: any[] = [];
-    snapshot.forEach((doc) => {
-      allQuestions.push({ id: doc.id, ...doc.data() });
+    // FIRST attempt using exact Firestore field "Subject name"
+    const q1 = firestoreQuery(ref, where('subject name', '==', subject));
+    let qSnap = await getDocs(q1);
+
+    // SECOND fallback (case insensitive)
+    if (qSnap.empty) {
+      const q2 = firestoreQuery(ref, where('subject name', '==', subject.toLowerCase()));
+      qSnap = await getDocs(q2);
+    }
+
+    const items: any[] = [];
+    qSnap.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+
+    // Shuffle
+    for (let i = items.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [items[i], items[j]] = [items[j], items[i]];
+    }
+
+    return items.slice(0, limit);
+
+  } catch (err) {
+    console.error('fetchQuestionsBySubject error', err);
+    throw err;
+  }
+}
+
+
+  async confirmStart(s: SeriesItem) {
+    const alert = await this.alertCtrl.create({
+      header: 'Start Test',
+      message: `Start "${s.title}" — ${s.questionsCount} questions?`,
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        {
+          text: 'Start',
+          handler: async () => {
+            await this.startWithSubject(s.subject || 'General', s.questionsCount || 10, s.timeSeconds || 600);
+          },
+        },
+      ],
     });
-
-    allQuestions = allQuestions.sort(() => Math.random() - 0.5);
-    this.questions = allQuestions.slice(0, numQuestions);
+    await alert.present();
   }
 
-  selectOption(option: string) {
-    this.answered = true;
-    this.selectedOption = option;
-
-    // ✅ Save answer
-    this.userAnswers[this.questions[this.currentQuestionIndex].id] = option;
+  async reAttempt(h: HistoryItem) {
+    const alert = await this.alertCtrl.create({
+      header: 'Re-attempt Test',
+      message: `Re-attempt ${h.title || 'this test'}?`,
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        {
+          text: 'Start',
+          handler: async () => {
+            await this.startWithSubject(h.subject || 'General', h.questionsCount || 10, h.timeSeconds || 600);
+          }
+        }
+      ],
+    });
+    await alert.present();
   }
 
-  nextQuestion() {
-    if (this.currentQuestionIndex < this.questions.length - 1) {
-      this.currentQuestionIndex++;
-      this.loadStoredAnswer();
+  viewDetails(h: HistoryItem) {
+    this.alertCtrl.create({
+      header: h.title || 'Attempt details',
+      message: `Subject: ${h.subject || '-'}<br>Questions: ${h.questionsCount}<br>Time: ${this.formatSeconds(h.timeSeconds)}<br>Score: ${h.score ?? '-'}`,
+      buttons: ['OK'],
+    }).then(a => a.present());
+  }
+
+  async startCustomTest() {
+    if (!this.selectedSubject || !this.selectedQuestions || !this.selectedTime) {
+      this.showToast('Please fill subject, questions and time', 'warning');
+      return;
+    }
+    await this.startWithSubject(this.selectedSubject, this.selectedQuestions, this.selectedTime);
+  }
+
+  private async startWithSubject(subject: string, questionsCount: number, timeSeconds: number) {
+    this.loadingStart = true;
+    try {
+      const fetched = await this.fetchQuestionsBySubject(subject, questionsCount);
+
+      if (!fetched || fetched.length === 0) {
+        this.showToast(`No questions found for "${subject}"`, 'warning');
+        return;
+      }
+
+      if (fetched.length < questionsCount) {
+        this.showToast(`Only ${fetched.length} questions found for "${subject}". Starting with available questions.`, 'warning');
+      }
+
+      localStorage.setItem('current_test_questions', JSON.stringify(fetched));
+      localStorage.setItem('current_test_meta', JSON.stringify({
+        subject, questionsCount: fetched.length, timeSeconds
+      }));
+
+      this.router.navigate(['/tabs/test-questions'], {
+        queryParams: { subject, questions: fetched.length, time: timeSeconds }
+      });
+
+    } catch (err) {
+      console.error('startWithSubject error', err);
+      this.showToast('Failed to start test. Try again.', 'danger');
+    } finally {
+      this.loadingStart = false;
     }
   }
 
-  prevQuestion() {
-    if (this.currentQuestionIndex > 0) {
-      this.currentQuestionIndex--;
-      this.loadStoredAnswer();
-    }
+  formatSeconds(sec?: number) {
+    sec = sec ?? 0;
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${m}m ${s}s`;
   }
 
-  private loadStoredAnswer() {
-    const qId = this.questions[this.currentQuestionIndex].id;
-    if (this.userAnswers[qId]) {
-      this.selectedOption = this.userAnswers[qId];
-      this.answered = true;
-    } else {
-      this.selectedOption = null;
-      this.answered = false;
-    }
+  private async showToast(msg: string, color: 'danger'|'success'|'warning'|'primary' = 'primary') {
+    const t = await this.toastCtrl.create({ message: msg, duration: 2200, color });
+    await t.present();
   }
-
- 
-
-  get progress() {
-    return `${this.currentQuestionIndex + 1}/${this.questions.length}`;
-  }
-
-  goToReview() {
-    this.showResult = false;
-    this.reviewMode = true;
-  }
-  timeBonus: number = 0;
-totalPoints: number = 0;
-  submitQuiz() {
-  this.correctCount = 0;
-
-  // ✅ Count correct answers
-  this.questions.forEach((q) => {
-    if (this.userAnswers[q.id] === q.answer) {
-      this.correctCount++;
-    }
-  });
-
-  // ✅ Time bonus (1 point for every 30 seconds left, adjust as you like)
-  this.timeBonus = Math.floor(this.timer / 30);
-
-  // ✅ Total points
-  this.totalPoints = this.correctCount * 10 + this.timeBonus;
-
-  // ✅ Show result card
-  this.showResult = true;
-
-  // ✅ Stop timer
-  this.stopTimer();
-}
-
 }

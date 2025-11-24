@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ meta.subject || 'Test' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div *ngIf="questions.length > 0; else noQuestions">
+    <h3>Question {{ currentIndex + 1 }} / {{ questions.length }}</h3>
+    <h2>{{ questions[currentIndex]?.question }}</h2>
+
+    <ion-list>
+      <ion-item *ngFor="let o of questions[currentIndex]?.options" (click)="selectOption(o)" [class.selected]="selectedOption === o">
+        {{ o }}
+      </ion-item>
+    </ion-list>
+
+    <ion-button expand="block" (click)="next()">Next</ion-button>
+    <p>⏳ {{ timeLeft }} seconds left</p>
+  </div>
+
+  <ng-template #noQuestions>
+    <p>No questions loaded.</p>
+  </ng-template>
+</ion-content>

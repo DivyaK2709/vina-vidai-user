@@ -1,129 +1,139 @@
 <ion-header class="quiz-header">
   <ion-toolbar>
-    <ion-title>Science Test</ion-title>
+    <ion-title>Tests</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <!-- Timer + Progress Bar -->
-  <div class="top-bar" *ngIf="!showResult && !reviewMode">
-    <div class="timer">⏳ {{ formatTime(timer) }}</div>
-    <ion-progress-bar
-      [value]="(currentQuestionIndex + 1) / questions.length"
-      color="primary"
-    ></ion-progress-bar>
-    <div class="progress-text">
-  Question {{ currentQuestionIndex + 1 }} / {{ questions.length }}
+<ion-content class="ion-padding">
+
+  <!-- SEGMENT CONTROL -->
+ <!-- CUSTOM SEGMENT DESIGN -->
+<div class="custom-segment">
+  <ion-segment [value]="selectedSegment" (ionChange)="onSegmentChange($event)">
+    <ion-segment-button value="history">
+      <ion-label>History</ion-label>
+    </ion-segment-button>
+
+    <ion-segment-button value="series">
+      <ion-label>Test Series</ion-label>
+    </ion-segment-button>
+  </ion-segment>
 </div>
 
+
+  <!-- HISTORY SEGMENT -->
+  <div *ngIf="selectedSegment === 'history'" class="segment-section">
+
+    <ng-container *ngIf="loadingHistory; else historyLoaded">
+      <ion-spinner name="crescent"></ion-spinner>
+    </ng-container>
+
+    <ng-template #historyLoaded>
+      <div *ngIf="testHistory.length === 0" class="empty-msg">No history found.</div>
+
+      <ion-card *ngFor="let h of testHistory" class="history-card">
+        <ion-card-header>
+          <ion-card-subtitle>{{ h.subject || 'General' }}</ion-card-subtitle>
+          <ion-card-title>{{ h.title || ('Attempt ' + (h.attemptNumber || '-')) }}</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content>
+
+          <div class="meta-row">
+            <div><strong>Questions:</strong> {{ h.questionsCount }}</div>
+            <div><strong>Time:</strong> {{ formatSeconds(h.timeSeconds) }}</div>
+            <div><strong>Score:</strong> {{ h.score ?? '—' }}</div>
+          </div>
+
+          <div class="history-actions">
+            <ion-button fill="outline" size="small" (click)="viewDetails(h)">
+              View
+            </ion-button>
+            <ion-button color="primary" size="small" (click)="reAttempt(h)">
+              Re-attempt
+            </ion-button>
+          </div>
+
+        </ion-card-content>
+      </ion-card>
+    </ng-template>
   </div>
 
-  <!-- Quiz Section -->
-  <div
-    class="question-container"
-    *ngIf="questions.length > 0 && !showResult && !reviewMode"
-  >
-    <h2>{{ questions[currentQuestionIndex]?.question }}</h2>
+  <!-- SERIES SEGMENT -->
+  <div *ngIf="selectedSegment === 'series'" class="segment-section">
 
-    <ion-list>
-      <ion-item
-        button
-        *ngFor="let option of questions[currentQuestionIndex]?.options"
-        (click)="selectOption(option)"
-        [class.selected]="option === selectedOption"
-      >
-        <ion-label>{{ option }}</ion-label>
-      </ion-item>
-    </ion-list>
+    <!-- CUSTOM TEST CREATOR -->
+    <ion-card class="series-config-card">
+      <ion-card-header>
+        <ion-card-title>Create Custom Test</ion-card-title>
+        <ion-card-subtitle>Set your preferences</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+
+        <ion-item>
+          <ion-label>Subject</ion-label>
+          <ion-select placeholder="Select Subject" [(ngModel)]="selectedSubject">
+            <ion-select-option value="current affairs">current affairs</ion-select-option>
+            <ion-select-option value="social science">social science</ion-select-option>
+            <ion-select-option value="history">history</ion-select-option>
+            <ion-select-option value="English">English</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Questions</ion-label>
+          <ion-input type="number" placeholder="Enter number" [(ngModel)]="selectedQuestions"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Time</ion-label>
+          <ion-select placeholder="Duration" [(ngModel)]="selectedTime">
+            <ion-select-option [value]="600">10 minutes</ion-select-option>
+            <ion-select-option [value]="1200">20 minutes</ion-select-option>
+            <ion-select-option [value]="1800">30 minutes</ion-select-option>
+            <ion-select-option [value]="3600">1 hour</ion-select-option>
+            <ion-select-option [value]="605">10 min 5 sec</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-button expand="block" color="success"
+          (click)="startCustomTest()"
+          [disabled]="!selectedSubject || !selectedQuestions || !selectedTime">
+          Start Test
+        </ion-button>
+
+      </ion-card-content>
+    </ion-card>
+
+    <hr />
+
+    <!-- AVAILABLE SERIES LIST -->
+    <ng-container *ngIf="loadingSeries; else seriesLoaded">
+      <ion-spinner name="crescent"></ion-spinner>
+    </ng-container>
+
+    <ng-template #seriesLoaded>
+      <ion-list>
+        <ion-item *ngFor="let s of testSeries" lines="none" class="series-item">
+          <ion-thumbnail slot="start" *ngIf="s.icon">
+            <img [src]="s.icon" />
+          </ion-thumbnail>
+
+          <ion-label>
+            <h3>{{ s.title }}</h3>
+            <p class="muted">{{ s.description }}</p>
+            <p class="meta">
+              {{ s.questionsCount }} Q • {{ formatSeconds(s.timeSeconds) }} • {{ s.subject }}
+            </p>
+          </ion-label>
+
+          <ion-button slot="end" (click)="confirmStart(s)" size="small" color="success">
+            Start
+          </ion-button>
+        </ion-item>
+      </ion-list>
+    </ng-template>
   </div>
 
-  <!-- Buttons Row -->
-  <div
-    class="button-row"
-    *ngIf="questions.length > 0 && !showResult && !reviewMode"
-  >
-    <ion-button
-      class="prev-btn styled-btn"
-      (click)="prevQuestion()"
-      [disabled]="currentQuestionIndex === 0"
-    >
-      <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
-      Previous
-    </ion-button>
-
-    <ion-button
-      *ngIf="currentQuestionIndex < questions.length - 1"
-      class="next-btn styled-btn"
-      (click)="nextQuestion()"
-      [disabled]="!answered"
-    >
-      Next
-      <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
-    </ion-button>
-
-    <ion-button
-      *ngIf="currentQuestionIndex === questions.length - 1"
-      class="submit-btn styled-btn"
-      (click)="submitQuiz()"
-      [disabled]="!answered"
-    >
-      Submit
-    </ion-button>
-  </div>
-
-  <!-- ✅ Result Popup -->
-  <!-- ✅ Result Card -->
-<div *ngIf="showResult" class="result-popup">
-  <div class="popup-card result-card">
-    <!-- Stars -->
-    <div class="stars">
-      <ion-icon name="star" class="star red"></ion-icon>
-      <ion-icon name="star" class="star yellow"></ion-icon>
-      <ion-icon name="star" class="star green"></ion-icon>
-    </div>
-
-    <!-- Effort Message -->
-    <h2 class="effort-text">GREAT EFFORT!</h2>
-
-    <!-- Score Table -->
-    <div class="score-table">
-      <div class="row">
-        <span>Quiz Points</span>
-        <span>{{ correctCount }} x 10 = {{ correctCount * 10 }} pts</span>
-      </div>
-      <div class="row">
-        <span>Time Bonus</span>
-        <span>{{ timeBonus }} pts</span>
-      </div>
-      <div class="row total">
-        <span>Total Points</span>
-        <span>{{ totalPoints }} pts</span>
-      </div>
-    </div>
-
-    <!-- Button -->
-    <ion-button expand="block" class="got-it-btn" (click)="goToReview()">
-      GOT IT
-    </ion-button>
-  </div>
-</div>
-
-  <!-- ✅ Review Mode -->
-  <div *ngIf="reviewMode" class="review-container">
-    <h2>Review Answers</h2>
-    <div *ngFor="let q of questions; let i = index" class="review-question">
-      <p class="question">{{ i + 1 }}. {{ q.question }}</p>
-      <div *ngFor="let option of q.options">
-        <p
-          class="option"
-          [ngClass]="{
-            'correct': option === q.answer,
-            'wrong': option === userAnswers[q.id] && option !== q.answer
-          }"
-        >
-          {{ option }}
-        </p>
-      </div>
-    </div>
-  </div>
 </ion-content>

@@ -19,17 +19,14 @@ const routes: Routes = [
     path: 'question',
     loadComponent: () => import('./question/question.page').then(m => m.QuestionPage)
   },
-   {
+  {
     path: 'welcome',
-    loadComponent: () => import('./welcome/welcome.page').then( m => m.WelcomePage)
+    loadComponent: () => import('./welcome/welcome.page').then(m => m.WelcomePage)
   },
-  
   {
     path: 'progress',
-    loadComponent: () => import('./progress/progress.page').then( m => m.ProgressPage)
+    loadComponent: () => import('./progress/progress.page').then(m => m.ProgressPage)
   },
-  
- 
   {
     path: 'tabs',
     loadComponent: () => import('./tabs/tabs.page').then(m => m.TabsPage),
@@ -38,24 +35,26 @@ const routes: Routes = [
         path: 'home',
         loadComponent: () => import('./home/home.page').then(m => m.HomePage)
       },
-        {
-    path: 'settings',
-    loadComponent: () => import('./settings/settings.page').then( m => m.SettingsPage)
+      {
+        path: 'settings',
+        loadComponent: () => import('./settings/settings.page').then(m => m.SettingsPage)
       },
       {
-    path: 'test',
-    loadComponent: () => import('./test/test.page').then( m => m.TestPage)
-  },
-     {
-    path: 'progress',
-    loadComponent: () => import('./progress/progress.page').then( m => m.ProgressPage)
-  },
-  {
-  path: 'question',
-  loadComponent: () => import('./question/question.page').then(m => m.QuestionPage)
-  },
-
-     
+        path: 'test',
+        loadComponent: () => import('./test/test.page').then(m => m.TestPage)
+      },
+      {
+        path: 'progress',
+        loadComponent: () => import('./progress/progress.page').then(m => m.ProgressPage)
+      },
+      {
+        path: 'question',
+        loadComponent: () => import('./question/question.page').then(m => m.QuestionPage)
+      },
+      {
+        path: 'test-questions',
+        loadComponent: () => import('./test-questions/test-questions.page').then(m => m.TestQuestionsPage)
+      },
       {
         path: '',
         redirectTo: 'home',
@@ -63,15 +62,10 @@ const routes: Routes = [
       }
     ]
   }
-
-
-  
-
-
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

@@ -24,7 +24,8 @@ export class HomePage implements OnInit {
 
   openUploadPage(subjectName: string) {
     console.log('Navigating to:', subjectName);
-    this.router.navigate(['/question'],
+    this.router.navigate(['/tabs/question'],
+
        {
       queryParams: { subject: subjectName }
     });

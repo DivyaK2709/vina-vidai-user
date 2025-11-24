@@ -18,28 +18,21 @@ export class QuestionPage {
 
   constructor(private router: Router) {}
 
- nextStep() {
+nextStep() {
   if (this.step === 1 && this.numQuestions != null) {
     this.step = 2;
   } else if (this.step === 2 && this.timeSelected != null) {
-    const timeMap: { [key: number]: number } = {
-      1: 600,  // 10 minutes  (10*60)
-      2: 1200, // 20 minutes
-      3: 1800, // 30 minutes
-      4: 605,  // 10 minutes 5 seconds
-      5: 610,  // 10 minutes 10 seconds
-    };
 
-    const totalSeconds = timeMap[this.timeSelected];
-
-    this.router.navigate(['/tabs', 'test'], {
+    this.router.navigate(['/tabs/test'], {
       queryParams: {
         questions: this.numQuestions,
-        time: totalSeconds,  // send in seconds
+        time: this.timeSelected,
+        subject: 'Chemistry'  // <-- dynamic subject (put actual subject here)
       },
     });
   }
 }
+
 
 
   prevStep() {
