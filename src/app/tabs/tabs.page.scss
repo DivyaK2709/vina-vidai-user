@@ -44,3 +44,18 @@ ion-content {
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
+/* Tab label inactive (default) */
+/* Normal label */
+.label-normal {
+  color: #6b6b6b;
+  font-size: 12px;
+}
+
+/* Clicked label – SAME COLOR AS YOUR CLICKED ICON */
+.label-click {
+  color: #00E6C0;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+

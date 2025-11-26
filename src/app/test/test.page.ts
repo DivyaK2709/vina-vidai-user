@@ -223,7 +223,7 @@ private async fetchQuestionsBySubject(subject: string, limit: number): Promise<a
       localStorage.setItem('current_test_meta', JSON.stringify({
         subject, questionsCount: fetched.length, timeSeconds
       }));
-
+      this.showToast('test gets started');
       this.router.navigate(['/tabs/test-questions'], {
         queryParams: { subject, questions: fetched.length, time: timeSeconds }
       });
@@ -235,6 +235,21 @@ private async fetchQuestionsBySubject(subject: string, limit: number): Promise<a
       this.loadingStart = false;
     }
   }
+validateQuestionCount(ev: any) {
+  const value = Number(ev.target.value);
+  if (value < 10) {
+    this.selectedQuestions = 10;
+    ev.target.value = 10;
+    this.showToast("Minimum 10 questions required", "warning");
+  }
+}
+goPrevious() {
+  this.showToast("Previous clicked", "primary");
+}
+
+goNext() {
+  this.showToast("Next clicked", "primary");
+}
 
   formatSeconds(sec?: number) {
     sec = sec ?? 0;

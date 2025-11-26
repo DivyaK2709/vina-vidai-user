@@ -1,6 +1,6 @@
 <ion-header class="quiz-header">
   <ion-toolbar>
-    <ion-title>Tests</ion-title>
+    <ion-title>Test</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -82,9 +82,13 @@
         </ion-item>
 
         <ion-item>
-          <ion-label>Questions</ion-label>
-          <ion-input type="number" placeholder="Enter number" [(ngModel)]="selectedQuestions"></ion-input>
-        </ion-item>
+  <ion-label>Number of Questions</ion-label>
+  <ion-input type="number" placeholder="Min 10"
+             [(ngModel)]="selectedQuestions"
+             (ionInput)="validateQuestionCount($event)">
+  </ion-input>
+</ion-item>
+
 
         <ion-item>
           <ion-label>Time</ion-label>
@@ -97,11 +101,22 @@
           </ion-select>
         </ion-item>
 
-        <ion-button expand="block" color="success"
-          (click)="startCustomTest()"
-          [disabled]="!selectedSubject || !selectedQuestions || !selectedTime">
-          Start Test
-        </ion-button>
+        <div class="nav-btn-row">
+  <ion-button shape="round" fill="outline" (click)="goPrevious()">
+    ←
+  </ion-button>
+
+  <ion-button shape="round" fill="outline" (click)="goNext()">
+    →
+  </ion-button>
+</div>
+
+<ion-button expand="block" color="success"
+  (click)="startCustomTest()"
+  [disabled]="!selectedSubject || !selectedQuestions || !selectedTime">
+  Start Test
+</ion-button>
+
 
       </ion-card-content>
     </ion-card>
@@ -123,9 +138,16 @@
           <ion-label>
             <h3>{{ s.title }}</h3>
             <p class="muted">{{ s.description }}</p>
-            <p class="meta">
-              {{ s.questionsCount }} Q • {{ formatSeconds(s.timeSeconds) }} • {{ s.subject }}
-            </p>
+            <div class="series-table">
+  <div class="header">Subject</div>
+  <div class="header">Number of Questions</div>
+  <div class="header">Time Duration</div>
+
+  <div class="value">{{ s.subject }}</div>
+  <div class="value">{{ s.questionsCount }}</div>
+  <div class="value">{{ formatSeconds(s.timeSeconds) }}</div>
+</div>
+
           </ion-label>
 
           <ion-button slot="end" (click)="confirmStart(s)" size="small" color="success">

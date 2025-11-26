@@ -1,0 +1,70 @@
+/* TIMER TOP RIGHT */
+.timer-box {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* QUESTION NUMBER */
+.q-num {
+  margin-top: 10px;
+  font-size: 18px;
+  color: #444;
+  font-weight: 600;
+}
+
+/* QUESTION TEXT */
+.q-text {
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+/* OPTIONS RADIO LIST */
+.options-list {
+  margin-top: 20px;
+  border-radius: 12px;
+  background: #fafafa;
+  padding: 5px;
+}
+
+ion-item {
+  --background: transparent;
+}
+
+/* Navigation buttons */
+.nav-buttons {
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.prev-btn, .next-btn, .submit-btn {
+  padding: 12px 22px;
+  border-radius: 25px !important;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.prev-btn {
+  background: #000;
+  color: #fff;
+}
+
+.next-btn {
+  background: #3b82f6;
+  color: #fff;
+}
+
+.submit-btn {
+  background: #22c55e;
+  color: white;
+}
