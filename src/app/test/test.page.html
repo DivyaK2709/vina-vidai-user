@@ -71,35 +71,52 @@
 
       <ion-card-content>
 
-        <ion-item>
-          <ion-label>Subject</ion-label>
-          <ion-select placeholder="Select Subject" [(ngModel)]="selectedSubject">
-            <ion-select-option value="current affairs">current affairs</ion-select-option>
-            <ion-select-option value="social science">social science</ion-select-option>
-            <ion-select-option value="history">history</ion-select-option>
-            <ion-select-option value="English">English</ion-select-option>
-          </ion-select>
-        </ion-item>
+<div class="table-3col">
 
-        <ion-item>
-  <ion-label>Number of Questions</ion-label>
-  <ion-input type="number" placeholder="Min 10"
-             [(ngModel)]="selectedQuestions"
-             (ionInput)="validateQuestionCount($event)">
-  </ion-input>
-</ion-item>
+  <div class="header-row">
+    <div class="col head">Subject</div>
+    <div class="col head">Number of Questions</div>
+    <div class="col head">Time Duration</div>
+  </div>
+
+  <div class="data-row">
+
+    <!-- SUBJECT -->
+    <div class="col">
+      <ion-select interface="popover" placeholder="Select" [(ngModel)]="selectedSubject">
+        <ion-select-option value="current affairs">current affairs</ion-select-option>
+        <ion-select-option value="social science">social science</ion-select-option>
+        <ion-select-option value="history">history</ion-select-option>
+        <ion-select-option value="English">English</ion-select-option>
+      </ion-select>
+    </div>
+
+    <!-- NUMBER OF QUESTIONS -->
+    <div class="col">
+      <ion-input
+        type="number"
+        placeholder="Min 10"
+        [(ngModel)]="selectedQuestions"
+        (ionInput)="validateQuestionCount($event)">
+      </ion-input>
+    </div>
+
+    <!-- TIME -->
+    <div class="col">
+      <ion-select interface="popover" placeholder="Duration" [(ngModel)]="selectedTime">
+        <ion-select-option [value]="600">10 minutes</ion-select-option>
+        <ion-select-option [value]="1200">20 minutes</ion-select-option>
+        <ion-select-option [value]="1800">30 minutes</ion-select-option>
+        <ion-select-option [value]="3600">1 hour</ion-select-option>
+        <ion-select-option [value]="605">10 min 5 sec</ion-select-option>
+      </ion-select>
+    </div>
+
+  </div>
+
+</div>
 
 
-        <ion-item>
-          <ion-label>Time</ion-label>
-          <ion-select placeholder="Duration" [(ngModel)]="selectedTime">
-            <ion-select-option [value]="600">10 minutes</ion-select-option>
-            <ion-select-option [value]="1200">20 minutes</ion-select-option>
-            <ion-select-option [value]="1800">30 minutes</ion-select-option>
-            <ion-select-option [value]="3600">1 hour</ion-select-option>
-            <ion-select-option [value]="605">10 min 5 sec</ion-select-option>
-          </ion-select>
-        </ion-item>
 
         <div class="nav-btn-row">
   <ion-button shape="round" fill="outline" (click)="goPrevious()">
@@ -124,38 +141,50 @@
     <hr />
 
     <!-- AVAILABLE SERIES LIST -->
-    <ng-container *ngIf="loadingSeries; else seriesLoaded">
-      <ion-spinner name="crescent"></ion-spinner>
-    </ng-container>
+    <!-- AVAILABLE SERIES LIST -->
+<ng-container *ngIf="loadingSeries; else seriesLoaded">
+  <ion-spinner name="crescent"></ion-spinner>
+</ng-container>
 
-    <ng-template #seriesLoaded>
-      <ion-list>
-        <ion-item *ngFor="let s of testSeries" lines="none" class="series-item">
-          <ion-thumbnail slot="start" *ngIf="s.icon">
-            <img [src]="s.icon" />
-          </ion-thumbnail>
+<ng-template #seriesLoaded>
+  <ion-list>
 
-          <ion-label>
-            <h3>{{ s.title }}</h3>
-            <p class="muted">{{ s.description }}</p>
-            <div class="series-table">
-  <div class="header">Subject</div>
-  <div class="header">Number of Questions</div>
-  <div class="header">Time Duration</div>
+    <ion-item *ngFor="let s of testSeries" lines="none" class="series-item">
 
-  <div class="value">{{ s.subject }}</div>
-  <div class="value">{{ s.questionsCount }}</div>
-  <div class="value">{{ formatSeconds(s.timeSeconds) }}</div>
-</div>
+      <ion-thumbnail slot="start" *ngIf="s.icon">
+        <img [src]="s.icon" />
+      </ion-thumbnail>
 
-          </ion-label>
+      <ion-label>
+        <h3>{{ s.title }}</h3>
+        <p class="muted">{{ s.description }}</p>
 
-          <ion-button slot="end" (click)="confirmStart(s)" size="small" color="success">
-            Start
-          </ion-button>
-        </ion-item>
-      </ion-list>
-    </ng-template>
+        <!-- TABLE ALIGNMENT -->
+        <div class="meta-table">
+
+          <div class="meta-row">
+            <div class="meta-cell head">Subject</div>
+            <div class="meta-cell head">Number of Questions</div>
+            <div class="meta-cell head">Time Duration</div>
+          </div>
+
+          <div class="meta-row">
+            <div class="meta-cell">{{ s.subject }}</div>
+            <div class="meta-cell">{{ s.questionsCount }}</div>
+            <div class="meta-cell">{{ formatSeconds(s.timeSeconds) }}</div>
+          </div>
+
+        </div>
+      </ion-label>
+
+      <ion-button slot="end" (click)="confirmStart(s)" size="small" color="success">
+        Start
+      </ion-button>
+
+    </ion-item>
+
+  </ion-list>
+</ng-template>
   </div>
 
 </ion-content>

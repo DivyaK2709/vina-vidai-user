@@ -47,20 +47,46 @@
   font-size: 20px;
 }
 
-.series-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-top: 10px;
+/* 3 COLUMN TABLE STYLE */
+.table-3col {
+  width: 100%;
+  display: table;
+  text-align: center;
+  margin-bottom: 25px;
+  border-collapse: collapse;
 }
 
-.series-grid .item {
-  background: #f5f5f5;
-  padding: 8px;
-  border-radius: 6px;
-  text-align: center;
-  font-size: 13px;
+.header-row,
+.data-row {
+  display: table-row;
 }
+
+.col {
+  display: table-cell;
+  padding: 12px 8px;
+  vertical-align: middle;
+}
+
+.head {
+  font-weight: 700;
+  font-size: 16px;
+  padding-bottom: 12px;
+}
+
+/* FIX ion-select width */
+.col ion-select,
+.col ion-input {
+  width: 100%;
+  --padding-start: 4px;
+  --padding-end: 4px;
+  text-align: center;
+}
+
+/* Center ion-input text */
+ion-input input {
+  text-align: center;
+}
+
 
 
 .custom-segment ion-segment-button.segment-button-checked {
