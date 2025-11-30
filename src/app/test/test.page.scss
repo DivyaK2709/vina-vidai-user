@@ -4,11 +4,14 @@
     text-align: center;
     font-weight: 700;
     color: black;
+    justify-content: center !important;
   }
 }
 
 .custom-segment-wrapper {
   padding: 10px 15px;
+  justify-content: center !important;
+  align-items: center;
 }
 
 .custom-segment {
@@ -17,6 +20,8 @@
   border-radius: 6px;
   height: 45px;
   padding: 4px;
+  justify-content: center !important;
+  align-items: center;
 }
 
 .custom-segment ion-segment-button {
@@ -25,25 +30,27 @@
   --color: #000;
   font-weight: 600;
   border-radius: 6px;
+  justify-content: center !important;
+  align-items: center;
 }
 
 .custom-segment ion-segment-button::part(native) {
   border-radius: 6px;
   transition: 0.25s ease-in-out;
   color: white;
+  justify-content: center !important;
+  align-items: center;
 }
 .nav-btn-row {
   display: flex;
   justify-content: space-between;
-  margin: 15px 0;
+  margin-bottom: 15px;
 }
 
 .nav-btn-row ion-button {
-  width: 50px;
-  height: 50px;
+  width: 55px;
+  height: 55px;
   --border-radius: 50%;
-  --padding-start: 0;
-  --padding-end: 0;
   font-size: 20px;
 }
 
@@ -51,20 +58,29 @@
 .table-3col {
   width: 100%;
   display: table;
-  text-align: center;
-  margin-bottom: 25px;
-  border-collapse: collapse;
+  justify-content: center !important;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .header-row,
 .data-row {
   display: table-row;
+  text-align: center ;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
 }
 
 .col {
   display: table-cell;
-  padding: 12px 8px;
-  vertical-align: middle;
+  text-align: center ;
+  align-items: center;
+  align-content: center;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
 }
 
 .head {
@@ -74,17 +90,19 @@
 }
 
 /* FIX ion-select width */
-.col ion-select,
-.col ion-input {
+.col ion-select {
   width: 100%;
   --padding-start: 4px;
   --padding-end: 4px;
   text-align: center;
+  justify-content: center !important;
 }
 
 /* Center ion-input text */
 ion-input input {
   text-align: center;
+  justify-content: center !important;
+  align-items: center;
 }
 
 
@@ -93,16 +111,22 @@ ion-input input {
   background: #0f766e;
   color: white;
   border-radius: 6px;
+  justify-content: center !important;
+  align-items: center;
 }
 
 .segment-section {
   margin-top: 12px;
+  justify-content: center !important;
+  align-items: center;
 }
 
 .series-config-card {
   margin-bottom: 15px;
   border-radius: 6px;
   box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+  justify-content: center !important;
+  align-items: center;
 }
 
 .history-card {
@@ -111,10 +135,12 @@ ion-input input {
 
 .meta-row {
   display: flex;
-  justify-content: space-between;
+  
   margin-bottom: 10px;
   gap: 8px;
   flex-wrap: wrap;
+  justify-content: center !important;
+  align-items: center;
 }
 
 .history-actions {
@@ -133,8 +159,39 @@ ion-input input {
   --background: #fff;
   border-radius: 10px;
   margin: 8px 0;
+  justify-content: center !important;
   align-items: center;
 }
+/* Start button text = white */
+.start-btn {
+  --color: #fff !important;
+}
+:host ::ng-deep .col ion-input input {
+  text-align: center !important;
+  justify-content: center;
+}
+
+
+/* Center aligned subject, question input, and time select */
+
+
+/* Center text inside input fields */
+
+/* View More button styling */
+.view-more-btn {
+  text-align: center;
+  font-weight: 600;
+  color: #0f766e;
+  margin-top: 10px;
+}
+
 
 .muted { color: #666; font-size: 13px; margin-top: 4px; }
 .meta { font-size: 12px; color: #888; }
+
+
+:host(.select-label-placement-start) .select-wrapper {
+    -ms-flex-direction: row;
+    flex-direction: row;
+    justify-content: center;
+}

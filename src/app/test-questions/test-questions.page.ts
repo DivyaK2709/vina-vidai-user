@@ -7,11 +7,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-test-questions',
   standalone: true,
-  imports: [
-    FormsModule,
-    IonicModule,
-    CommonModule
-  ],
+  imports: [FormsModule, IonicModule, CommonModule],
   templateUrl: './test-questions.page.html',
   styleUrls: ['./test-questions.page.scss'],
 })
@@ -38,12 +34,7 @@ export class TestQuestionsPage implements OnInit, OnDestroy {
     this.questions = JSON.parse(localStorage.getItem('current_test_questions') || '[]');
     this.meta = JSON.parse(localStorage.getItem('current_test_meta') || '{}');
 
-    // SET TIME
-    this.timeLeft = this.meta.timeSeconds ||
-      Number(this.route.snapshot.queryParamMap.get('time')) ||
-      600;
-
-    // Load previous answer if exists
+    this.timeLeft = this.meta.timeSeconds || Number(this.route.snapshot.queryParamMap.get('time')) || 600;
     this.userAnswer = this.questions[this.currentIndex]?.selected || "";
 
     this.updateFormattedTime();
@@ -56,14 +47,13 @@ export class TestQuestionsPage implements OnInit, OnDestroy {
 
   startTimer() {
     if (this.timer) return;
-
     this.timer = setInterval(() => {
       this.timeLeft--;
       this.updateFormattedTime();
 
       if (this.timeLeft <= 0) {
         clearInterval(this.timer);
-        this.submitAndFinish();
+        this.showSummaryPopup();
       }
     }, 1000);
   }
@@ -79,7 +69,6 @@ export class TestQuestionsPage implements OnInit, OnDestroy {
 
   previous() {
     this.saveUserAnswer();
-
     if (this.currentIndex > 0) {
       this.currentIndex--;
       this.userAnswer = this.questions[this.currentIndex].selected || "";
@@ -88,7 +77,6 @@ export class TestQuestionsPage implements OnInit, OnDestroy {
 
   next() {
     this.saveUserAnswer();
-
     if (this.currentIndex < this.questions.length - 1) {
       this.currentIndex++;
       this.userAnswer = this.questions[this.currentIndex].selected || "";
@@ -99,39 +87,113 @@ export class TestQuestionsPage implements OnInit, OnDestroy {
     this.questions[this.currentIndex].selected = this.userAnswer;
   }
 
-  async confirmSubmit() {
+  onSelectOption() {
+    this.saveUserAnswer();
+  }
+
+async confirmSubmit() {
+  const alert = await this.alertCtrl.create({
+    header: 'Submit Test?',
+    message: 'Are you sure you want to submit your answers?',
+    cssClass: 'custom-submit-alert', // <-- important
+    buttons: [
+      { text: 'Cancel', role: 'cancel', cssClass: 'cancel-btn' },
+      { text: 'Submit', handler: () => this.showSummaryAlert(), cssClass: 'submit-btn' }
+    ]
+  });
+
+  await alert.present();
+}
+
+
+// Show second popup with only counts
+private async showSummaryAlert() {
+  const summary = this.computeSummary();
+
+  const alert = await this.alertCtrl.create({
+    header: 'Test Summary',
+    subHeader: `Attempted: ${summary.attempted} | Right: ${summary.right} | Wrong: ${summary.wrong}`,
+    cssClass: 'summary-alert',
+    buttons: [
+      {
+        text: 'View More',
+        handler: () => {
+          this.router.navigate(['/tabs/progress'], {
+            queryParams: { score: summary.right, total: summary.total }
+          });
+        },
+        cssClass: 'view-more-btn'
+      },
+      {
+        text: 'Close',
+        role: 'cancel',
+        cssClass: 'close-btn'
+      }
+    ]
+  });
+
+  await alert.present();
+}
+
+
+  private computeSummary() {
+    this.saveUserAnswer();
+
+    const total = this.questions.length;
+    let attempted = 0;
+    let right = 0;
+    let wrong = 0;
+
+    this.questions.forEach(q => {
+      if (q.selected) {
+        attempted++;
+        if (q.answer && q.selected.toLowerCase() === q.answer.toLowerCase()) right++;
+        else wrong++;
+      }
+    });
+
+    this.score = right;
+    return { total, attempted, right, wrong };
+  }
+
+  private async showSummaryPopup() {
+    const summary = this.computeSummary();
+
+    const content = `
+      <div class="summary-content">
+        <div class="summary-row"><div>Total Questions</div><div class="summary-right">${summary.total}</div></div>
+        <div class="summary-row"><div>Attempted</div><div class="summary-right">${summary.attempted}</div></div>
+        <div class="summary-row"><div>Right</div><div class="summary-right">${summary.right}</div></div>
+        <div class="summary-row"><div>Wrong</div><div class="summary-right">${summary.wrong}</div></div>
+      </div>
+    `;
+
     const alert = await this.alertCtrl.create({
-      header: 'Submit Test?',
-      message: 'Are you sure you want to submit your answers?',
+      header: 'Test Summary',
+      message: content,
+      cssClass: 'summary-alert',
       buttons: [
-        { text: 'Cancel', role: 'cancel' },
         {
-          text: 'Submit',
-          handler: () => this.submitAndFinish()
+          text: 'Close',
+          role: 'cancel',
+          cssClass: 'close-btn'
+        },
+        {
+          text: 'View More',
+          handler: () => {
+            this.router.navigate(['/tabs/test-result'], {
+              queryParams: {
+                score: summary.right,
+                total: summary.total
+              }
+            });
+          },
+          cssClass: 'view-more-btn'
         }
       ]
     });
 
-    alert.present();
+    await alert.present();
   }
-
-  submitAndFinish() {
-    clearInterval(this.timer);
-
-    // Calculate score
-    this.score = 0;
-
-    this.questions.forEach(q => {
-      if (q.selected?.toLowerCase() === q.answer?.toLowerCase()) {
-        this.score++;
-      }
-    });
-
-    this.router.navigate(['/tabs/test-result'], {
-      queryParams: {
-        score: this.score,
-        total: this.questions.length
-      }
-    });
-  }
+  
 }

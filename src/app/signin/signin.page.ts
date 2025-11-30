@@ -43,14 +43,17 @@ export class SigninPage {
     this.isEmailValid = false;
   }
 
-  async presentToast(message: string, color: string = 'medium') {
-    const toast = await this.toastCtrl.create({
-      message,
-      duration: 2000,
-      color
-    });
-    toast.present();
-  }
+ async presentToast(message: string, color: string = 'medium') {
+  const toast = await this.toastCtrl.create({
+    message,
+    duration: 2000,
+    color,
+    position: 'top',   // 👈 SHOW TOAST AT TOP
+    cssClass: 'top-toast'
+  });
+  toast.present();
+}
+
 
   async onSignIn() {
     if (!this.emailOrUsername || !this.password) {

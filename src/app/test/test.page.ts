@@ -223,7 +223,7 @@ private async fetchQuestionsBySubject(subject: string, limit: number): Promise<a
       localStorage.setItem('current_test_meta', JSON.stringify({
         subject, questionsCount: fetched.length, timeSeconds
       }));
-      this.showToast('test gets started');
+      await this.showPopup('Your test has started successfully!');
       this.router.navigate(['/tabs/test-questions'], {
         queryParams: { subject, questions: fetched.length, time: timeSeconds }
       });
@@ -250,6 +250,18 @@ goPrevious() {
 goNext() {
   this.showToast("Next clicked", "primary");
 }
+private async showPopup(message: string) {
+  const alert = await this.alertCtrl.create({
+    header: 'Test Started',
+    message,
+    buttons: ['OK']
+  });
+  await alert.present();
+}
+goToProgress() {
+  this.router.navigate(['/tabs/progress']);
+}
+
 
   formatSeconds(sec?: number) {
     sec = sec ?? 0;

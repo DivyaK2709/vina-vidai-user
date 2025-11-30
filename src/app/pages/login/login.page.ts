@@ -36,10 +36,27 @@ export class LoginPage {
     private toastCtrl: ToastController
   ) {}
 
-  // FIXED 100% — no TS errors
+  // ⭐ UPDATED → Icon activates ONLY when field is valid (for username)
   updateIcon(field: FieldName) {
-    const value = this[field as keyof LoginPage] as string;
-    this.icons[field] = value.trim().length > 0;
+    const value = this[field] as string;
+
+    switch (field) {
+      case 'username':
+        this.icons.username = /^[A-Za-z]+$/.test(value);
+        break;
+
+      case 'email':
+        this.icons.email = this.emailPattern.test(value);
+        break;
+
+      case 'password':
+        this.icons.password = value.length >= 6;
+        break;
+
+      case 'confirmPassword':
+        this.icons.confirmPassword = value === this.password && value.length >= 6;
+        break;
+    }
   }
 
   // validations
@@ -56,7 +73,7 @@ export class LoginPage {
   }
 
   isConfirmPasswordValid() {
-    return this.password === this.confirmPassword;
+    return this.password === this.confirmPassword && this.password.length >= 6;
   }
 
   isFormValid() {
@@ -68,14 +85,17 @@ export class LoginPage {
     );
   }
 
-  async showToast(msg: string, color: string = 'danger') {
-    const t = await this.toastCtrl.create({
-      message: msg,
-      duration: 2500,
-      color
-    });
-    t.present();
-  }
+async showToast(msg: string, color: string = 'danger') {
+  const t = await this.toastCtrl.create({
+    message: msg,
+    duration: 2500,
+    color,
+    position: 'top',         // 👈 SHOW TOAST AT TOP
+    cssClass: 'top-toast'    // 👈 CUSTOM CLASS FOR STYLING
+  });
+  t.present();
+}
+
 
   async onSubmit() {
     if (!this.isFormValid()) {

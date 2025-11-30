@@ -19,10 +19,11 @@
 
     <!-- RADIO OPTIONS -->
     <ion-list class="options-list">
-      <ion-radio-group [(ngModel)]="userAnswer">
-        <ion-item *ngFor="let opt of questions[currentIndex]?.options">
+      <ion-radio-group [(ngModel)]="userAnswer" (ionChange)="onSelectOption()">
+        <ion-item *ngFor="let opt of questions[currentIndex]?.options"
+                  [class.selected]="userAnswer === opt">
           <ion-label>{{ opt }}</ion-label>
-          <ion-radio slot="start" [value]="opt"></ion-radio>
+          <ion-radio slot="start" [value]="opt" color="success"></ion-radio>
         </ion-item>
       </ion-radio-group>
     </ion-list>
@@ -53,5 +54,6 @@
   <ng-template #noQuestions>
     <p>No questions loaded.</p>
   </ng-template>
+  
 
 </ion-content>
