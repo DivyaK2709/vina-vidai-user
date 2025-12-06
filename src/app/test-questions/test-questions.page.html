@@ -23,6 +23,7 @@
         <ion-item *ngFor="let opt of questions[currentIndex]?.options"
                   [class.selected]="userAnswer === opt">
           <ion-label>{{ opt }}</ion-label>
+          <!-- color="success" makes the radio bullet use success color when checked -->
           <ion-radio slot="start" [value]="opt" color="success"></ion-radio>
         </ion-item>
       </ion-radio-group>
@@ -54,6 +55,5 @@
   <ng-template #noQuestions>
     <p>No questions loaded.</p>
   </ng-template>
-  
 
 </ion-content>

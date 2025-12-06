@@ -22,6 +22,7 @@
   padding: 4px;
   justify-content: center !important;
   align-items: center;
+  justify-items: center;
 }
 
 .custom-segment ion-segment-button {
@@ -32,6 +33,7 @@
   border-radius: 6px;
   justify-content: center !important;
   align-items: center;
+  justify-items: center;
 }
 
 .custom-segment ion-segment-button::part(native) {
@@ -61,6 +63,7 @@
   justify-content: center !important;
   align-items: center;
   margin-bottom: 20px;
+  justify-items: center;
 }
 
 .header-row,
@@ -71,6 +74,7 @@
   align-content: center;
   justify-content: center;
   align-items: center;
+  justify-items: center;
 }
 
 .col {
@@ -81,12 +85,14 @@
   padding: 10px;
   justify-content: center;
   align-items: center;
+  justify-items: center;
 }
 
 .head {
   font-weight: 700;
   font-size: 16px;
   padding-bottom: 12px;
+  justify-items: center;
 }
 
 /* FIX ion-select width */
@@ -96,6 +102,7 @@
   --padding-end: 4px;
   text-align: center;
   justify-content: center !important;
+  justify-items: center;
 }
 
 /* Center ion-input text */
@@ -103,6 +110,7 @@ ion-input input {
   text-align: center;
   justify-content: center !important;
   align-items: center;
+  justify-items: center;
 }
 
 
@@ -164,8 +172,11 @@ ion-input input {
 }
 /* Start button text = white */
 .start-btn {
-  --color: #fff !important;
+  --background: green; /* button background */
+  color: white !important; /* button text */
+  font-weight: 600;
 }
+
 :host ::ng-deep .col ion-input input {
   text-align: center !important;
   justify-content: center;

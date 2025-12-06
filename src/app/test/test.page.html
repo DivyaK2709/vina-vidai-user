@@ -117,11 +117,12 @@
       </div>
 
       <!-- START BUTTON (WHITE TEXT) -->
-      <ion-button expand="block" color="success" class="start-btn"
-        (click)="startCustomTest()"
-        [disabled]="!selectedSubject || !selectedQuestions || !selectedTime">
-        START TEST
-      </ion-button>
+      <ion-button expand="block" class="start-btn" 
+            (click)="startCustomTest()"
+            [disabled]="!selectedSubject || !selectedQuestions || !selectedTime">
+  START TEST
+</ion-button>
+
 
       <!-- VIEW MORE BUTTON -->
       <ion-button expand="block" fill="clear" class="view-more-btn"
