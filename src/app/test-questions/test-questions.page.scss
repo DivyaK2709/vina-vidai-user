@@ -31,30 +31,11 @@
   margin-top: 20px;
   border-radius: 12px;
   background: #fafafa;
-  padding: 6px;
+  padding: 5px;
 }
 
-/* default ion-item style */
 ion-item {
   --background: transparent;
-  transition: background-color .18s ease, color .18s ease;
-  padding: 10px 12px;
-}
-
-/* when item is selected (userAnswer === option) */
-.options-list ion-item.selected {
-  background: rgba(16, 185, 129, 0.08); /* subtle green tint */
-  border-radius: 8px;
-}
-
-.options-list ion-item.selected ion-label {
-  color: #059669; /* green text for selected label */
-  font-weight: 600;
-}
-
-/* Ion-radio bullet when checked uses color="success", but we also ensure text inside input is aligned nicely */
-.options-list ion-radio {
-  margin-right: 8px;
 }
 
 /* Navigation buttons */
@@ -65,28 +46,45 @@ ion-item {
   align-items: center;
 }
 
-.prev-btn, .next-btn, .submit-btn {
-  padding: 12px 22px;
+button.submit-btn {
+  background-color: #059669 !important;
+  color: white !important;
+   padding: 12px 22px;
   border-radius: 25px !important;
   font-weight: 600;
   text-transform: uppercase;
 }
 
-/* === CUSTOM ALERT WRAPPER === */
-/* First confirm popup */
-.custom-submit-alert {
-  --background: #fff;
-  --max-width: 94%;
+
+.prev-btn {
+  padding: 12px 22px;
+  border-radius: 25px !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  
+}
+.next-btn{
+   padding: 12px 22px;
+  border-radius: 25px !important;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
-/* Align buttons inside alert */
-/* ---------- SUBMIT CONFIRM POPUP STYLING ---------- */
+
+/* === CUSTOM ALERT WRAPPER === */
 .custom-submit-alert {
   --background: #fff;
   --max-width: 90%;
 }
 
-/* Cancel Button = RED text + RED border */
+/* Align buttons */
+.custom-submit-alert .alert-button-group {
+  display: flex;
+  justify-content: space-between !important;
+  gap: 12px;
+}
+
+/* === CANCEL BUTTON → Red border + Red text === */
 .custom-submit-alert .cancel-btn::part(button) {
   color: red !important;
   border: 2px solid red !important;
@@ -94,93 +92,15 @@ ion-item {
   border-radius: 10px !important;
   padding: 10px 18px !important;
   font-weight: 600;
+  text-transform: uppercase;
 }
 
-/* Submit Button = GREEN background + WHITE text */
+/* === SUBMIT BUTTON → Green BG + White text === */
 .custom-submit-alert .submit-btn::part(button) {
   background: green !important;
   color: white !important;
   border-radius: 10px !important;
   padding: 10px 18px !important;
   font-weight: 600;
-}
-
-/* ---------- RESULT SUMMARY POPUP ---------- */
-.result-popup {
-  --background: #fff;
-  --max-width: 90%;
-  text-align: left;
-}
-
-.result-popup .view-more-btn::part(button) {
-  background: #007bff !important;
-  color: white !important;
-  padding: 10px 20px !important;
-  border-radius: 10px !important;
-  font-weight: 600;
-}
-
-
-/* === SECOND ALERT (SUMMARY) STYLE === */
-.summary-alert {
-  --background: #fff;
-  --max-width: 94%;
-}
-
-.summary-content {
-  text-align: left;
-  padding: 6px 6px 0 6px;
-  line-height: 1.5;
-  font-size: 15px;
-}
-
-.summary-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px dashed #e6e6e6;
-}
-
-.summary-row:last-child {
-  border-bottom: none;
-}
-
-.summary-right {
-  color: #059669;
-  font-weight: 700;
-}
-
-/* summary buttons - style the View More similarly to primary */
-.summary-alert .view-more-btn::part(button) {
-  background: #059669 !important;
-  color: #fff !important;
-  font-weight: 700;
-  border-radius: 8px;
-  padding: 8px 12px;
-}
-
-.summary-alert .close-btn::part(button) {
-  background: transparent !important;
-  color: #374151 !important;
-  border-radius: 8px;
-  font-weight: 700;
-}
-/* Base alert button design */
-.custom-submit-alert .alert-button {
-  font-weight: 600 !important;
-  border-radius: 10px !important;
-  padding: 10px 18px !important;
-}
-
-/* CANCEL button (red border + red text) */
-.custom-submit-alert .alert-button.cancel-btn.sc-ion-alert-md {
-  color: red !important;
-  border: 2px solid red !important;
-  background: transparent !important;
-}
-
-/* SUBMIT button (green background + white text) */
-.custom-submit-alert .alert-button.submit-btn.sc-ion-alert-md {
-  background: green !important;
-  color: white !important;
+  text-transform: uppercase;
 }
