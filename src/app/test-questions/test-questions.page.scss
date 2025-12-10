@@ -46,14 +46,15 @@ ion-item {
   align-items: center;
 }
 
-button.submit-btn {
-  background-color: #059669 !important;
-  color: white !important;
-   padding: 12px 22px;
+ion-button.submit-btn {
+  --background: #059669 !important; /* GREEN */
+  --color: white !important;        /* TEXT WHITE */
+  padding: 12px 22px;
   border-radius: 25px !important;
   font-weight: 600;
   text-transform: uppercase;
 }
+
 
 
 .prev-btn {
@@ -73,7 +74,7 @@ button.submit-btn {
 
 /* === CUSTOM ALERT WRAPPER === */
 .custom-submit-alert {
-  --background: #fff;
+  --background: #ffffff !important;
   --max-width: 90%;
 }
 
@@ -85,7 +86,7 @@ button.submit-btn {
 }
 
 /* === CANCEL BUTTON → Red border + Red text === */
-.custom-submit-alert .cancel-btn::part(button) {
+.custom-submit-alert .alert-cancel-btn::part(button) {
   color: red !important;
   border: 2px solid red !important;
   background: transparent !important;
@@ -96,8 +97,8 @@ button.submit-btn {
 }
 
 /* === SUBMIT BUTTON → Green BG + White text === */
-.custom-submit-alert .submit-btn::part(button) {
-  background: green !important;
+.custom-submit-alert .alert-submit-btn::part(button) {
+  background: #059669 !important; /* GREEN */
   color: white !important;
   border-radius: 10px !important;
   padding: 10px 18px !important;

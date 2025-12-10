@@ -67,18 +67,28 @@ export class TestQuestionsPage implements OnInit, OnDestroy {
   onSelectOption() { this.saveUserAnswer(); }
 
   // FIRST CONFIRM POPUP
-  async confirmSubmit() {
-    const alert = await this.alertCtrl.create({
-      header: 'Submit Test?',
-      message: 'Are you sure you want to submit your answers?',
-      cssClass: 'custom-submit-alert',
-      buttons: [
-        { text: 'Cancel', role: 'cancel', cssClass: 'cancel-btn' },
-        { text: 'Submit', handler: () => this.showSummaryAlert(), cssClass: 'submit-btn' }
-      ]
-    });
-    await alert.present();
-  }
+async confirmSubmit() {
+  const alert = await this.alertCtrl.create({
+    header: 'Submit Test?',
+    message: 'Are you sure you want to submit your answers?',
+    cssClass: 'custom-submit-alert',  // wrapper class
+    buttons: [
+      {
+        text: 'Cancel',
+        role: 'cancel',
+        cssClass: 'alert-cancel-btn'   // button class
+      },
+      {
+        text: 'Submit',
+        handler: () => this.showSummaryAlert(),
+        cssClass: 'alert-submit-btn'   // button class
+      }
+    ]
+  });
+
+  await alert.present();
+}
+
 
   // SECOND POPUP: SUMMARY
   private async showSummaryAlert() {
