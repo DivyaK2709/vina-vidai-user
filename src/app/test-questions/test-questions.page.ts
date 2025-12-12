@@ -71,23 +71,65 @@ async confirmSubmit() {
   const alert = await this.alertCtrl.create({
     header: 'Submit Test?',
     message: 'Are you sure you want to submit your answers?',
-    cssClass: 'custom-submit-alert',  // wrapper class
+    cssClass: 'custom-submit-alert',
     buttons: [
       {
         text: 'Cancel',
         role: 'cancel',
-        cssClass: 'alert-cancel-btn'   // button class
+        cssClass: 'cancel-btn'
       },
       {
         text: 'Submit',
         handler: () => this.showSummaryAlert(),
-        cssClass: 'alert-submit-btn'   // button class
+        cssClass: 'submit-btn'
       }
     ]
   });
 
   await alert.present();
+
+  // 🔥 Always works in all devices
+  this.applyAlertCSS(alert);
 }
+applyAlertCSS(alert: HTMLIonAlertElement) {
+  const styles = `
+    .alert-button.cancel-btn {
+      color: red !important;
+      border: 2px solid red !important;
+      background: transparent !important;
+      border-radius: 10px !important;
+      padding: 10px 18px !important;
+      font-weight: 600 !important;
+      text-transform: uppercase !important;
+    }
+
+    .alert-button.submit-btn {
+      background: #059669 !important;
+      color: white !important;
+      border-radius: 10px !important;
+      padding: 10px 18px !important;
+      font-weight: 600 !important;
+      text-transform: uppercase !important;
+    }
+  `;
+
+  // 🔥 Create <style> tag
+  const styleEl = document.createElement('style');
+  styleEl.textContent = styles;
+
+  // 🔥 Append inside shadow DOM (works in all Ionic versions)
+  const shadow = alert.shadowRoot;
+  if (shadow) {
+    shadow.appendChild(styleEl);
+  }
+
+  // 🔥 Also append to alert wrapper (fallback for Android devices)
+  const wrapper = document.querySelector('.custom-submit-alert');
+  if (wrapper) {
+    wrapper.appendChild(styleEl.cloneNode(true));
+  }
+}
+
 
 
   // SECOND POPUP: SUMMARY

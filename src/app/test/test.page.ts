@@ -127,32 +127,57 @@ private async fetchQuestionsBySubject(subject: string, limit: number): Promise<a
   try {
     const ref = collection(this.firestore, 'questions');
 
-    // FIRST attempt using exact Firestore field "Subject name"
-    const q1 = firestoreQuery(ref, where('subject name', '==', subject));
-    let qSnap = await getDocs(q1);
+    // 1) Try exact match fields
+    const fieldsToTry = [
+      'subject',
+      'Subject',
+      'subjectName',
+      'subject name'
+    ];
 
-    // SECOND fallback (case insensitive)
-    if (qSnap.empty) {
-      const q2 = firestoreQuery(ref, where('subject name', '==', subject.toLowerCase()));
-      qSnap = await getDocs(q2);
+    let items: any[] = [];
+
+    for (const field of fieldsToTry) {
+      const q = firestoreQuery(ref, where(field, '==', subject));
+      const snap = await getDocs(q);
+
+      if (!snap.empty) {
+        snap.forEach(doc => {
+          items.push({ id: doc.id, ...doc.data() });
+        });
+      }
     }
 
-    const items: any[] = [];
-    qSnap.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+    // 2) If still empty → load ALL questions and filter manually
+    if (items.length === 0) {
+      const snap = await getDocs(ref);
+      snap.forEach(doc => {
+        const d: any = doc.data();
+        const sub = (d.subject || d.Subject || d.subjectName || d["subject name"] || '').toLowerCase();
+        if (sub === subject.toLowerCase()) {
+          items.push({ id: doc.id, ...doc.data() });
+        }
+      });
+    }
 
-    // Shuffle
+    // 3) If STILL empty → return []
+    if (items.length === 0) return [];
+
+    // 4) Shuffle
     for (let i = items.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [items[i], items[j]] = [items[j], items[i]];
     }
 
+    // 5) Return required number
     return items.slice(0, limit);
 
   } catch (err) {
-    console.error('fetchQuestionsBySubject error', err);
+    console.error("fetchQuestionsBySubject ERROR :", err);
     throw err;
   }
 }
+
 
 
   async confirmStart(s: SeriesItem) {
