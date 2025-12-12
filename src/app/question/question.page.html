@@ -1,5 +1,7 @@
 <ion-content class="center-content" fullscreen>
   <div class="card-wrapper">
+    
+    <!-- STEP 1 -->
     <div *ngIf="step === 1" class="card">
       <h2 class="quiz-title">Step 1</h2>
       <p class="quiz-subtitle">How many questions do you want to attempt?</p>
@@ -12,30 +14,36 @@
         </ion-input>
       </ion-item>
 
-      <ion-button expand="block" (click)="nextStep()" [disabled]="!numQuestions">
+      <ion-button expand="block" class="green-btn"
+                  (click)="nextStep()" [disabled]="!numQuestions">
         Next →
       </ion-button>
     </div>
 
+    <!-- STEP 2 -->
     <div *ngIf="step === 2" class="card">
       <h2 class="quiz-title">Step 2</h2>
       <p class="quiz-subtitle">How much time do you want?</p>
 
       <ion-item>
-  <ion-select placeholder="Select duration" [(ngModel)]="timeSelected">
-    <ion-select-option value="1">10 minutes</ion-select-option>
-    <ion-select-option value="2">20 minutes</ion-select-option>
-    <ion-select-option value="3">30 minutes</ion-select-option>
-    <ion-select-option value="4">10 minutes 5 seconds</ion-select-option>
-    <ion-select-option value="5">10 minutes 10 seconds</ion-select-option>
-  </ion-select>
-</ion-item>
+        <ion-select placeholder="Select duration" [(ngModel)]="timeSelected">
+          <ion-select-option value="1">10 minutes</ion-select-option>
+          <ion-select-option value="2">20 minutes</ion-select-option>
+          <ion-select-option value="3">30 minutes</ion-select-option>
+          <ion-select-option value="4">10 minutes 5 seconds</ion-select-option>
+          <ion-select-option value="5">10 minutes 10 seconds</ion-select-option>
+        </ion-select>
+      </ion-item>
 
+      <ion-button expand="block" class="green-btn" (click)="prevStep()">
+        Back
+      </ion-button>
 
-      <ion-button expand="block" (click)="prevStep()">Back</ion-button>
-      <ion-button expand="block" (click)="nextStep()" [disabled]="!timeSelected">
+      <ion-button expand="block" class="green-btn"
+                  (click)="nextStep()" [disabled]="!timeSelected">
         Start Test →
       </ion-button>
     </div>
+
   </div>
 </ion-content>

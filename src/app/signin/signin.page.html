@@ -17,9 +17,13 @@
         <input type="text" style="display:none" autocomplete="off">
         <input type="password" style="display:none" autocomplete="new-password">
 
-        <!-- EMAIL FIELD with ICON -->
+        <!-- EMAIL FIELD -->
         <div class="input-wrapper">
-          <ion-item class="input-item" lines="none">
+          <ion-item
+            class="input-item"
+            lines="none"
+            [class.active-label]="activeField==='email'">
+
             <ion-label position="floating">Email or Username</ion-label>
 
             <ion-input
@@ -28,24 +32,26 @@
               name="emailOrUsername"
               required
               autocomplete="off"
-              autocorrect="off"
-              autocapitalize="off"
-              spellcheck="false"
+              (ionFocus)="setActive('email')"
+              (ionBlur)="clearActive('email')"
               (ionInput)="validateEmail()"
               placeholder="john@example.com or johnsmith">
             </ion-input>
           </ion-item>
 
-          <!-- ICON -->
           <img
             class="field-icon"
-            [src]="isEmailValid ? 'assets/icon/email_click.png' : 'assets/icon/email.png'"
-            alt="email icon">
+            [src]="isEmailValid ? 'assets/icon/email_click.png' : 'assets/icon/email.png'">
         </div>
 
-        <!-- PASSWORD -->
-        <ion-item class="input-item" lines="none">
+        <!-- PASSWORD FIELD -->
+        <ion-item
+          class="input-item"
+          lines="none"
+          [class.active-label]="activeField==='password'">
+
           <ion-label position="floating">Password</ion-label>
+
           <ion-input
             type="password"
             [(ngModel)]="password"
@@ -53,13 +59,16 @@
             required
             minlength="6"
             autocomplete="new-password"
+            (ionFocus)="setActive('password')"
+            (ionBlur)="clearActive('password')"
             placeholder="At least 6 characters">
           </ion-input>
         </ion-item>
 
-        <p *ngIf="password && password.length < 6" class="error-msg">
-          Password must be at least 6 characters
-        </p>
+        <p *ngIf="passwordError" class="error-msg">
+  {{ passwordError }}
+</p>
+
 
         <div class="signin-button-wrapper">
           <ion-button expand="block" class="signin-button" type="submit" [disabled]="!signinForm.valid">
@@ -70,10 +79,9 @@
       </form>
 
       <div class="signup-link">
-  <ion-text>Don't have an account?</ion-text>
-  <ion-text class="signup-text" (click)="goToSignup()"> Create one</ion-text>
-</div>
-
+        <ion-text>Don't have an account?</ion-text>
+        <ion-text class="signup-text" (click)="goToSignup()"> Create an account</ion-text>
+      </div>
 
     </div>
   </div>

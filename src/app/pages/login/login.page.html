@@ -8,9 +8,10 @@
 
       <form (ngSubmit)="onSubmit()" #signupForm="ngForm" autocomplete="off" novalidate>
 
-        <!-- USERNAME FIELD -->
+        <!-- USERNAME -->
         <div class="input-wrapper">
-          <ion-item lines="none" class="input-item">
+          <ion-item lines="none" class="input-item"
+            [class.valid-label]="isUsernameValid() || isUsernameFocused">
             <ion-label position="floating">Username</ion-label>
             <ion-input
               type="text"
@@ -18,20 +19,25 @@
               name="username"
               required
               placeholder="e.g. johnsmith"
+              (ionFocus)="isUsernameFocused = true"
+              (ionBlur)="isUsernameFocused = false"
               (ionInput)="updateIcon('username')">
             </ion-input>
           </ion-item>
 
+          <!-- ICON → keep as is -->
           <img class="field-icon"
             [src]="icons.username ? 'assets/icon/user_click.png' : 'assets/icon/user.png'">
         </div>
 
-        <p *ngIf="username && !isUsernameValid()" class="error-msg">Username must contain only alphabets</p>
+        <p *ngIf="username && !isUsernameValid()" class="error-msg">
+          Username must be alphabetic & at least 3 characters
+        </p>
 
-
-        <!-- EMAIL FIELD -->
+        <!-- EMAIL -->
         <div class="input-wrapper">
-          <ion-item lines="none" class="input-item">
+          <ion-item lines="none" class="input-item"
+            [class.valid-label]="isEmailValid()">
             <ion-label position="floating">Email</ion-label>
             <ion-input
               type="email"
@@ -47,15 +53,18 @@
             [src]="isEmailValid() ? 'assets/icon/email_click.png' : 'assets/icon/email.png'">
         </div>
 
-        <p *ngIf="email && !isEmailValid()" class="error-msg">Please enter a valid email address</p>
+        <p *ngIf="email && !isEmailValid()" class="error-msg">
+          Please enter a valid email address
+        </p>
 
-
-        <!-- PASSWORD FIELD -->
+        <!-- PASSWORD (REMOVED PASSWORD ICON) -->
         <div class="input-wrapper">
-          <ion-item lines="none" class="input-item">
+          <ion-item lines="none" class="input-item"
+            [class.valid-label]="isPasswordValid()">
             <ion-label position="floating">Password</ion-label>
             <ion-input
               type="password"
+              toggleIcon="null"
               [(ngModel)]="password"
               name="password"
               required
@@ -64,20 +73,20 @@
               (ionInput)="updateIcon('password')">
             </ion-input>
           </ion-item>
-
-          <img class="field-icon"
-            [src]="isPasswordValid() ? 'assets/icon/password_click.png' : 'assets/icon/password.png'">
         </div>
 
-        <p *ngIf="password && !isPasswordValid()" class="error-msg">Password must be at least 6 characters</p>
+        <p *ngIf="password && !isPasswordValid()" class="error-msg">
+          Password must be at least 6 characters
+        </p>
 
-
-        <!-- CONFIRM PASSWORD -->
+        <!-- CONFIRM PASSWORD (REMOVED PASSWORD ICON) -->
         <div class="input-wrapper">
-          <ion-item lines="none" class="input-item">
+          <ion-item lines="none" class="input-item"
+            [class.valid-label]="isConfirmPasswordValid()">
             <ion-label position="floating">Confirm Password</ion-label>
             <ion-input
               type="password"
+              toggleIcon="null"
               [(ngModel)]="confirmPassword"
               name="confirmPassword"
               required
@@ -85,17 +94,13 @@
               (ionInput)="updateIcon('confirmPassword')">
             </ion-input>
           </ion-item>
-
-          <img class="field-icon"
-            [src]="isConfirmPasswordValid() ? 'assets/icon/password_click.png' : 'assets/icon/password.png'">
         </div>
 
         <p *ngIf="confirmPassword && !isConfirmPasswordValid()" class="error-msg">
           Passwords do not match
         </p>
 
-
-        <!-- REGISTER BUTTON -->
+        <!-- BUTTON -->
         <div class="signup-button-wrapper">
           <ion-button expand="block" type="submit"
             class="signup-button"

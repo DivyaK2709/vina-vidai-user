@@ -21,6 +21,8 @@ export class LoginPage {
   password = '';
   confirmPassword = '';
 
+  isUsernameFocused = false;   // ⭐ NEW
+
   icons = {
     username: false,
     email: false,
@@ -36,13 +38,12 @@ export class LoginPage {
     private toastCtrl: ToastController
   ) {}
 
-  // ⭐ UPDATED → Icon activates ONLY when field is valid (for username)
   updateIcon(field: FieldName) {
     const value = this[field] as string;
 
     switch (field) {
       case 'username':
-        this.icons.username = /^[A-Za-z]+$/.test(value);
+        this.icons.username = /^[A-Za-z]{3,}$/.test(value);
         break;
 
       case 'email':
@@ -54,14 +55,14 @@ export class LoginPage {
         break;
 
       case 'confirmPassword':
-        this.icons.confirmPassword = value === this.password && value.length >= 6;
+        this.icons.confirmPassword =
+          value === this.password && value.length >= 6;
         break;
     }
   }
 
-  // validations
   isUsernameValid() {
-    return /^[A-Za-z]+$/.test(this.username);
+    return /^[A-Za-z]{3,}$/.test(this.username);
   }
 
   isEmailValid() {
@@ -85,17 +86,16 @@ export class LoginPage {
     );
   }
 
-async showToast(msg: string, color: string = 'danger') {
-  const t = await this.toastCtrl.create({
-    message: msg,
-    duration: 2500,
-    color,
-    position: 'top',         // 👈 SHOW TOAST AT TOP
-    cssClass: 'top-toast'    // 👈 CUSTOM CLASS FOR STYLING
-  });
-  t.present();
-}
-
+  async showToast(msg: string, color: string = 'danger') {
+    const t = await this.toastCtrl.create({
+      message: msg,
+      duration: 2500,
+      color,
+      position: 'top',
+      cssClass: 'top-toast'
+    });
+    t.present();
+  }
 
   async onSubmit() {
     if (!this.isFormValid()) {

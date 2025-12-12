@@ -56,3 +56,16 @@ ion-content {
 .back-btn {
   margin-top: 10px;
 }
+.green-btn {
+  --background: #00c9a7 !important;
+  --background-hover: #00b495 !important;
+  --background-activated: #009f87 !important;
+  --background-focused: #00b495 !important;
+  color: white !important;
+  font-weight: 600;
+  border-radius: 10px;
+}
+
+ion-button[disabled] {
+  opacity: 0.5;
+}

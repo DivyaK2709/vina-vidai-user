@@ -8,6 +8,21 @@
   }
 }
 
+/* Default style */
+ion-segment-button ,ion-labe{
+  --color: #000;
+  --background: #0f766e;
+}
+
+/* Hover effect */
+ion-segment-button:hover {
+  --color: #0f766e !important;      /* text becomes green */
+  --background: #ffffff !important; /* background becomes white */
+}
+
+
+
+
 .custom-segment-wrapper {
   padding: 10px 15px;
   justify-content: center !important;
