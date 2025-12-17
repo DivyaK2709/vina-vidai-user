@@ -20,6 +20,9 @@ export class LoginPage {
   email = '';
   password = '';
   confirmPassword = '';
+  showPassword = false;
+showConfirmPassword = false;
+
 
   isUsernameFocused = false;   // ⭐ NEW
 
@@ -60,6 +63,14 @@ export class LoginPage {
         break;
     }
   }
+  togglePassword() {
+  this.showPassword = !this.showPassword;
+}
+
+toggleConfirmPassword() {
+  this.showConfirmPassword = !this.showConfirmPassword;
+}
+
 
   isUsernameValid() {
     return /^[A-Za-z]{3,}$/.test(this.username);

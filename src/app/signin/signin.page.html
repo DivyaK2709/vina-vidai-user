@@ -45,25 +45,35 @@
         </div>
 
         <!-- PASSWORD FIELD -->
-        <ion-item
-          class="input-item"
-          lines="none"
-          [class.active-label]="activeField==='password'">
+       <!-- PASSWORD FIELD -->
+<div class="input-wrapper">
+  <ion-item
+    class="input-item"
+    lines="none"
+    [class.active-label]="activeField==='password'">
 
-          <ion-label position="floating">Password</ion-label>
+    <ion-label position="floating">Password</ion-label>
 
-          <ion-input
-            type="password"
-            [(ngModel)]="password"
-            name="password"
-            required
-            minlength="6"
-            autocomplete="new-password"
-            (ionFocus)="setActive('password')"
-            (ionBlur)="clearActive('password')"
-            placeholder="At least 6 characters">
-          </ion-input>
-        </ion-item>
+    <ion-input
+      [type]="showPassword ? 'text' : 'password'"
+      [(ngModel)]="password"
+      name="password"
+      required
+      minlength="6"
+      autocomplete="new-password"
+      (ionFocus)="setActive('password')"
+      (ionBlur)="clearActive('password')"
+      placeholder="At least 6 characters">
+    </ion-input>
+  </ion-item>
+
+  <!-- CUSTOM EYE ICON -->
+  <img
+    class="eye-icon"
+    [src]="showPassword ? 'assets/icon/password_click.png' : 'assets/icon/password.png'"
+    (click)="togglePassword()">
+</div>
+
 
         <p *ngIf="passwordError" class="error-msg">
   {{ passwordError }}

@@ -58,6 +58,8 @@ ion-button.submit-btn {
 
 
 .prev-btn {
+ --background: green!important; /* GREEN */
+  --color: white !important;        /* TEXT WHITE */
   padding: 12px 22px;
   border-radius: 25px !important;
   font-weight: 600;
@@ -65,10 +67,13 @@ ion-button.submit-btn {
   
 }
 .next-btn{
-   padding: 12px 22px;
+   --background: green!important; /* GREEN */
+  --color: white !important;        /* TEXT WHITE */
+  padding: 12px 22px;
   border-radius: 25px !important;
   font-weight: 600;
   text-transform: uppercase;
+  
 }
 
 

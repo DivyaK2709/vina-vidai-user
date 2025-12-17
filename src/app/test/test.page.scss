@@ -38,6 +38,8 @@ ion-segment-button:hover {
   justify-content: center !important;
   align-items: center;
   justify-items: center;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .custom-segment ion-segment-button {
@@ -49,6 +51,9 @@ ion-segment-button:hover {
   justify-content: center !important;
   align-items: center;
   justify-items: center;
+  border: none !important;
+  box-shadow: none !important;
+  --indicator-color: transparent !important;
 }
 
 .custom-segment ion-segment-button::part(native) {

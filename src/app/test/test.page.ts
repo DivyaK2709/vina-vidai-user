@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { IonicModule, AlertController, ToastController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastService } from '../services/toast.service';
 import {
   Firestore,
   collection,
@@ -57,7 +58,8 @@ export class TestPage implements OnInit {
     private firestore: Firestore,
     private alertCtrl: AlertController,
     private toastCtrl: ToastController,
-    private router: Router
+    private router: Router,
+    private toast: ToastService
   ) {}
 
   ngOnInit() {
@@ -224,7 +226,7 @@ private async fetchQuestionsBySubject(subject: string, limit: number): Promise<a
 
   async startCustomTest() {
     if (!this.selectedSubject || !this.selectedQuestions || !this.selectedTime) {
-      this.showToast('Please fill subject, questions and time', 'warning');
+      this.toast.show('Please fill subject, questions and time', 'warning');
       return;
     }
     await this.startWithSubject(this.selectedSubject, this.selectedQuestions, this.selectedTime);
@@ -236,12 +238,12 @@ private async fetchQuestionsBySubject(subject: string, limit: number): Promise<a
       const fetched = await this.fetchQuestionsBySubject(subject, questionsCount);
 
       if (!fetched || fetched.length === 0) {
-        this.showToast(`No questions found for "${subject}"`, 'warning');
+        this.toast.show(`No questions found for "${subject}"`, 'warning');
         return;
       }
 
       if (fetched.length < questionsCount) {
-        this.showToast(`Only ${fetched.length} questions found for "${subject}". Starting with available questions.`, 'warning');
+         this.toast.show(`Only ${fetched.length} questions found for "${subject}". Starting with available questions.`, 'warning');
       }
 
       localStorage.setItem('current_test_questions', JSON.stringify(fetched));
@@ -255,7 +257,7 @@ private async fetchQuestionsBySubject(subject: string, limit: number): Promise<a
 
     } catch (err) {
       console.error('startWithSubject error', err);
-      this.showToast('Failed to start test. Try again.', 'danger');
+      this.toast.show('Failed to start test. Try again.', 'danger');
     } finally {
       this.loadingStart = false;
     }
@@ -265,15 +267,15 @@ validateQuestionCount(ev: any) {
   if (value < 10) {
     this.selectedQuestions = 10;
     ev.target.value = 10;
-    this.showToast("Minimum 10 questions required", "warning");
+    this.toast.show("Minimum 10 questions required", "warning");
   }
 }
 goPrevious() {
-  this.showToast("Previous clicked", "primary");
+  this.toast.show("Previous clicked", "primary");
 }
 
 goNext() {
-  this.showToast("Next clicked", "primary");
+  this.toast.show("Next clicked", "primary");
 }
 private async showPopup(message: string) {
   const alert = await this.alertCtrl.create({

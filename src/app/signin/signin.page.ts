@@ -17,6 +17,7 @@ export class SigninPage {
   emailOrUsername = '';
   password = '';
   isEmailValid = false;
+  showPassword = false; 
 
   activeField: 'email' | 'password' | '' = '';
   passwordError = '';   // <-- NEW
@@ -34,6 +35,9 @@ export class SigninPage {
   clearActive(field: 'email' | 'password') {
     if (this.activeField === field) this.activeField = '';
   }
+  togglePassword() {
+  this.showPassword = !this.showPassword;
+}
 
   validateEmail() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -62,7 +66,7 @@ export class SigninPage {
   }
 
 async onSignIn() {
-  this.passwordError = ''; // reset password error
+  this.passwordError = ''; // reset error
 
   if (!this.emailOrUsername || !this.password) {
     return this.presentToast('Please fill all fields', 'warning');
@@ -70,45 +74,57 @@ async onSignIn() {
 
   try {
     if (this.emailOrUsername.includes('@')) {
-      await this.firebaseService.signInWithEmail(this.emailOrUsername, this.password);
+      await this.firebaseService.signInWithEmail(
+        this.emailOrUsername,
+        this.password
+      );
     } else {
-      await this.firebaseService.signInWithUsername(this.emailOrUsername, this.password);
+      await this.firebaseService.signInWithUsername(
+        this.emailOrUsername,
+        this.password
+      );
     }
 
-    // SUCCESS LOGIN
+    // ✅ SUCCESS
     this.presentToast('Signin successful', 'success');
     this.router.navigate(['/tabs']);
 
   } catch (err: any) {
-    let msg = err?.message?.toLowerCase() || '';
 
-    console.log("Firebase Error:", msg); // DEBUG
+    const code = err?.code || '';
 
-    // 🔥 PASSWORD WRONG
+    console.log('Firebase Error Code:', code);
+
+    // 🔥 WRONG PASSWORD
     if (
-      msg.includes('wrong-password') ||
-      msg.includes('auth/wrong-password') ||
-      msg.includes('invalid password') ||
-      msg.includes('password')
+      code === 'auth/wrong-password' ||
+      code === 'auth/invalid-credential'
     ) {
       this.passwordError = 'Password incorrect';
       return;
     }
 
-    // ❌ USER NOT FOUND
+    // 🔥 USER NOT FOUND
     if (
-      msg.includes('user-not-found') ||
-      msg.includes('auth/user-not-found') ||
-      msg.includes('no user') ||
-      msg.includes('invalid email')
+      code === 'auth/user-not-found'
     ) {
-      return this.presentToast('User not found', 'danger');
+      this.presentToast('User not found', 'danger');
+      return;
+    }
+
+    // 🔥 INVALID EMAIL
+    if (
+      code === 'auth/invalid-email'
+    ) {
+      this.presentToast('Invalid email format', 'danger');
+      return;
     }
 
     // ❗ ANY OTHER ERROR
     this.presentToast('Signin failed', 'danger');
   }
 }
+
 
 
   goToSignup() {

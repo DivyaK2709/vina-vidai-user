@@ -66,10 +66,18 @@
   --background: #fff;
   border-radius: 10px;
   margin: 10px 0;
-  padding: 6px;
+    --padding-top: 14px;
+  --padding-bottom: 10px;
   border: 1px solid #eee;
   overflow: visible !important;   /* IMPORTANT FIX */
 }
+/* Add space between floating label and input text */
+
+/* Push label slightly up for clean spacing */
+.input-item ion-label {
+  margin-bottom: 6px;
+}
+
 
 ion-input {
   color: #222;
@@ -109,4 +117,18 @@ ion-input {
 .active-label ion-label {
   color: #2ecc71 !important;
   font-weight: 600;
+}
+.eye-icon {
+  width: 22px;
+  position: absolute;
+  right: 16px;
+  top: 18px;
+  z-index: 20;
+  cursor: pointer;
+}
+input[type='password']::-ms-reveal,
+input[type='password']::-ms-clear,
+input::-webkit-credentials-auto-fill-button,
+input::-webkit-password-toggle {
+  display: none !important;
 }

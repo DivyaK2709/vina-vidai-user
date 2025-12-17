@@ -1,18 +1,8 @@
 ion-content {
   --background: linear-gradient(to bottom right, #e0f7ff, #e0e7ff);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-.start-button {
-  margin-top: 30px;
-  display: flex;
-  justify-content: center;
 }
 
-
-
+/* Center content */
 .center-content {
   display: flex;
   justify-content: center;
@@ -24,7 +14,9 @@ ion-content {
   width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+}
+.green-btn outline-btn small-btn{
+  color:#009f87;
 }
 
 .card {
@@ -37,10 +29,11 @@ ion-content {
   text-align: center;
 }
 
+/* Titles */
 .quiz-title {
   font-size: 1.6rem;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .quiz-subtitle {
@@ -48,24 +41,54 @@ ion-content {
   color: #555;
 }
 
-.quiz-input {
+/* 🔥 REMOVE INPUT BACKGROUND */
+.no-bg-item {
+  --background: transparent;
+  --border-color: #ddd;
+  --highlight-height: 0;
+  border-radius: 10px;
   margin-bottom: 20px;
 }
 
-.next-btn,
-.back-btn {
-  margin-top: 10px;
-}
-.green-btn {
-  --background: #00c9a7 !important;
-  --background-hover: #00b495 !important;
-  --background-activated: #009f87 !important;
-  --background-focused: #00b495 !important;
-  color: white !important;
-  font-weight: 600;
-  border-radius: 10px;
+/* Button Row */
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 16px;
 }
 
+/* Single button center */
+.button-row.single {
+  justify-content: center;
+}
+
+/* Button styles */
+.green-btn {
+  --background: #00c9a7;
+  --background-hover: #00b495;
+  --background-activated: #009f87;
+  color: white;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+/* Small buttons (logout style) */
+.small-btn {
+  min-width: 120px;
+  height: 42px;
+  font-size: 14px;
+}
+
+/* Outline back button */
+.outline-btn {
+  --background: #00c9a7;
+  --border-color: #00c9a7;
+  --color: #00c9a7;
+  border: 1.5px solid #00c9a7;
+}
+
+/* Disabled state */
 ion-button[disabled] {
   opacity: 0.5;
 }

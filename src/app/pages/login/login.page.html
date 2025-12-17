@@ -56,45 +56,55 @@
         <p *ngIf="email && !isEmailValid()" class="error-msg">
           Please enter a valid email address
         </p>
+<div class="input-wrapper">
+  <ion-item lines="none" class="input-item"
+    [class.valid-label]="isPasswordValid()">
+    <ion-label position="floating">Password</ion-label>
+    <ion-input
+      [type]="showPassword ? 'text' : 'password'"
+      [(ngModel)]="password"
+      name="password"
+      required
+      minlength="6"
+      placeholder="At least 6 characters"
+      (ionInput)="updateIcon('password')">
+    </ion-input>
+  </ion-item>
 
-        <!-- PASSWORD (REMOVED PASSWORD ICON) -->
-        <div class="input-wrapper">
-          <ion-item lines="none" class="input-item"
-            [class.valid-label]="isPasswordValid()">
-            <ion-label position="floating">Password</ion-label>
-            <ion-input
-              type="password"
-              toggleIcon="null"
-              [(ngModel)]="password"
-              name="password"
-              required
-              minlength="6"
-              placeholder="At least 6 characters"
-              (ionInput)="updateIcon('password')">
-            </ion-input>
-          </ion-item>
-        </div>
+  <!-- CUSTOM EYE ICON -->
+  <img
+    class="eye-icon"
+    [src]="showPassword ? 'assets/icon/password_click.png' : 'assets/icon/password.png'"
+    (click)="togglePassword()">
+</div>
+
 
         <p *ngIf="password && !isPasswordValid()" class="error-msg">
           Password must be at least 6 characters
         </p>
 
         <!-- CONFIRM PASSWORD (REMOVED PASSWORD ICON) -->
-        <div class="input-wrapper">
-          <ion-item lines="none" class="input-item"
-            [class.valid-label]="isConfirmPasswordValid()">
-            <ion-label position="floating">Confirm Password</ion-label>
-            <ion-input
-              type="password"
-              toggleIcon="null"
-              [(ngModel)]="confirmPassword"
-              name="confirmPassword"
-              required
-              placeholder="Repeat password"
-              (ionInput)="updateIcon('confirmPassword')">
-            </ion-input>
-          </ion-item>
-        </div>
+ <div class="input-wrapper">
+  <ion-item lines="none" class="input-item"
+    [class.valid-label]="isConfirmPasswordValid()">
+    <ion-label position="floating">Confirm Password</ion-label>
+    <ion-input
+      [type]="showConfirmPassword ? 'text' : 'password'"
+      [(ngModel)]="confirmPassword"
+      name="confirmPassword"
+      required
+      placeholder="Repeat password"
+      (ionInput)="updateIcon('confirmPassword')">
+    </ion-input>
+  </ion-item>
+
+  <!-- CUSTOM EYE ICON -->
+  <img
+    class="eye-icon"
+    [src]="showConfirmPassword ? 'assets/icon/password_click.png' : 'assets/icon/password.png'"
+    (click)="toggleConfirmPassword()">
+</div>
+
 
         <p *ngIf="confirmPassword && !isConfirmPasswordValid()" class="error-msg">
           Passwords do not match
