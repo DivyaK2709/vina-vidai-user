@@ -16,8 +16,12 @@ export class TestQuestionsPage implements OnInit, OnDestroy {
 
   questions: any[] = [];
   meta: any = {};
+
   currentIndex = 0;
-  userAnswer: string = '';
+  currentQuestion: any = null;   // ✅ CRITICAL FIX
+
+  userAnswer: string | null = null;
+
   score = 0;
   timeLeft = 0;
   formattedTime = '00:00:00';
@@ -30,18 +34,24 @@ export class TestQuestionsPage implements OnInit, OnDestroy {
     private toast: ToastService
   ) {}
 
+  // ======================
+  // INIT
+  // ======================
   ngOnInit() {
     this.questions = JSON.parse(localStorage.getItem('current_test_questions') || '[]');
     this.meta = JSON.parse(localStorage.getItem('current_test_meta') || '{}');
 
-    if (!this.questions || this.questions.length === 0) {
+    if (!this.questions.length) {
       this.toast.show('No questions available!', 'warning');
       return;
     }
 
-    this.currentIndex = 0;
-    this.timeLeft = this.meta.timeSeconds || Number(this.route.snapshot.queryParamMap.get('time')) || 600;
-    this.loadCurrentQuestion();
+    this.timeLeft =
+      this.meta.timeSeconds ||
+      Number(this.route.snapshot.queryParamMap.get('time')) ||
+      600;
+
+    this.loadQuestion(0);
     this.updateFormattedTime();
     this.startTimer();
   }
@@ -54,7 +64,6 @@ export class TestQuestionsPage implements OnInit, OnDestroy {
   // TIMER
   // ======================
   startTimer() {
-    if (this.timer) return;
     this.timer = setInterval(() => {
       this.timeLeft--;
       this.updateFormattedTime();
@@ -74,45 +83,54 @@ export class TestQuestionsPage implements OnInit, OnDestroy {
   }
 
   // ======================
+  // QUESTION LOADING (🔥 FIX)
+  // ======================
+  loadQuestion(index: number) {
+    this.saveUserAnswer();
+
+    this.currentIndex = index;
+
+    // 🔥 Detach old view completely
+    this.currentQuestion = null;
+    this.userAnswer = null;
+
+    setTimeout(() => {
+      this.currentQuestion = this.questions[this.currentIndex];
+      this.userAnswer = this.currentQuestion?.selected || null;
+
+      if (!this.currentQuestion?.options?.length) {
+        this.currentQuestion.options = ['No options available'];
+      }
+    });
+  }
+
+  saveUserAnswer() {
+    if (this.currentQuestion) {
+      this.currentQuestion.selected = this.userAnswer;
+    }
+  }
+
+  // ======================
   // NAVIGATION
   // ======================
   previous() {
-    this.saveUserAnswer();
     if (this.currentIndex > 0) {
-      this.currentIndex--;
-      this.loadCurrentQuestion();
+      this.loadQuestion(this.currentIndex - 1);
     }
   }
 
   next() {
-    this.saveUserAnswer();
     if (this.currentIndex < this.questions.length - 1) {
-      this.currentIndex++;
-      this.loadCurrentQuestion();
-    }
-  }
-
-  private loadCurrentQuestion() {
-    const question = this.questions[this.currentIndex];
-    if (!question) return;
-
-    // Safe initialization
-    this.userAnswer = question.selected || '';
-
-    if (!question.options || question.options.length === 0) {
-      question.options = ['No options available']; // prevent *ngFor crash
-      this.toast.show(`Question ${this.currentIndex + 1} has no options!`, 'warning');
-    }
-  }
-
-  saveUserAnswer() {
-    if (this.questions[this.currentIndex]) {
-      this.questions[this.currentIndex].selected = this.userAnswer;
+      this.loadQuestion(this.currentIndex + 1);
     }
   }
 
   onSelectOption() {
     this.saveUserAnswer();
+  }
+
+  trackByOption(_: number, opt: string) {
+    return opt;
   }
 
   // ======================
@@ -124,27 +142,11 @@ export class TestQuestionsPage implements OnInit, OnDestroy {
       message: 'Are you sure you want to submit your answers?',
       cssClass: 'custom-submit-alert',
       buttons: [
-        { text: 'Cancel', role: 'cancel', cssClass: 'cancel-btn' },
-        { text: 'Submit', handler: () => this.showSummaryAlert(), cssClass: 'submit-btn' }
+        { text: 'Cancel', role: 'cancel' },
+        { text: 'Submit', handler: () => this.showSummaryAlert() }
       ]
     });
     await alert.present();
-    this.applyAlertCSS(alert);
-  }
-
-  applyAlertCSS(alert: HTMLIonAlertElement) {
-    const styles = `
-      .alert-button.cancel-btn { color: red !important; border: 2px solid red !important; background: transparent !important; border-radius: 10px !important; padding: 10px 18px !important; font-weight: 600 !important; text-transform: uppercase !important; }
-      .alert-button.submit-btn { background: #059669 !important; color: white !important; border-radius: 10px !important; padding: 10px 18px !important; font-weight: 600 !important; text-transform: uppercase !important; }
-    `;
-    const styleEl = document.createElement('style');
-    styleEl.textContent = styles;
-
-    const shadow = alert.shadowRoot;
-    if (shadow) shadow.appendChild(styleEl);
-
-    const wrapper = document.querySelector('.custom-submit-alert');
-    if (wrapper) wrapper.appendChild(styleEl.cloneNode(true));
   }
 
   // ======================
@@ -152,38 +154,34 @@ export class TestQuestionsPage implements OnInit, OnDestroy {
   // ======================
   private async showSummaryAlert() {
     this.saveUserAnswer();
-    const summary = this.computeSummary();
 
-    const alert = await this.alertCtrl.create({
-      header: 'Test Summary',
-      subHeader: `Attempted: ${summary.attempted} | Right: ${summary.right} | Wrong: ${summary.wrong}`,
-      cssClass: 'summary-alert',
-      buttons: [
-        { text: 'Close', role: 'cancel', cssClass: 'close-btn' },
-        { text: 'View More', handler: () => {
-            this.router.navigate(['/tabs/progress'], { queryParams: { score: summary.right, total: summary.total } });
-          }, cssClass: 'view-more-btn'
-        }
-      ]
-    });
-
-    await alert.present();
-  }
-
-  private computeSummary() {
-    this.saveUserAnswer();
-    const total = this.questions.length;
     let attempted = 0, right = 0, wrong = 0;
 
     this.questions.forEach(q => {
       if (q.selected) {
         attempted++;
-        if (q.answer && q.selected.toLowerCase() === q.answer.toLowerCase()) right++;
+        if (q.answer && q.selected === q.answer) right++;
         else wrong++;
       }
     });
 
-    this.score = right;
-    return { total, attempted, right, wrong };
+    const alert = await this.alertCtrl.create({
+      header: 'Test Summary',
+      subHeader: `Attempted: ${attempted} | Right: ${right} | Wrong: ${wrong}`,
+      buttons: [
+        { text: 'Close', role: 'cancel' },
+        {
+          text: 'View More',
+          handler: () => {
+            this.router.navigate(
+              ['/tabs/progress'],
+              { queryParams: { score: right, total: this.questions.length } }
+            );
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 }

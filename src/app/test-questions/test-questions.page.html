@@ -13,40 +13,59 @@
 
   <div *ngIf="questions.length > 0; else noQuestions">
 
-    <h3 class="q-num">Question {{ currentIndex + 1 }} / {{ questions.length }}</h3>
-    <h2 class="q-text">{{ questions[currentIndex]?.question }}</h2>
+  
 
-    <!-- RADIO OPTIONS -->
+  <ng-container *ngIf="currentQuestion">
+
+    <h3 class="q-num">
+      Question {{ currentIndex + 1 }} / {{ questions.length }}
+    </h3>
+
+    <h2 class="q-text">{{ currentQuestion.question }}</h2>
+
     <ion-list class="options-list">
       <ion-radio-group [(ngModel)]="userAnswer" (ionChange)="onSelectOption()">
-        <ion-item *ngFor="let opt of questions[currentIndex]?.options"
-                  [class.selected]="userAnswer === opt">
-          <ion-label>{{ opt }}</ion-label>
+        <ion-item
+          *ngFor="let opt of currentQuestion.options; trackBy: trackByOption"
+          [class.selected]="userAnswer === opt">
+
           <ion-radio slot="start" [value]="opt" color="success"></ion-radio>
+          <ion-label>{{ opt }}</ion-label>
+
         </ion-item>
       </ion-radio-group>
     </ion-list>
 
-    <!-- NAV BUTTONS -->
     <div class="nav-buttons">
-      <ion-button class="prev-btn" shape="round"
-                  [disabled]="currentIndex === 0"
-                  (click)="previous()">
+      <ion-button
+        class="prev-btn"
+        shape="round"
+        [disabled]="currentIndex === 0"
+        (click)="previous()">
         ← Previous
       </ion-button>
 
-      <ion-button class="next-btn" shape="round"
-                  *ngIf="currentIndex < questions.length - 1"
-                  (click)="next()">
+      <ion-button
+        class="next-btn"
+        shape="round"
+        *ngIf="currentIndex < questions.length - 1"
+        (click)="next()">
         Next →
       </ion-button>
 
-      <ion-button class="submit-btn" shape="round"
-                  *ngIf="currentIndex === questions.length - 1"
-                  (click)="confirmSubmit()">
+      <ion-button
+        class="submit-btn"
+        shape="round"
+        *ngIf="currentIndex === questions.length - 1"
+        (click)="confirmSubmit()">
         Submit Test ✔
       </ion-button>
     </div>
+
+  </ng-container>
+
+
+
 
   </div>
 
