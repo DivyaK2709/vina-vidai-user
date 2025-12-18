@@ -15,11 +15,10 @@ ion-segment-button ,ion-labe{
 }
 
 /* Hover effect */
-ion-segment-button:hover {
-  --color: #0f766e !important;      /* text becomes green */
-  --background: #ffffff !important; /* background becomes white */
+.custom-segment ion-segment-button:hover::part(native) {
+  background: #0f766e;
+  color: white;
 }
-
 
 
 
@@ -30,43 +29,35 @@ ion-segment-button:hover {
 }
 
 .custom-segment {
-  --background: #e3e3e3;
-  --border-radius: 6px;
-  border-radius: 6px;
-  height: 45px;
-  padding: 4px;
-  justify-content: center !important;
-  align-items: center;
-  justify-items: center;
-  border: none !important;
-  box-shadow: none !important;
+  background: transparent;
+  padding: 6px;
+  display: flex;
+  justify-content: center;
 }
 
 .custom-segment ion-segment-button {
-  --indicator-color: transparent !important;
-  --indicator-box-shadow: none !important;
-  --color: #000;
+  --background: white;
+  --color: black;
+
+  border: 2px solid #0f766e; /* visible border */
+  border-radius: 10px;
+
   font-weight: 600;
-  border-radius: 6px;
-  justify-content: center !important;
-  align-items: center;
-  justify-items: center;
-  border: none !important;
-  box-shadow: none !important;
-  --indicator-color: transparent !important;
+  transition: all 0.25s ease-in-out;
+
+  min-height: 42px;
 }
 
 .custom-segment ion-segment-button::part(native) {
-  border-radius: 6px;
-  transition: 0.25s ease-in-out;
-  color: white;
-  justify-content: center !important;
-  align-items: center;
+  background: white;
+  color: black;
+  border-radius: 10px;
 }
 .nav-btn-row {
   display: flex;
   justify-content: space-between;
   margin-bottom: 15px;
+  color: green;
 }
 
 .nav-btn-row ion-button {
@@ -74,6 +65,8 @@ ion-segment-button:hover {
   height: 55px;
   --border-radius: 50%;
   font-size: 20px;
+  color: green;
+  border-color: green;
 }
 
 /* 3 COLUMN TABLE STYLE */
@@ -136,11 +129,13 @@ ion-input input {
 
 
 .custom-segment ion-segment-button.segment-button-checked {
+  --background: #0f766e;
+  --color: white;
+}
+.custom-segment ion-segment-button.segment-button-checked::part(native) {
   background: #0f766e;
   color: white;
-  border-radius: 6px;
-  justify-content: center !important;
-  align-items: center;
+  border-color: #0f766e;
 }
 
 .segment-section {
@@ -195,6 +190,8 @@ ion-input input {
   --background: green; /* button background */
   color: white !important; /* button text */
   font-weight: 600;
+  min-width: 120px;
+  margin-left: 300px;
 }
 
 :host ::ng-deep .col ion-input input {

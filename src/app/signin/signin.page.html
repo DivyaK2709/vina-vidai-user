@@ -34,10 +34,14 @@
               autocomplete="off"
               (ionFocus)="setActive('email')"
               (ionBlur)="clearActive('email')"
-              (ionInput)="validateEmail()"
+              (ionInput)="validateEmailOrUsername()"
               placeholder="john@example.com or johnsmith">
             </ion-input>
           </ion-item>
+          <p *ngIf="usernameError" class="error-msg">
+  {{ usernameError }}
+</p>
+
 
           <img
             class="field-icon"

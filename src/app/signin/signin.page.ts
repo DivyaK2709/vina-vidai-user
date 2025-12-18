@@ -17,10 +17,14 @@ export class SigninPage {
   emailOrUsername = '';
   password = '';
   isEmailValid = false;
-  showPassword = false; 
+  showPassword = false;
 
   activeField: 'email' | 'password' | '' = '';
-  passwordError = '';   // <-- NEW
+  passwordError = '';
+  usernameError = '';   // ✅ NEW
+
+  // ✅ USERNAME REGEX (NO NUMBERS)
+  private USERNAME_REGEX = /^[a-zA-Z._]+$/;
 
   constructor(
     private firebaseService: FirebaseService,
@@ -35,22 +39,41 @@ export class SigninPage {
   clearActive(field: 'email' | 'password') {
     if (this.activeField === field) this.activeField = '';
   }
-  togglePassword() {
-  this.showPassword = !this.showPassword;
-}
 
-  validateEmail() {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    this.isEmailValid = emailRegex.test(this.emailOrUsername);
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+
+  // ===========================
+  // EMAIL / USERNAME VALIDATION
+  // ===========================
+  validateEmailOrUsername() {
+    this.usernameError = '';
+    this.isEmailValid = false;
+
+    if (!this.emailOrUsername) return;
+
+    // EMAIL
+    if (this.emailOrUsername.includes('@')) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      this.isEmailValid = emailRegex.test(this.emailOrUsername);
+      if (!this.isEmailValid) {
+        this.usernameError = 'Invalid email format';
+      }
+      return;
+    }
+
+    // USERNAME
+    if (!this.USERNAME_REGEX.test(this.emailOrUsername)) {
+      this.usernameError = 'Username does not accept numbers or symbols';
+    }
   }
 
   ionViewWillEnter() {
     this.emailOrUsername = '';
     this.password = '';
-    this.passwordError = '';  // <-- NEW
-    setTimeout(() => {
-      document.querySelectorAll('input').forEach((input: any) => input.value = '');
-    }, 60);
+    this.passwordError = '';
+    this.usernameError = '';
     this.isEmailValid = false;
   }
 
@@ -59,73 +82,81 @@ export class SigninPage {
       message,
       duration: 2000,
       color,
-      position: 'top',
-      cssClass: 'top-toast'
+      position: 'top'
     });
     await toast.present();
   }
 
-async onSignIn() {
-  this.passwordError = ''; // reset error
+  // ===========================
+  // SIGN IN
+  // ===========================
+  async onSignIn() {
 
-  if (!this.emailOrUsername || !this.password) {
-    return this.presentToast('Please fill all fields', 'warning');
+    this.passwordError = '';
+    this.usernameError = '';
+
+    if (!this.emailOrUsername || !this.password) {
+      return this.presentToast('Please fill all fields', 'warning');
+    }
+
+    // ❌ USERNAME VALIDATION BLOCK
+    if (
+      !this.emailOrUsername.includes('@') &&
+      !this.USERNAME_REGEX.test(this.emailOrUsername)
+    ) {
+      this.usernameError = 'Username does not accept numbers';
+      return;
+    }
+
+    try {
+
+      if (this.emailOrUsername.includes('@')) {
+        await this.firebaseService.signInWithEmail(
+          this.emailOrUsername,
+          this.password
+        );
+      } else {
+        await this.firebaseService.signInWithUsername(
+          this.emailOrUsername,
+          this.password
+        );
+      }
+
+      // ✅ SUCCESS
+      this.presentToast('Signin successful', 'success');
+      this.router.navigate(['/tabs']);
+
+    } catch (err: any) {
+
+      const code = err?.code || '';
+
+      console.log('Firebase Error:', code);
+
+      // ❌ WRONG PASSWORD
+      if (
+        code === 'auth/wrong-password' ||
+        code === 'auth/invalid-credential'
+      ) {
+        this.passwordError = 'Password incorrect';
+        return;
+      }
+
+      // ❌ USER NOT FOUND (EMAIL OR USERNAME)
+      if (code === 'auth/user-not-found') {
+        this.usernameError = 'User not found';
+        return;
+      }
+
+      // ❌ INVALID EMAIL
+      if (code === 'auth/invalid-email') {
+        this.usernameError = 'Invalid email format';
+        return;
+      }
+
+      // ❌ FALLBACK
+      this.presentToast('Signin failed', 'danger');
+    }
   }
-
-  try {
-    if (this.emailOrUsername.includes('@')) {
-      await this.firebaseService.signInWithEmail(
-        this.emailOrUsername,
-        this.password
-      );
-    } else {
-      await this.firebaseService.signInWithUsername(
-        this.emailOrUsername,
-        this.password
-      );
-    }
-
-    // ✅ SUCCESS
-    this.presentToast('Signin successful', 'success');
-    this.router.navigate(['/tabs']);
-
-  } catch (err: any) {
-
-    const code = err?.code || '';
-
-    console.log('Firebase Error Code:', code);
-
-    // 🔥 WRONG PASSWORD
-    if (
-      code === 'auth/wrong-password' ||
-      code === 'auth/invalid-credential'
-    ) {
-      this.passwordError = 'Password incorrect';
-      return;
-    }
-
-    // 🔥 USER NOT FOUND
-    if (
-      code === 'auth/user-not-found'
-    ) {
-      this.presentToast('User not found', 'danger');
-      return;
-    }
-
-    // 🔥 INVALID EMAIL
-    if (
-      code === 'auth/invalid-email'
-    ) {
-      this.presentToast('Invalid email format', 'danger');
-      return;
-    }
-
-    // ❗ ANY OTHER ERROR
-    this.presentToast('Signin failed', 'danger');
-  }
-}
-
-
 
   goToSignup() {
     this.router.navigate(['/login']);

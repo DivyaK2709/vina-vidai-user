@@ -17,6 +17,7 @@ ion-content {
 }
 .green-btn outline-btn small-btn{
   color:#009f87;
+  
 }
 
 .card {
@@ -75,7 +76,7 @@ ion-content {
 
 /* Small buttons (logout style) */
 .small-btn {
-  min-width: 120px;
+  min-width: 150px;
   height: 42px;
   font-size: 14px;
 }
@@ -86,6 +87,7 @@ ion-content {
   --border-color: #00c9a7;
   --color: #00c9a7;
   border: 1.5px solid #00c9a7;
+ min-width: 2px;
 }
 
 /* Disabled state */
