@@ -6,40 +6,59 @@ import { ToastController } from '@ionic/angular';
 })
 export class ToastService {
 
+  private styleInjected = false;
+
   constructor(private toastCtrl: ToastController) {}
 
   async show(
     message: string,
-    color: 'success' | 'danger' | 'warning' | 'primary' = 'success', // ✅ second argument
-    duration: number = 2200                                          // ✅ third argument
+    type: 'success' | 'warning' | 'danger' | 'primary' = 'success',
+    duration: number = 2200
   ) {
+
+    this.injectToastStyles(); // ✅ runtime-only CSS
+
     const toast = await this.toastCtrl.create({
       message,
       duration,
       position: 'top',
-      cssClass: 'custom-toast',
-      color: color // will be overridden in shadow DOM if needed
+      cssClass: `app-toast app-toast-${type}`
     });
 
     await toast.present();
+  }
 
-    setTimeout(() => {
-      const toastEl = toast as any;
-      const wrapper = toastEl?.overlay?.shadowRoot?.querySelector('.toast-wrapper');
-      const msg = toastEl?.overlay?.shadowRoot?.querySelector('.toast-message');
+  // 🔥 Injected ONCE – NOT global CSS file
+  private injectToastStyles() {
+    if (this.styleInjected) return;
 
-      if (wrapper) {
-        wrapper.setAttribute(
-          'style',
-          'background-color: green !important; border-radius: 10px;'
-        );
+    const style = document.createElement('style');
+    style.innerHTML = `
+      ion-toast.app-toast {
+        --color: #ffffff;
+        --border-radius: 12px;
+        font-weight: 600;
+        text-align: center;
       }
-      if (msg) {
-        msg.setAttribute(
-          'style',
-          'color: white !important; font-weight: 600; text-align: center;'
-        );
+
+      ion-toast.app-toast-success {
+        --background: #0f766e; /* light green theme */
       }
-    }, 50);
+
+      ion-toast.app-toast-warning {
+        --background: green;
+      }
+
+      ion-toast.app-toast-danger {
+        --background: #dc2626;
+      }
+
+      ion-toast.app-toast-primary {
+        --background: #2563eb;
+      }
+    `;
+
+    document.head.appendChild(style);
+    this.styleInjected = true;
   }
 }

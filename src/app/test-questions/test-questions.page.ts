@@ -136,18 +136,41 @@ export class TestQuestionsPage implements OnInit, OnDestroy {
   // ======================
   // SUBMIT
   // ======================
-  async confirmSubmit() {
+ async confirmSubmit() {
     const alert = await this.alertCtrl.create({
       header: 'Submit Test?',
       message: 'Are you sure you want to submit your answers?',
       cssClass: 'custom-submit-alert',
       buttons: [
-        { text: 'Cancel', role: 'cancel' },
-        { text: 'Submit', handler: () => this.showSummaryAlert() }
+        { text: 'Cancel', role: 'cancel', cssClass: 'cancel-btn' },
+        { text: 'Submit', handler: () => this.showSummaryAlert(), cssClass: 'submit-btn' }
       ]
     });
     await alert.present();
+    this.applyAlertCSS(alert);
   }
+
+  applyAlertCSS(alert: HTMLIonAlertElement) {
+    const styles = `
+      .alert-button.cancel-btn { color: red !important; border: 2px solid red !important; background: transparent !important; border-radius: 10px !important; padding: 10px 18px !important; font-weight: 600 !important; text-transform: uppercase !important; }
+      .alert-button.submit-btn { background: #059669 !important; color: white !important; border-radius: 10px !important; padding: 10px 18px !important; font-weight: 600 !important; text-transform: uppercase !important; }
+    `;
+    const styleEl = document.createElement('style');
+    styleEl.textContent = styles;
+
+    const shadow = alert.shadowRoot;
+    if (shadow) shadow.appendChild(styleEl);
+
+    const wrapper = document.querySelector('.custom-submit-alert');
+    if (wrapper) wrapper.appendChild(styleEl.cloneNode(true));
+  }
+
+  // ======================
+  // SUMMARY
+  // ======================
+ 
+  
+
 
   // ======================
   // SUMMARY
