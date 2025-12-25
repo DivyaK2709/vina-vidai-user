@@ -150,20 +150,54 @@ export class TestQuestionsPage implements OnInit, OnDestroy {
     this.applyAlertCSS(alert);
   }
 
-  applyAlertCSS(alert: HTMLIonAlertElement) {
-    const styles = `
-      .alert-button.cancel-btn { color: red !important; border: 2px solid red !important; background: transparent !important; border-radius: 10px !important; padding: 10px 18px !important; font-weight: 600 !important; text-transform: uppercase !important; }
-      .alert-button.submit-btn { background: #059669 !important; color: white !important; border-radius: 10px !important; padding: 10px 18px !important; font-weight: 600 !important; text-transform: uppercase !important; }
-    `;
-    const styleEl = document.createElement('style');
-    styleEl.textContent = styles;
+applyAlertCSS(alert: HTMLIonAlertElement) {
+  const styles = `
+    /* 🔹 CENTER BOTH BUTTONS */
+    .alert-button-group {
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 16px !important;
+    }
 
-    const shadow = alert.shadowRoot;
-    if (shadow) shadow.appendChild(styleEl);
+    /* CANCEL BUTTON */
+    .alert-button.cancel-btn {
+      color: red !important;
+      border: 2px solid red !important;
+      background: transparent !important;
+      border-radius: 10px !important;
+      padding: 10px 18px !important;
+      font-weight: 600 !important;
+      text-transform: uppercase !important;
+    }
 
-    const wrapper = document.querySelector('.custom-submit-alert');
-    if (wrapper) wrapper.appendChild(styleEl.cloneNode(true));
+    /* SUBMIT BUTTON */
+    .alert-button.submit-btn {
+      background: #059669 !important;
+      color: white !important;
+      border-radius: 10px !important;
+      padding: 10px 18px !important;
+      font-weight: 600 !important;
+      text-transform: uppercase !important;
+    }
+  `;
+
+  const styleEl = document.createElement('style');
+  styleEl.textContent = styles;
+
+  /* Inject into alert shadow DOM */
+  const shadow = alert.shadowRoot;
+  if (shadow) {
+    shadow.appendChild(styleEl);
   }
+
+  /* Fallback injection (safe) */
+  const wrapper = document.querySelector('.custom-submit-alert');
+  if (wrapper) {
+    wrapper.appendChild(styleEl.cloneNode(true));
+  }
+}
+
 
   // ======================
   // SUMMARY

@@ -42,11 +42,13 @@ export class ToastService {
       }
 
       ion-toast.app-toast-success {
-        --background: #0f766e; /* light green theme */
+        --background: #059669; /* light green theme */
       }
 
       ion-toast.app-toast-warning {
-        --background: green;
+        --background: #16A34A
+
+;
       }
 
       ion-toast.app-toast-danger {
@@ -54,7 +56,8 @@ export class ToastService {
       }
 
       ion-toast.app-toast-primary {
-        --background: #2563eb;
+        --background: #ECFDF5
+;
       }
     `;
 

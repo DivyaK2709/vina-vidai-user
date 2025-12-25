@@ -1,5 +1,6 @@
 .quiz-header {
-  --background: linear-gradient(180deg, #0f766e, #023030);
+  --background: linear-gradient(180deg, #16A34A
+, #023030);
   ion-title {
     text-align: center;
     font-weight: 700;
@@ -11,12 +12,14 @@
 /* Default style */
 ion-segment-button ,ion-labe{
   --color: #000;
-  --background: #0f766e;
+  --background: #16A34A
+;
 }
 
 /* Hover effect */
 .custom-segment ion-segment-button:hover::part(native) {
-  background: #0f766e;
+  background: #16A34A
+;
   color: white;
 }
 
@@ -39,8 +42,8 @@ ion-segment-button ,ion-labe{
   --background: white;
   --color: black;
 
-  border: 2px solid #0f766e; /* visible border */
-  border-radius: 10px;
+   /* visible border */
+  
 
   font-weight: 600;
   transition: all 0.25s ease-in-out;
@@ -51,7 +54,7 @@ ion-segment-button ,ion-labe{
 .custom-segment ion-segment-button::part(native) {
   background: white;
   color: black;
-  border-radius: 10px;
+  
 }
 .nav-btn-row {
   display: flex;
@@ -60,13 +63,15 @@ ion-segment-button ,ion-labe{
   color: green;
 }
 
+
 .nav-btn-row ion-button {
   width: 55px;
   height: 55px;
   --border-radius: 50%;
   font-size: 20px;
   color: green;
-  border-color: green;
+  
+  --border-color: green;
 }
 
 /* 3 COLUMN TABLE STYLE */
@@ -129,13 +134,15 @@ ion-input input {
 
 
 .custom-segment ion-segment-button.segment-button-checked {
-  --background: #0f766e;
+  --background: #16A34A
+;
   --color: white;
 }
 .custom-segment ion-segment-button.segment-button-checked::part(native) {
-  background: #0f766e;
+  background: #16A34A;
   color: white;
-  border-color: #0f766e;
+  border-color: #16A34A
+;
 }
 
 .segment-section {

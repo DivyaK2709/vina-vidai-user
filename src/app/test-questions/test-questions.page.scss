@@ -63,7 +63,7 @@ ion-button.submit-btn {
   padding: 12px 22px;
   border-radius: 25px !important;
   font-weight: 600;
-  text-transform: uppercase;
+  text-transform: capitalize !important;
   
 }
 .next-btn{
@@ -72,7 +72,7 @@ ion-button.submit-btn {
   padding: 12px 22px;
   border-radius: 25px !important;
   font-weight: 600;
-  text-transform: uppercase;
+   text-transform: capitalize !important;
   
 }
 
