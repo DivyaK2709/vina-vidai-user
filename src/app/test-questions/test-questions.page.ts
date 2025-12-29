@@ -209,36 +209,85 @@ applyAlertCSS(alert: HTMLIonAlertElement) {
   // ======================
   // SUMMARY
   // ======================
-  private async showSummaryAlert() {
-    this.saveUserAnswer();
+private async showSummaryAlert() {
+  this.saveUserAnswer();
 
-    let attempted = 0, right = 0, wrong = 0;
+  let attempted = 0;
+  let right = 0;
+  let wrong = 0;
 
-    this.questions.forEach(q => {
-      if (q.selected) {
-        attempted++;
-        if (q.answer && q.selected === q.answer) right++;
-        else wrong++;
+  this.questions.forEach(q => {
+    if (q.selected) {
+      attempted++;
+      if (q.answer && q.selected === q.answer) {
+        right++;
+      } else {
+        wrong++;
+      }
+    }
+  });
+
+  // Use non-breaking spaces for column alignment
+  const summaryText =
+    'Attempted : ' + attempted + '\n' +
+    'Correct   : ✔ ' + right + '\n' +
+    'Wrong     : ✖ ' + wrong;
+
+  const alert = await this.alertCtrl.create({
+    header: 'Test Summary',
+    message: summaryText,
+    buttons: [
+      { text: 'CLOSE', role: 'cancel' },
+      {
+        text: 'VIEW MORE',
+        handler: () => {
+          this.router.navigate(
+            ['/tabs/progress'],
+            { queryParams: { score: right, total: this.questions.length } }
+          );
+        }
+      }
+    ]
+  });
+
+  await alert.present();
+
+  // Wait for alert to render
+  setTimeout(() => {
+    // 1️⃣ Format message text
+    const msgEl = document.querySelector('ion-alert .alert-message') as HTMLElement;
+    if (msgEl) {
+      msgEl.style.whiteSpace = 'pre';         // preserve line breaks
+      msgEl.style.fontFamily = 'monospace';  // fixed-width font for column alignment
+      msgEl.style.fontSize = '15px';
+      msgEl.style.lineHeight = '1.6';
+    }
+
+    // 2️⃣ Style buttons
+    document.querySelectorAll('ion-alert button').forEach(btn => {
+      const button = btn as HTMLButtonElement;
+      const text = button.textContent || '';
+
+      if (text.includes('CLOSE')) {
+        button.style.border = '2px solid #dc2626';
+        button.style.color = '#dc2626';
+        button.style.background = 'transparent';
+        button.style.borderRadius = '10px';
+        button.style.padding = '8px 16px';
+        button.style.fontWeight = '600';
+      }
+
+      if (text.includes('VIEW')) {
+        button.style.background = '#16a34a';
+        button.style.color = 'white';
+        button.style.borderRadius = '10px';
+        button.style.padding = '8px 16px';
+        button.style.fontWeight = '600';
       }
     });
+  }, 50);
+}
 
-    const alert = await this.alertCtrl.create({
-      header: 'Test Summary',
-      subHeader: `Attempted: ${attempted} | Right: ${right} | Wrong: ${wrong}`,
-      buttons: [
-        { text: 'Close', role: 'cancel' },
-        {
-          text: 'View More',
-          handler: () => {
-            this.router.navigate(
-              ['/tabs/progress'],
-              { queryParams: { score: right, total: this.questions.length } }
-            );
-          }
-        }
-      ]
-    });
 
-    await alert.present();
-  }
+
 }

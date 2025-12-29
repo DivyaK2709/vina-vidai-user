@@ -111,3 +111,54 @@ ion-button.submit-btn {
   font-weight: 600;
   text-transform: uppercase;
 }
+/* =========================
+   TEST SUMMARY ALERT
+========================= */
+.test-summary-alert {
+
+  /* Header */
+  ion-alert::part(title) {
+    text-align: center;
+    font-weight: 700;
+    font-size: 18px;
+  }
+
+  /* 🔥 COLUMN ALIGNMENT */
+  ion-alert::part(sub-title) {
+    white-space: pre;                 /* KEEP SPACES */
+    font-family: monospace;           /* FIXED WIDTH */
+    font-size: 15px;
+    line-height: 1.8;
+    margin-top: 10px;
+    padding-left: 16px;
+  }
+
+  /* BUTTON ALIGNMENT */
+  ion-alert::part(button-group) {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding-top: 12px;
+  }
+
+  /* CLOSE BUTTON (RED) */
+  ion-alert button.close-btn::part(native) {
+    color: #dc2626;
+    border: 2px solid #dc2626;
+    background: transparent;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  /* VIEW MORE BUTTON (GREEN) */
+  ion-alert button.view-btn::part(native) {
+    background: #059669;
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+}

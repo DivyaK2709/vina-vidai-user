@@ -15,9 +15,25 @@ ion-content {
   display: flex;
   justify-content: center;
 }
-.green-btn outline-btn small-btn{
-  color:#009f87;
-  
+.green-btn.outline-btn.small-btn {
+  --background: transparent !important;
+  --color: #10B981;
+  --border-color: #10B981;
+  --border-width: 2px;
+  --border-style: solid;
+
+  border-radius: 8px;
+  font-weight: 600;
+}
+.green-btn.small-btn:not(.outline-btn) {
+  --background: transparent !important;
+  --color: #10B981;
+  --border-color: #10B981;
+  --border-width: 2px;
+  --border-style: solid;
+
+  border-radius: 8px;
+  font-weight: 600;
 }
 
 .card {
@@ -66,13 +82,22 @@ ion-content {
 
 /* Button styles */
 .green-btn {
-  --background: #00c9a7;
-  --background-hover: #00b495;
-  --background-activated: #009f87;
-  color: white;
-  font-weight: 600;
+  --background: transparent !important;
+  --background-hover: transparent !important;
+  --background-activated: transparent !important;
+  --background-focused: transparent !important;
+
+  --color: #10B981;               /* text color */
+  --border-color: #10B981;
+  --border-width: 2px;
+  --border-style: solid;
+
   border-radius: 8px;
+  font-weight: 600;
+  box-shadow: none;
 }
+
+
 
 /* Small buttons (logout style) */
 .small-btn {
@@ -83,10 +108,10 @@ ion-content {
 
 /* Outline back button */
 .outline-btn {
-  --background: #00c9a7;
-  --border-color: #00c9a7;
-  --color: #00c9a7;
-  border: 1.5px solid #00c9a7;
+  --background: #10B981;
+  --border-color: #10B981;
+  --color: #10B981;
+  border: 1.5px solid #10B981;
  min-width: 2px;
 }
 

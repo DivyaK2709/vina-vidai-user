@@ -278,13 +278,43 @@ goNext() {
   this.toast.show("Next clicked", "primary");
 }
 private async showPopup(message: string) {
+
+  const popupMessage =
+    '✔ ' + message;
+
   const alert = await this.alertCtrl.create({
     header: 'Test Started',
-    message,
-    buttons: ['OK']
+    message: popupMessage,
+    buttons: [
+      {
+        text: 'OK',
+        role: 'cancel'
+      }
+    ],
+    backdropDismiss: false
   });
+
   await alert.present();
+
+  // 🔥 APPLY BUTTON UI (SAME STYLE LOGIC AS SUMMARY)
+  this.applyPopupCSS();
 }
+applyPopupCSS() {
+  document.querySelectorAll('ion-alert button').forEach(btn => {
+    const button = btn as HTMLButtonElement;
+    const text = button.textContent || '';
+
+    if (text.includes('OK')) {
+      button.style.background = '#16a34a';
+      button.style.color = '#ffffff';
+      button.style.borderRadius = '10px';
+      button.style.padding = '8px 20px';
+      button.style.fontWeight = '600';
+      button.style.border = 'none';
+    }
+  });
+}
+
 goToProgress() {
   this.router.navigate(['/tabs/progress']);
 }

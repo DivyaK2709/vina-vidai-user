@@ -4,7 +4,7 @@ import { ToastController, IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FirebaseService } from '../services/firebaseauth.service';
-
+import { ToastService } from '../services/toast.service';
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.page.html',
@@ -29,7 +29,8 @@ export class SigninPage {
   constructor(
     private firebaseService: FirebaseService,
     private router: Router,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+    private toast: ToastService
   ) {}
 
   setActive(field: 'email' | 'password') {
@@ -96,7 +97,7 @@ export class SigninPage {
     this.usernameError = '';
 
     if (!this.emailOrUsername || !this.password) {
-      return this.presentToast('Please fill all fields', 'warning');
+      return this.showToast('Please fill all fields', 'warning');
     }
 
     // ❌ USERNAME VALIDATION BLOCK
@@ -123,7 +124,7 @@ export class SigninPage {
       }
 
       // ✅ SUCCESS
-      this.presentToast('Signin successful', 'success');
+      this.showToast('Signin successful', 'success');
       this.router.navigate(['/tabs']);
 
     } catch (err: any) {
@@ -154,11 +155,18 @@ export class SigninPage {
       }
 
       // ❌ FALLBACK
-      this.presentToast('Signin failed', 'danger');
+      this.showToast('Signin failed', 'danger');
     }
   }
 
   goToSignup() {
     this.router.navigate(['/login']);
   }
+ showToast(
+  message: string,
+  color: 'success' | 'danger' | 'warning' | 'primary' = 'success'
+) {
+  this.toast.show(message, color);
+}
+
 }
