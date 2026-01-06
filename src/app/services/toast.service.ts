@@ -46,7 +46,7 @@ export class ToastService {
       }
 
       ion-toast.app-toast-warning {
-        --background: #16A34A
+        --background: #059669
 
 ;
       }

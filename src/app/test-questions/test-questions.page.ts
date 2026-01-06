@@ -159,6 +159,24 @@ applyAlertCSS(alert: HTMLIonAlertElement) {
       align-items: center !important;
       gap: 16px !important;
     }
+      .alert-wrapper {
+      text-align: center !important;
+    }
+         .alert-head::before {
+      content: '';
+      display: block;
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 12px auto;
+      background-image: url('assets/icon/warning.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+        .alert-title {
+      text-align: center !important;
+      font-weight: 700 !important;
+    }
 
     /* CANCEL BUTTON */
     .alert-button.cancel-btn {
@@ -227,67 +245,105 @@ private async showSummaryAlert() {
     }
   });
 
-  // Use non-breaking spaces for column alignment
+ 
   const summaryText =
-    'Attempted : ' + attempted + '\n' +
-    'Correct   : ✔ ' + right + '\n' +
-    'Wrong     : ✖ ' + wrong;
-
-  const alert = await this.alertCtrl.create({
-    header: 'Test Summary',
-    message: summaryText,
-    buttons: [
-      { text: 'CLOSE', role: 'cancel' },
-      {
-        text: 'VIEW MORE',
-        handler: () => {
-          this.router.navigate(
-            ['/tabs/progress'],
-            { queryParams: { score: right, total: this.questions.length } }
-          );
-        }
+     'Attempted : 🟡 ' + attempted + '\n' +
+    'Correct   : ✔️ ' + right + '\n' +
+    'Wrong     : ❌ ' + wrong;
+ const alert = await this.alertCtrl.create({
+  header: 'Test Summary',
+  message: summaryText,
+  cssClass: 'summary-alert',
+  buttons: [
+    { text: 'CLOSE', role: 'cancel' },
+    {
+      text: 'VIEW MORE',
+      handler: () => {
+        this.router.navigate(
+          ['/tabs/progress'],
+          { queryParams: { score: right, total: this.questions.length } }
+        );
       }
-    ]
-  });
+    }
+  ]
+});
 
-  await alert.present();
+await alert.present();
 
-  // Wait for alert to render
-  setTimeout(() => {
-    // 1️⃣ Format message text
-    const msgEl = document.querySelector('ion-alert .alert-message') as HTMLElement;
-    if (msgEl) {
-      msgEl.style.whiteSpace = 'pre';         // preserve line breaks
-      msgEl.style.fontFamily = 'monospace';  // fixed-width font for column alignment
-      msgEl.style.fontSize = '15px';
-      msgEl.style.lineHeight = '1.6';
+  this.injectSummaryStyles();
+}
+injectSummaryStyles() {
+
+  if (document.getElementById('summary-style')) return;
+
+  const style = document.createElement('style');
+  style.id = 'summary-style';
+
+  style.textContent = `
+    ion-alert.summary-alert {
+      --width: 320px;
+      --border-radius: 20px;
     }
 
-    // 2️⃣ Style buttons
-    document.querySelectorAll('ion-alert button').forEach(btn => {
-      const button = btn as HTMLButtonElement;
-      const text = button.textContent || '';
+    ion-alert.summary-alert .alert-wrapper {
+      border-radius: 20px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.25);
+      text-align: center;
+    }
 
-      if (text.includes('CLOSE')) {
-        button.style.border = '2px solid #dc2626';
-        button.style.color = '#dc2626';
-        button.style.background = 'transparent';
-        button.style.borderRadius = '10px';
-        button.style.padding = '8px 16px';
-        button.style.fontWeight = '600';
-      }
+    ion-alert.summary-alert .alert-title {
+      text-align: center;
+      font-weight: 700;
+    }
 
-      if (text.includes('VIEW')) {
-        button.style.background = '#16a34a';
-        button.style.color = 'white';
-        button.style.borderRadius = '10px';
-        button.style.padding = '8px 16px';
-        button.style.fontWeight = '600';
-      }
-    });
-  }, 50);
+    ion-alert.summary-alert .alert-message {
+      white-space: pre-line;
+      text-align: center;
+      font-size: 15px;
+      line-height: 1.8;
+      font-weight: 500;
+    }
+
+    ion-alert.summary-alert .alert-message span {
+      display: block;
+    }
+
+    ion-alert.summary-alert .alert-message {
+      color: #000;
+    }
+
+    ion-alert.summary-alert .alert-message::first-line {
+      color: #ca8a04;
+    }
+
+    ion-alert.summary-alert .alert-button-group {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      padding-top: 14px;
+    }
+
+    ion-alert.summary-alert .alert-button {
+      border-radius: 10px;
+      font-weight: 600;
+       
+      color: #dc2626;
+      background: transparent;
+    }
+        ======================= */
+    ion-alert.summary-alert .alert-button.alert-button-role-cancel {
+      border: 2px solid #dc2626;
+      color: #dc2626;
+      background: transparent;
+    }
+        ion-alert.summary-alert .alert-button:not(.alert-button-role-cancel) {
+      background: #16a34a;
+      color: #ffffff;
+    }
+  `;
+
+  document.head.appendChild(style);
 }
 
-
-
 }
+

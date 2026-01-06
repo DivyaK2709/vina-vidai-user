@@ -279,12 +279,12 @@ goNext() {
 }
 private async showPopup(message: string) {
 
-  const popupMessage =
-    '✔ ' + message;
+  const popupMessage = `✔️ ${message}`;
 
   const alert = await this.alertCtrl.create({
     header: 'Test Started',
     message: popupMessage,
+    cssClass: 'custom-test-popup',   // ✅ IMPORTANT
     buttons: [
       {
         text: 'OK',
@@ -296,24 +296,64 @@ private async showPopup(message: string) {
 
   await alert.present();
 
-  // 🔥 APPLY BUTTON UI (SAME STYLE LOGIC AS SUMMARY)
-  this.applyPopupCSS();
+  // ✅ Inject styles AFTER alert exists
+  this.injectPopupStyles();
 }
-applyPopupCSS() {
-  document.querySelectorAll('ion-alert button').forEach(btn => {
-    const button = btn as HTMLButtonElement;
-    const text = button.textContent || '';
+injectPopupStyles() {
 
-    if (text.includes('OK')) {
-      button.style.background = '#16a34a';
-      button.style.color = '#ffffff';
-      button.style.borderRadius = '10px';
-      button.style.padding = '8px 20px';
-      button.style.fontWeight = '600';
-      button.style.border = 'none';
+  // ❌ Prevent duplicate style injection
+  if (document.getElementById('custom-test-popup-style')) return;
+
+  const style = document.createElement('style');
+  style.id = 'custom-test-popup-style';
+
+  style.innerHTML = `
+    ion-alert.custom-test-popup {
+
+      --background: #ffffff;
+      --width: 320px;
+      --border-radius: 20px;
+      
     }
-  });
+
+    ion-alert.custom-test-popup .alert-wrapper {
+      border-radius: 20px;
+       box-shadow: 0 18px 40px green;
+    }
+
+    ion-alert.custom-test-popup .alert-title {
+      text-align: center;
+      font-weight: 700;
+    }
+
+    ion-alert.custom-test-popup .alert-message {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.6;
+      color: #16a34a;
+    }
+
+    ion-alert.custom-test-popup .alert-button-group {
+      display: flex;
+      justify-content: center;
+      padding-top: 12px;
+    }
+
+    ion-alert.custom-test-popup .alert-button {
+      background: #16a34a !important;
+      color: #ffffff !important;
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-weight: 200;
+      border: none;
+      min-width: 70px;
+    }
+  `;
+
+  document.head.appendChild(style);
 }
+
 
 goToProgress() {
   this.router.navigate(['/tabs/progress']);
