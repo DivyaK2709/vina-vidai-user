@@ -157,21 +157,32 @@ applyAlertCSS(alert: HTMLIonAlertElement) {
       display: flex !important;
       justify-content: center !important;
       align-items: center !important;
-      gap: 16px !important;
+      padding-bottom:0px
+      
     }
+      .alert-message{
+       margin-top: 0 !important;
+  padding-bottom: 0px!important;
+  line-height: 1.4;
+  }
       .alert-wrapper {
       text-align: center !important;
+       margin-top: 0 !important;     /* 🔥 removes extra gap */
+      padding-bottom: 0px;
+  line-height: 1.4;
     }
-         .alert-head::before {
+         .alert-head::after {
       content: '';
       display: block;
-      width: 48px;
-      height: 48px;
-      margin: 0 auto 12px auto;
+      width: 90px;
+      height: 90px;
+        margin: 0 auto 2px !important;
+        padding-bottom:0px;
       background-image: url('assets/icon/warning.png');
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
+      
     }
         .alert-title {
       text-align: center !important;
@@ -246,10 +257,14 @@ private async showSummaryAlert() {
   });
 
  
-  const summaryText =
-     'Attempted : 🟡 ' + attempted + '\n' +
-    'Correct   : ✔️ ' + right + '\n' +
-    'Wrong     : ❌ ' + wrong;
+const labelWidth = 14;   // 🔥 controls left column
+const valueWidth = 3;   // 🔥 controls number spacing
+
+const summaryText =
+  'Attempted'.padEnd(labelWidth) + ': ' + String(attempted).padEnd(valueWidth) + ' 🟡\n' +
+  'Correct'.padEnd(labelWidth)   + ': ' + String(right).padEnd(valueWidth)     + ' ✔️\n' +
+  'Wrong'.padEnd(labelWidth)     + ': ' + String(wrong).padEnd(valueWidth)     + ' ❌';
+
  const alert = await this.alertCtrl.create({
   header: 'Test Summary',
   message: summaryText,
@@ -302,6 +317,7 @@ injectSummaryStyles() {
       font-size: 15px;
       line-height: 1.8;
       font-weight: 500;
+      font-family: monospace !important;
     }
 
     ion-alert.summary-alert .alert-message span {

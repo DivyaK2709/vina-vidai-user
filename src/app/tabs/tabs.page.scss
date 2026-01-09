@@ -1,8 +1,13 @@
+
 :host {
-  display: block;
-  height: 100%;
-  background-color: #e6f2ff;
-  --ion-background-color: #e6f2ff;
+  --ion-background-color: linear-gradient(
+    180deg,
+    #dcfce7 0%,   /* soft mint green */
+    #bbf7d0 45%,  /* light fresh green */
+    #fef9c3 100%  /* soft warm yellow */
+  );
+    display: block;
+  height: 100%; 
 }
 
 ion-content {

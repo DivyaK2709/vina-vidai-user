@@ -318,7 +318,7 @@ injectPopupStyles() {
 
     ion-alert.custom-test-popup .alert-wrapper {
       border-radius: 20px;
-       box-shadow: 0 18px 40px green;
+       box-shadow:0 8px 20px rgba(34, 197, 94, 0.25);
     }
 
     ion-alert.custom-test-popup .alert-title {

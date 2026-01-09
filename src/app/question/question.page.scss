@@ -91,10 +91,30 @@ ion-content {
   --border-color: #10B981;
   --border-width: 2px;
   --border-style: solid;
-
+  width: 50px;
   border-radius: 8px;
   font-weight: 600;
   box-shadow: none;
+}
+.back-btn::part(native) {
+  background: transparent;
+  color: #202020;
+  border: 2px solid #202020;
+  border-radius: 8px;
+  font-weight: 600;
+  width: 110px;   /* ⬅️ reduce width */
+  height: 38px;       /* optional: reduce height */
+  padding: 0 12px;    /* controls inner spacing */
+  font-size: 13px;
+
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+.back-btn:hover::part(native),
+.back-btn:focus::part(native),
+.back-btn.ion-focused::part(native),
+.back-btn:active::part(native) {
+  color: #10B981;
+  border-color: #10B981;
 }
 
 

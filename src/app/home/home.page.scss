@@ -37,12 +37,7 @@ ion-card {
   z-index: 1;
   pointer-events: auto;
 }
-:host {
-  display: block;
-  height: 100%;
-   background: transparent !important;
-  
-}
+
 /* ===============================
    FORCE REMOVE IONIC BACKGROUND
    =============================== */
@@ -50,29 +45,30 @@ ion-card {
 /* ===============================
    SOFT GREEN CALM BACKGROUND
    =============================== */
-
-ion-app,
-ion-content,
-ion-content::part(background) {
-  --background: linear-gradient(
+/* ===============================
+   SOFT GREEN CALM BACKGROUND
+    display: block;
+  height: 100%; =============================== */
+:host {
+  --ion-background-color: linear-gradient(
     180deg,
-    #f0fdf4 0%,   /* very soft mint green */
-    #ecfdf5 40%,  /* light green */
-    #f7fee7 100%  /* pale green-yellow tint */
-  ) !important;
+    #dcfce7 0%,   /* soft mint green */
+    #bbf7d0 45%,  /* light fresh green */
+    #fef9c3 100%  /* soft warm yellow */
+  );
+    display: block;
+  height: 100%; 
+}
 
-  background: linear-gradient(
-    180deg,
-    #f0fdf4 0%,
-    #ecfdf5 40%,
-    #f7fee7 100%
-  ) !important;
+ion-content {
+  --ion-background-color: transparent;
 }
 
 /* Remove harsh contrast */
-:host {
-  background: transparent !important;
-}
+
+
+/* Remove harsh contrast */
+
 
 
 
