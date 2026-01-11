@@ -324,30 +324,47 @@ injectPopupStyles() {
     ion-alert.custom-test-popup .alert-title {
       text-align: center;
       font-weight: 700;
+      font-size: 18px;
     }
 
     ion-alert.custom-test-popup .alert-message {
-      text-align: center;
+     padding-top: 10px;
+    }
+       ion-alert.custom-test-popup .success-message {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
       font-size: 16px;
       font-weight: 500;
-      line-height: 1.6;
       color: #16a34a;
     }
 
-    ion-alert.custom-test-popup .alert-button-group {
+    ion-alert.custom-test-popup .success-message .tick {
+      font-size: 20px;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    ion-alert.custom-test-popup .success-message .text {
+      line-height: 1.6;
+    }
+   
+
+   
+      ion-alert.custom-test-popup .alert-button-group {
       display: flex;
       justify-content: center;
-      padding-top: 12px;
+      gap: 16px;
+      padding-top: 14px;
     }
 
     ion-alert.custom-test-popup .alert-button {
-      background: #16a34a !important;
+      border-radius: 10px;
+      font-weight: 600;
+       
+    background: #16a34a !important;
       color: #ffffff !important;
-      border-radius: 12px;
-      padding: 10px 20px;
-      font-weight: 200;
-      border: none;
-      min-width: 70px;
     }
   `;
 

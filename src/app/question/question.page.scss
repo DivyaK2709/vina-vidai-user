@@ -98,10 +98,10 @@ ion-content {
 }
 .back-btn::part(native) {
   background: transparent;
-  color: #202020;
-  border: 2px solid #202020;
+  color: gray;
+  border: 2px solid gray;
   border-radius: 8px;
-  font-weight: 600;
+  
   width: 110px;   /* ⬅️ reduce width */
   height: 38px;       /* optional: reduce height */
   padding: 0 12px;    /* controls inner spacing */

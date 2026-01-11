@@ -49,20 +49,61 @@ ion-card {
    SOFT GREEN CALM BACKGROUND
     display: block;
   height: 100%; =============================== */
+/* ===============================
+   DARK GREEN HEADER (NEW SHADE)
+   =============================== */
+
+ion-header.dark-header ion-toolbar {
+  --background: linear-gradient(
+    135deg,
+    #022c22 0%,    /* deep forest green */
+    #064e3b 50%,   /* emerald dark */
+    #052e2b 100%   /* rich dark green */
+  );
+
+  --color: #ffffff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+/* Header title */
+ion-header.dark-header ion-title {
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+
+/* Header icons */
+ion-header.dark-header ion-icon,
+ion-header.dark-header ion-button {
+  color: #ffffff;
+}
+/* ===============================
+   LIGHT GREEN PAGE BACKGROUND =============================== */
+  .home-title {
+  text-align: center;
+  width: 100%;
+}
+
+
 :host {
   --ion-background-color: linear-gradient(
     180deg,
-    #dcfce7 0%,   /* soft mint green */
-    #bbf7d0 45%,  /* light fresh green */
-    #fef9c3 100%  /* soft warm yellow */
+    #f0fdf4 0%,   /* light sage */
+    #dcfce7 50%,  /* pale green */
+    #ecfdf5 100% /* calm green */
   );
-    display: block;
-  height: 100%; 
+  display: block;
+  height: 100%;
 }
 
 ion-content {
-  --ion-background-color: transparent;
+  --background-color: #b7f3d0
+
+;
+
+
 }
+
 
 /* Remove harsh contrast */
 

@@ -2,18 +2,15 @@
 :host {
   --ion-background-color: linear-gradient(
     180deg,
-    #dcfce7 0%,   /* soft mint green */
-    #bbf7d0 45%,  /* light fresh green */
-    #fef9c3 100%  /* soft warm yellow */
+    #f0fdf4 0%,   /* light sage */
+    #dcfce7 50%,  /* pale green */
+    #ecfdf5 100% /* calm green */
   );
-    display: block;
-  height: 100%; 
+  display: block;
+  height: 100%;
 }
 
-ion-content {
-  --background: #e6f2ff;
-  background-color: #e6f2ff;
-}
+
 
 /* Common style for all icons */
 .progress-icon, .progress-icon-click,
