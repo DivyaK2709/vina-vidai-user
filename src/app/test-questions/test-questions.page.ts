@@ -252,6 +252,7 @@ private async showSummaryAlert() {
   let attempted = 0;
   let right = 0;
   let wrong = 0;
+  let unattempted = 0;
 
   this.questions.forEach(q => {
     if (q.selected) {
@@ -261,7 +262,11 @@ private async showSummaryAlert() {
       } else {
         wrong++;
       }
+      
     }
+    else {
+    unattempted++;
+  }
   });
 
  
@@ -272,9 +277,10 @@ const pad = (text: string, width: number) =>
   text + '\u00A0'.repeat(Math.max(0, width - text.length));
 
 const summaryText =
-  pad('Attempted', labelWidth) + ' : ' + pad(String(attempted), valueWidth) + ' 🟡\n' +
-  pad('Correct',   labelWidth) + ' : ' + pad(String(right),    valueWidth) + ' ✔️\n' +
-  pad('Wrong',     labelWidth) + ' : ' + pad(String(wrong),    valueWidth) + ' ❌';
+  pad('Attempted', labelWidth) +  ' : ' + pad(String(attempted), valueWidth) + ' 🟡\n' +
+  pad('Unattempted',labelWidth) + ' : ' + pad(String(unattempted), valueWidth) + ' 🔴\n' +
+  pad('Correct',   labelWidth) +  ' : ' + pad(String(right),    valueWidth) + ' ✔️\n' +
+  pad('Wrong',     labelWidth) +  ' : ' + pad(String(wrong),    valueWidth) + ' ❌';
  const alert = await this.alertCtrl.create({
   header: 'Test Summary',
   message: summaryText,
