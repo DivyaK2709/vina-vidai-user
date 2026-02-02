@@ -79,9 +79,10 @@
 </div>
 
 
-        <p *ngIf="password && !isPasswordValid()" class="error-msg">
-          Password must be at least 6 characters
-        </p>
+      <p *ngIf="password && !isPasswordValid()" class="error-msg">
+  Password must contain at least 6 characters, including a letter and a number
+</p>
+
 
         <!-- CONFIRM PASSWORD (REMOVED PASSWORD ICON) -->
  <div class="input-wrapper">

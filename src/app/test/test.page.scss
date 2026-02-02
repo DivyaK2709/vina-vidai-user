@@ -86,11 +86,11 @@ ion-segment-button ,ion-labe{
 
 .header-row,
 .data-row {
-  display: table-row;
+  display: flex;
   text-align: center ;
   align-items: center;
   align-content: center;
-  justify-content: center;
+  justify-content:space-between;
   align-items: center;
   justify-items: center;
 }
@@ -104,6 +104,7 @@ ion-segment-button ,ion-labe{
   justify-content: center;
   align-items: center;
   justify-items: center;
+  flex: 1;
 }
 
 .head {
@@ -193,13 +194,26 @@ ion-input input {
   align-items: center;
 }
 /* Start button text = white */
-.start-btn {
-  --background: green; /* button background */
-  color: white !important; /* button text */
-  font-weight: 600;
-  min-width: 120px;
-  margin-left: 560px;
+/* Wrapper → centers button */
+.start-btn-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
 }
+
+/* Start Test button */
+.start-test-btn {
+  --background: #16a34a;      /* light green */
+  --color: #ffffff;
+  --border-radius: 999px;     /* perfect round */
+  min-width: 140px;           /* 👈 SMALL button */
+  height: 40px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
 
 :host ::ng-deep .col ion-input input {
   text-align: center !important;
@@ -229,4 +243,94 @@ ion-input input {
     -ms-flex-direction: row;
     flex-direction: row;
     justify-content: center;
+}
+/* ================= MOBILE FIX ================= */
+@media (max-width: 480px) {
+
+  /* Convert whole table to stacked rows */
+  .table-3col {
+    display: block !important;
+    width: 100%;
+  }
+
+  /* Each data row becomes a card-like block */
+  .data-row {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px;
+    width: 100%;
+  }
+
+  /* Each column becomes a row */
+  .col {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+
+  /* 🔥 KEEP HEADER VISIBLE */
+  .header-row {
+    display: none !important; /* hide original header row */
+  }
+
+  /* Inject header labels using CSS only */
+  .data-row .col:nth-child(1)::before {
+    content: "Subject";
+  }
+
+  .data-row .col:nth-child(2)::before {
+    content: "Number of Questions";
+  }
+
+  .data-row .col:nth-child(3)::before {
+    content: "Time Duration";
+  }
+
+  /* Style injected headers */
+  .data-row .col::before {
+    font-size: 13px;
+    font-weight: 700;
+    color: #065f46;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  /* Inputs full width */
+  ion-select,
+  ion-input {
+    width: 100% !important;
+    max-width: 220px;
+    text-align: center;
+  }
+
+  /* 🔘 START BUTTON – small & centered */
+  .start-btn {
+    margin: 16px auto 0 auto !important;
+    min-width: 160px;
+    width: auto;
+    display: block;
+    border-radius: 20px;
+  }
+}
+
+/* FORCE visible text inside inputs & selects */
+.col ion-select::part(text),
+.col ion-input input {
+  color: #065f46 !important;   /* dark green */
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* Placeholder color */
+.col ion-select::part(placeholder),
+.col ion-input::part(placeholder) {
+  color: #047857 !important;
+  opacity: 1;
+}
+
+/* Dropdown arrow visibility */
+.col ion-select::part(icon) {
+  color: #065f46 !important;
 }

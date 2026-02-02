@@ -67,6 +67,7 @@
       autocomplete="new-password"
       (ionFocus)="setActive('password')"
       (ionBlur)="clearActive('password')"
+       (ionInput)="validatePassword()"
       placeholder="At least 6 characters">
     </ion-input>
   </ion-item>

@@ -44,6 +44,16 @@ export class SigninPage {
   togglePassword() {
     this.showPassword = !this.showPassword;
   }
+validatePassword() {
+  this.passwordError = '';
+
+  if (!this.password) return;
+
+  if (this.password.length < 6) {
+    this.passwordError = 'Password must be at least 6 characters';
+    return;
+  }
+}
 
   // ===========================
   // EMAIL / USERNAME VALIDATION
@@ -69,7 +79,7 @@ export class SigninPage {
       this.usernameError = 'Username does not accept numbers or symbols';
     }
   }
-
+   
   ionViewWillEnter() {
     this.emailOrUsername = '';
     this.password = '';

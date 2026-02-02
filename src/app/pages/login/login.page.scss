@@ -20,7 +20,7 @@
   max-width: 430px;
   background: #ffffff;
   border-radius: 14px;
-  padding: 26px;
+  padding: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   text-align: center;
 }
@@ -34,9 +34,13 @@
 .input-item {
   --background: #fff;
   border-radius: 10px;
-  margin: 8px 0 ;
-   --padding-top: 14px;
-  --padding-bottom: 10px;
+   display: flex;
+  align-items: center; 
+ --padding-start: 14px;
+  --padding-end: 46px;              /* space for icon */
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  margin: 8px 0;
   border: 1px solid #eee;
   overflow: visible !important;
 }
@@ -46,37 +50,47 @@
 
 /* Push label slightly up for clean spacing */
 .input-item ion-label {
-  margin-bottom: 12px;
+  margin-bottom: 2px;
+}
+.input-item ion-input {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
 }
 
 
-
 /* Icon inside field */
-.field-icon {
+.field-icon,
+ .eye-icon {
+ position: absolute;
+  right: 14px;
+
+  /* 🔥 REAL CENTER FIX */
+  top: 50%;
+  transform: translateY(-50%);
+
   width: 22px;
-  position: absolute;
-  right: 16px;
-  top: 18px;
-  z-index: 10;
-  pointer-events: none;
+  height: 22px;
+
+  z-index: 30;
 }
 
 .error-msg {
   color: #e53935;
+  margin: 4px 0 8px 6px;
   font-size: 12px;
-  margin: 6px 0 10px 6px;
 }
 
 .signup-button {
   --background: linear-gradient(90deg, #a8e063, #56ab2f);
   --color: #fff;
   border-radius: 10px;
-  height: 46px;
+  height: 44px;
   font-weight: 700;
 }
 
 .signup-button-wrapper {
-  margin-top: 18px;
+  margin-top: 14px;
 }
 
 .signin-text {
@@ -103,7 +117,15 @@ ion-input::-ms-reveal,
 ion-input::-ms-clear {
   display: none !important;
 }
-
+ion-input {
+  --padding-top: 6px;
+  --padding-bottom: 6px;
+}
+ion-item::part(native) {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  align-items: center !important;
+}
 
 /* Disable browser default password eye */
 input[type='password']::-ms-reveal,
@@ -113,11 +135,7 @@ input::-webkit-password-toggle {
   display: none !important;
 }
 .eye-icon {
-  width: 22px;
-  position: absolute;
-  right: 16px;
-  top: 18px;
-  z-index: 20;
+ pointer-events: auto;
   cursor: pointer;
 }
 

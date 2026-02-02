@@ -34,6 +34,7 @@ showConfirmPassword = false;
   };
 
   emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+   passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/;
 
   constructor(
     private firebaseService: FirebaseService,
@@ -53,14 +54,15 @@ showConfirmPassword = false;
         this.icons.email = this.emailPattern.test(value);
         break;
 
-      case 'password':
-        this.icons.password = value.length >= 6;
-        break;
+    case 'password':
+  this.icons.password = this.passwordPattern.test(value);
+  break;
 
-      case 'confirmPassword':
-        this.icons.confirmPassword =
-          value === this.password && value.length >= 6;
-        break;
+case 'confirmPassword':
+  this.icons.confirmPassword =
+    value === this.password && this.passwordPattern.test(value);
+  break;
+
     }
   }
   togglePassword() {
@@ -80,13 +82,17 @@ toggleConfirmPassword() {
     return this.emailPattern.test(this.email);
   }
 
-  isPasswordValid() {
-    return this.password.length >= 6;
-  }
+ isPasswordValid() {
+  return this.passwordPattern.test(this.password);
+}
+
 
   isConfirmPasswordValid() {
-    return this.password === this.confirmPassword && this.password.length >= 6;
-  }
+  return (
+    this.confirmPassword === this.password &&
+    this.passwordPattern.test(this.confirmPassword)
+  );
+}
 
   isFormValid() {
     return (
