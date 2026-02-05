@@ -19,5 +19,6 @@ export class TabsPage {
 
   onTabChange(event: any) {
     this.selectedTab = event.tab;
+    
   }
 }

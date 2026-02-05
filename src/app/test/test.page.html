@@ -7,8 +7,14 @@
 <ion-content class="ion-padding">
 
 <!-- SEGMENT CONTROL -->
-<div class="custom-segment">
-  <ion-segment [value]="selectedSegment" (ionChange)="onSegmentChange($event)">
+<!-- SEGMENT CONTROL -->
+<div class="pill-segment-wrapper">
+
+  <ion-segment
+    [value]="selectedSegment"
+    (ionChange)="onSegmentChange($event)"
+    class="pill-segment">
+
     <ion-segment-button value="history">
       <ion-label>History</ion-label>
     </ion-segment-button>
@@ -16,8 +22,11 @@
     <ion-segment-button value="series">
       <ion-label>Test Series</ion-label>
     </ion-segment-button>
+
   </ion-segment>
+
 </div>
+
 
 <!-- HISTORY SECTION -->
 <div *ngIf="selectedSegment==='history'" class="segment-section">

@@ -334,3 +334,77 @@ ion-input input {
 .col ion-select::part(icon) {
   color: #065f46 !important;
 }
+/* ===============================
+   CLEAN PILL SEGMENT — NO EXTRA BOX
+================================*/
+
+.pill-segment-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 12px 0;
+}
+
+/* OUTER BAR */
+.pill-segment {
+  background: #e5e7eb;
+  border-radius: 999px;
+  padding: 4px;
+  width: 92%;
+  max-width: 420px;
+
+  display: flex;
+}
+
+/* REMOVE DEFAULT IONIC SHADE */
+.pill-segment::part(indicator) {
+  display: none !important;
+}
+
+/* BUTTON BASE */
+.pill-segment ion-segment-button {
+  --background: transparent !important;
+  --indicator-color: transparent !important;
+
+  background: transparent !important;
+  box-shadow: none !important;
+
+  border-radius: 999px !important;
+
+  flex: 1;
+  min-height: 40px;
+
+  font-weight: 600;
+  color: #6b7280;
+
+  margin: 0;
+  padding: 0;
+}
+
+/* REMOVE INNER SHADED BOX */
+.pill-segment ion-segment-button::part(native) {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* ACTIVE ONLY */
+.pill-segment ion-segment-button.segment-button-checked {
+  background: #16a34a !important;
+}
+
+/* ACTIVE TEXT */
+.pill-segment ion-segment-button.segment-button-checked ion-label {
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+/* PRESS FEEDBACK */
+.pill-segment ion-segment-button:active::part(native) {
+  transform: scale(0.97);
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+  .pill-segment {
+    width: 95%;
+  }
+}

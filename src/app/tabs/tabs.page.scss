@@ -1,63 +1,159 @@
+/* ===================================== */
+/* ROOT FIXES */
+/* ===================================== */
 
-:host {
-  --ion-background-color: linear-gradient(
-    180deg,
-    #f0fdf4 0%,   /* light sage */
-    #dcfce7 50%,  /* pale green */
-    #ecfdf5 100% /* calm green */
-  );
-  display: block;
-  height: 100%;
+ion-tabs,
+ion-tab-bar,
+ion-router-outlet {
+  overflow: visible !important;
+}
+
+ion-content {
+  --padding-bottom: 130px;
+}
+
+/* ===================================== */
+/* FORCE REAL TAB BAR GREEN */
+/* ===================================== */
+
+ion-tab-bar::part(container) {
+  background-color: #bbf7d0 !important; /* contrast green */
+  border-top-left-radius: 22px;
+  border-top-right-radius: 22px;
+  box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.25);
+}
+
+/* ===================================== */
+/* TAB BAR */
+/* ===================================== */
+.green-tab-bar {
+  height: 78px;
+  overflow: visible !important;
 }
 
 
+/* ===================================== */
+/* TAB BUTTON BASE */
+/* ===================================== */
 
-/* Common style for all icons */
-.progress-icon, .progress-icon-click,
-.home-icon, .home-icon-click,
-.test-icon, .test-icon-click,
-.search-icon, .search-icon-click,
-.settings-icon, .settings-icon-click {
+ion-tab-button {
+  --background: transparent;
+  --ripple-color: transparent;
+
+  position: relative;
+  flex-direction: column;
+
+  background-color: #bbf7d0 ;
+  font-size: 11px;
+
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+/* ===================================== */
+/* ICON BASE */
+/* ===================================== */
+
+.tab-icon {
   width: 24px;
   height: 24px;
+
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+
+  transition: transform 0.3s ease;
 }
 
-/* Default icons */
-.progress-icon { background-image: url('/assets/icon/progress.png'); }
-.home-icon { background-image: url('/assets/icon/home.png'); }
-.test-icon { background-image: url('/assets/icon/test.png'); }
-.search-icon { background-image: url('/assets/icon/search.png'); }
-.settings-icon { background-image: url('/assets/icon/settings.png'); }
+/* ===================================== */
+/* 🔥 SELECTED TAB WHITE CURVE */
+/* ===================================== */
 
-/* Clicked icons */
-.progress-icon-click { background-image: url('/assets/icon/progress_click.png'); }
-.home-icon-click { background-image: url('/assets/icon/home_click.png'); }
-.test-icon-click { background-image: url('/assets/icon/test_click.png'); }
-.search-icon-click { background-image: url('/assets/icon/search_click.png'); }
-.settings-icon-click { background-image: url('/assets/icon/settings_click.png'); }
-
-.subject-card {
-  background: white;
-  padding: 16px;
-  margin: 10px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-/* Tab label inactive (default) */
-/* Normal label */
-.label-normal {
-  color: #6b6b6b;
-  font-size: 12px;
+ion-tab-button.tab-selected {
+  color: #16a34a;
+  z-index: 50;
 }
 
-/* Clicked label – SAME COLOR AS YOUR CLICKED ICON */
-.label-click {
-  color: #00E6C0;
-  font-size: 12px;
-  font-weight: 600;
+/* WHITE CURVED CUT-OUT */
+ion-tab-button.tab-selected::before {
+  content: '';
+  position: absolute;
+
+  left: 50%;
+  transform: translateX(-50%);
+
+  bottom:0px;
+ 
+  width: 96px;
+  height: 96px;
+
+  background: #ffffff;
+
+  border-radius: 50%;
+
+  /* EXTEND WHITE DOWN */
+  box-shadow:
+    0 -60px 0 0 #ffffff,
+    0 -90px 0 0 #ffffff;
+
+  z-index: -1;
 }
 
+/* LIFT ICON INTO CURVE */
+ion-tab-button.tab-selected .tab-icon {
+  transform: translateY(-14px);
+}
 
+/* LABEL */
+ion-label {
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+ion-tab-button.tab-selected ion-label {
+  margin-top: 6px;
+}
+
+/* ===================================== */
+/* ICON IMAGES */
+/* ===================================== */
+
+.test-icon {
+  background-image: url('/assets/icon/test.png');
+}
+
+.progress-icon {
+  background-image: url('/assets/icon/progress.png');
+}
+
+.home-icon {
+  background-image: url('/assets/icon/home.png');
+}
+
+.search-icon {
+  background-image: url('/assets/icon/search.png');
+}
+
+.settings-icon {
+  background-image: url('/assets/icon/settings.png');
+}
+
+/* ===================================== */
+/* MOBILE ADJUSTMENTS */
+/* ===================================== */
+
+@media (max-width: 480px) {
+  .green-tab-bar {
+    height: 72px;
+  }
+
+  ion-tab-button.tab-selected::before {
+    width: 80px;
+    height: 80px;
+    bottom: 28px;
+  }
+
+  ion-tab-button.tab-selected .tab-icon {
+    transform: translateY(-10px);
+  }
+}
