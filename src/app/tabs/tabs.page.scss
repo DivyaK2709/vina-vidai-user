@@ -17,7 +17,7 @@ ion-content {
 /* ===================================== */
 
 ion-tab-bar::part(container) {
-  background-color: #bbf7d0 !important; /* contrast green */
+  background-color: #bbf7d0 !important;
   border-top-left-radius: 22px;
   border-top-right-radius: 22px;
   box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.25);
@@ -26,11 +26,11 @@ ion-tab-bar::part(container) {
 /* ===================================== */
 /* TAB BAR */
 /* ===================================== */
+
 .green-tab-bar {
   height: 78px;
   overflow: visible !important;
 }
-
 
 /* ===================================== */
 /* TAB BUTTON BASE */
@@ -43,7 +43,7 @@ ion-tab-button {
   position: relative;
   flex-direction: column;
 
-  background-color: #bbf7d0 ;
+  background-color: #bbf7d0;
   font-size: 11px;
 
   z-index: 1;
@@ -62,57 +62,25 @@ ion-tab-button {
   background-repeat: no-repeat;
   background-position: center;
 
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, width 0.3s ease,
+    height 0.3s ease;
 }
 
 /* ===================================== */
-/* 🔥 SELECTED TAB WHITE CURVE */
+/* SELECTED FLOAT OUTSIDE */
 /* ===================================== */
 
-ion-tab-button.tab-selected {
-  color: #16a34a;
-  z-index: 50;
-}
 
-/* WHITE CURVED CUT-OUT */
-ion-tab-button.tab-selected::before {
-  content: '';
-  position: absolute;
-
-  left: 50%;
-  transform: translateX(-50%);
-
-  bottom:0px;
- 
-  width: 96px;
-  height: 96px;
-
-  background: #ffffff;
-
-  border-radius: 50%;
-
-  /* EXTEND WHITE DOWN */
-  box-shadow:
-    0 -60px 0 0 #ffffff,
-    0 -90px 0 0 #ffffff;
-
-  z-index: -1;
-}
-
-/* LIFT ICON INTO CURVE */
-ion-tab-button.tab-selected .tab-icon {
-  transform: translateY(-14px);
-}
-
+/* ===================================== */
 /* LABEL */
+/* ===================================== */
+
 ion-label {
   margin-top: 4px;
   font-weight: 500;
 }
 
-ion-tab-button.tab-selected ion-label {
-  margin-top: 6px;
-}
+
 
 /* ===================================== */
 /* ICON IMAGES */
@@ -139,7 +107,31 @@ ion-tab-button.tab-selected ion-label {
 }
 
 /* ===================================== */
-/* MOBILE ADJUSTMENTS */
+/* ACTIVE ICON IMAGE FOR ALL TABS */
+/* ===================================== */
+
+ion-tab-button.tab-selected .test-icon {
+  background-image: url('/assets/icon/test_click.png');
+}
+
+ion-tab-button.tab-selected .progress-icon {
+  background-image: url('/assets/icon/progress_click.png');
+}
+
+ion-tab-button.tab-selected .home-icon {
+  background-image: url('/assets/icon/home_click.png');
+}
+
+ion-tab-button.tab-selected .search-icon {
+  background-image: url('/assets/icon/search_click.png');
+}
+
+ion-tab-button.tab-selected .settings-icon {
+  background-image: url('/assets/icon/settings_click.png');
+}
+
+/* ===================================== */
+/* MOBILE */
 /* ===================================== */
 
 @media (max-width: 480px) {
@@ -147,13 +139,5 @@ ion-tab-button.tab-selected ion-label {
     height: 72px;
   }
 
-  ion-tab-button.tab-selected::before {
-    width: 80px;
-    height: 80px;
-    bottom: 28px;
-  }
-
-  ion-tab-button.tab-selected .tab-icon {
-    transform: translateY(-10px);
-  }
+  
 }
