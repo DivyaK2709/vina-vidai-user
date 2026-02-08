@@ -1,5 +1,6 @@
 .progress-page {
-  --background: linear-gradient(180deg, #0f766e, #023030); 
+  --background: linear-gradient(180deg, #bbf7d0, #86efac);
+
 
   .summary {
     display: flex;
@@ -19,8 +20,8 @@
 
         ion-segment-button {
           --background: transparent;
-          --color: #e0f7f5;        /* inactive tab text */
-          --color-checked: #ffffff; /* active tab text */
+          --color: black;        /* inactive tab text */
+          --color-checked: #16a34a; /* active tab text */
           --indicator-color: #00c9a7; /* accent teal */
           font-weight: 600;
           text-transform: uppercase;

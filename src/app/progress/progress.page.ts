@@ -1,206 +1,267 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  Injector,
+  runInInjectionContext
+} from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { NgChartsModule } from 'ng2-charts';
 
-import { Firestore, doc, getDoc } from '@angular/fire/firestore';
-import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
+import {
+  Firestore,
+  collection,
+  getDocs
+} from '@angular/fire/firestore';
+
+import {
+  Auth,
+  authState
+} from '@angular/fire/auth';
 
 @Component({
   selector: 'app-progress',
   standalone: true,
-  imports: [CommonModule, IonicModule, FormsModule, NgChartsModule],
+  imports: [
+    CommonModule,
+    IonicModule,
+    FormsModule,
+    NgChartsModule
+  ],
   templateUrl: './progress.page.html',
-  styleUrls: ['./progress.page.scss'],
+  styleUrls: ['./progress.page.scss']
 })
 export class ProgressPage implements OnInit {
+
+  // --------------------------------------------------
+  private firestore = inject(Firestore);
+  private auth = inject(Auth);
+  private injector = inject(Injector);
+
   segment: 'daily' | 'weekly' | 'subjects' = 'daily';
 
   uid: string | null = null;
-  userDocData: any = null;
 
-  // --- Daily chart ---
-  dailyLabels: string[] = [];
-  dailyDataSet = [{ 
-    data: [] as number[], 
-    label: 'Daily Points x2', 
-    backgroundColor: '#00c9a7' 
-  }];
-  dailyChartData: any = { labels: this.dailyLabels, datasets: this.dailyDataSet };
-  dailyOptions: any = {
-    responsive: true,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { grid: { display: false } },
-      y: { beginAtZero: true, ticks: { stepSize: 2 } } // adjust step size if needed
-    }
-  };
+  totalPoints = 0;
+  lastUpdated = '';
 
-  // --- Weekly chart ---
-  weeklyLabels: string[] = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  weeklyDataSet = [{ 
-    data: [] as number[], 
-    label: 'Weekly Points x2', 
-    fill: true,
-    backgroundColor: 'rgba(0,201,167,0.2)', 
-    borderColor: '#00c9a7', 
-    borderWidth: 2 
-  }];
-  weeklyChartData: any = { labels: this.weeklyLabels, datasets: this.weeklyDataSet };
-  weeklyOptions: any = {
-    responsive: true,
-    elements: { line: { tension: 0,  fill: true } },
-    scales: { x: { grid: { display: false } }, y: { beginAtZero: true, ticks: { stepSize: 2 } } },
-    plugins: { legend: { display: false } }
-  };
+  subjectColors = [
+    '#00c9a7',
+    '#ff6384',
+    '#36a2eb',
+    '#ffcd56',
+    '#9966ff',
+    '#ff9f40',
+    '#8c564b'
+  ];
 
-  // --- Subject pie chart ---
-  subjectLabels: string[] = [];
-  subjectData: number[] = [];
-  subjectColors: string[] = ['#00c9a7','#ff6384','#36a2eb','#ffcd56','#9966ff','#ff9f40','#8c564b'];
-  subjectChartData: any = { labels: this.subjectLabels, datasets: [{ data: this.subjectData, backgroundColor: this.subjectColors }] };
-  subjectOptions: any = { responsive: true, plugins: { legend: { position: 'bottom' } } };
+  dailyChartData: any = { labels: [], datasets: [] };
+  weeklyChartData: any = { labels: [], datasets: [] };
+  subjectChartData: any = { labels: [], datasets: [] };
 
-  totalPoints: number = 0;
-  lastUpdated: string = '';
+  weeklyLabels = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+   // ================= CHART OPTIONS =================
 
-  constructor(private firestore: Firestore, private auth: Auth) {}
+dailyOptions: any = {
+  responsive: true,
+  plugins: {
+    legend: { position: 'bottom' }
+  }
+};
 
-  ngOnInit(): void {
-    const currentUser = this.auth.currentUser;
-    if (currentUser) {
-      this.uid = currentUser.uid;
-      this.loadUserProgress();
-    } else {
-      onAuthStateChanged(this.auth, (user: User | null) => {
-        if (user) {
-          this.uid = user.uid;
-          this.loadUserProgress();
+weeklyOptions: any = {
+  responsive: true,
+  plugins: { legend: { display: false } },
+  scales: {
+    x: { grid: { display: false } },
+    y: { beginAtZero: true }
+  }
+};
+
+subjectOptions: any = {
+  responsive: true,
+  plugins: {
+    legend: { position: 'bottom' }
+  }
+};
+
+  // --------------------------------------------------
+  ngOnInit() {
+
+    // 🔐 Everything Firebase inside injection context
+    runInInjectionContext(this.injector, () => {
+
+      authState(this.auth).subscribe(user => {
+
+        if (!user) {
+          console.warn('❌ User not logged in');
+          return;
         }
+
+        this.uid = user.uid;
+
+        // 🔐 Call loader inside same context
+        this.loadProgressSafe();
+
       });
-    }
+
+    });
   }
 
-  private async loadUserProgress() {
+  // --------------------------------------------------
+  private loadProgressSafe() {
+
+    runInInjectionContext(this.injector, async () => {
+      await this.loadProgress();
+    });
+
+  }
+
+  // --------------------------------------------------
+ private async loadProgress() {
+
   if (!this.uid) return;
 
   try {
-    const docRef = doc(this.firestore, 'users', this.uid);
-    const snap = await getDoc(docRef);
 
-    if (!snap.exists()) return;
+    console.log('📡 UID =', this.uid);
 
-    const data = snap.data() as any;
-    this.userDocData = data;
+    // ✅ CORRECT PATH
+    const attemptsRef = collection(
+      this.firestore,
+      `users/${this.uid}/testProgress`
+    );
 
-    // Total points & last updated
-    this.totalPoints = data.points ?? 0;
-    this.lastUpdated = data.date?.toDate
-      ? data.date.toDate().toLocaleString()
-      : new Date().toLocaleString();
+    const snap = await getDocs(attemptsRef);
 
-    // --- Daily chart ---
-// --- Daily chart ---
-let dailyObj: any = {};
-if (typeof data.daily === 'string') {
-  dailyObj = safeParse(data.daily);
-} else {
-  dailyObj = data.daily || {};
-}
+    const allAttempts: any[] = [];
 
-// Sort keys as real dates
-const sortedKeys = Object.keys(dailyObj).sort(
-  (a, b) => new Date(a).getTime() - new Date(b).getTime()
-);
+    snap.forEach(d => {
+      allAttempts.push(d.data());
+    });
 
-// ✅ Directly use Firestore keys as x-axis labels
-this.dailyLabels = sortedKeys.map(dateStr => {
-  const dt = new Date(dateStr);
-  return dt.toLocaleDateString('en-US', { day: '2-digit', month: 'short' });
-});
+    console.log('📦 ATTEMPTS FOUND:', allAttempts);
 
-
-// Set dataset values
-this.dailyDataSet[0].data = sortedKeys.map(k => (Number(dailyObj[k]) || 0) );
-
-// Assign to chart
-this.dailyChartData = {
-  labels: [...this.dailyLabels],
-  datasets: [...this.dailyDataSet]
-};
-
-function safeParse(str: string): any {
-  try {
-    const fixed = str
-      .replace(/(\w+):/g, '"$1":')   // add quotes around keys
-      .replace(/,}/g, '}')           // remove trailing commas
-      .replace(/,]/g, ']');          // remove trailing commas
-    return JSON.parse(fixed);
-  } catch (err) {
-    console.error("❌ Failed to parse:", err, "Input:", str);
-    return {};
-  }
-}
-
-
-
-    // --- Weekly chart ---
-   // --- Weekly chart ---
-let weeklyObj: any = {};
-try {
-  if (typeof data.weekly === 'string') {
-    weeklyObj = JSON.parse(data.weekly);   // parse Firestore string
-  } else {
-    weeklyObj = data.weekly || {};
-  }
-} catch (err) {
-  console.error('Failed to parse weekly:', err);
-  weeklyObj = {};
-}
-
-this.weeklyLabels = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-
-// Fill chart dataset
-this.weeklyDataSet[0].data = this.weeklyLabels.map(day =>
-  Number(weeklyObj[day]) ? Number(weeklyObj[day]) : 0
-);
-
-// Force chart refresh
-this.weeklyChartData = {
-  labels: [...this.weeklyLabels],
-  datasets: JSON.parse(JSON.stringify(this.weeklyDataSet))  // deep copy so chart updates
-};
-
-
-
-    // --- Subject chart ---
-    let subjObj: any = {};
-    try {
-      subjObj = JSON.parse(data.subjects); // 👈 Parse string
-    } catch {
-      subjObj = {};
+    if (!allAttempts.length) {
+      console.warn('❌ No progress data found');
+      return;
     }
 
-    this.subjectLabels = Object.keys(subjObj);
-    this.subjectData = this.subjectLabels.map(s => Number(subjObj[s]) || 0);
+    // ================= TOTAL =================
+    this.totalPoints = allAttempts.reduce(
+      (s, a) => s + (a.score || 0),
+      0
+    );
+
+    // ================= LAST UPDATED =================
+    const latest = allAttempts
+      .filter(a => a.timestamp)
+      .sort(
+        (a, b) =>
+          b.timestamp.toDate().getTime() -
+          a.timestamp.toDate().getTime()
+      )[0];
+
+    this.lastUpdated =
+      latest?.timestamp
+        ?.toDate()
+        .toLocaleDateString() || '';
+
+    // ================= DAILY =================
+    const todayStr = new Date().toDateString();
+
+    const dailyMap: any = {};
+
+    allAttempts.forEach(a => {
+
+      if (!a.timestamp || !a.subject) return;
+
+      const d = a.timestamp.toDate().toDateString();
+
+      if (d === todayStr) {
+        dailyMap[a.subject] =
+          (dailyMap[a.subject] || 0) + a.score;
+      }
+    });
+
+    this.dailyChartData = {
+      labels: Object.keys(dailyMap),
+      datasets: [{
+        data: Object.values(dailyMap),
+        backgroundColor: this.subjectColors
+      }]
+    };
+
+    // ================= WEEKLY =================
+    const weeklyMap: any = {
+      Mon:0, Tue:0, Wed:0,
+      Thu:0, Fri:0, Sat:0, Sun:0
+    };
+
+    allAttempts.forEach(a => {
+
+      if (!a.timestamp) return;
+
+      const day =
+        a.timestamp
+          .toDate()
+          .toLocaleDateString('en-US', {
+            weekday: 'short'
+          });
+
+      weeklyMap[day] =
+        (weeklyMap[day] || 0) + a.score;
+    });
+
+    this.weeklyChartData = {
+      labels: [...this.weeklyLabels],
+      datasets: [{
+        data: this.weeklyLabels.map(
+          d => weeklyMap[d]
+        ),
+        label: 'Weekly Score',
+        backgroundColor: '#00c9a7'
+      }]
+    };
+
+    // ================= SUBJECT =================
+    const subjectMap: any = {};
+
+    allAttempts.forEach(a => {
+
+      if (!a.subject) return;
+
+      subjectMap[a.subject] =
+        (subjectMap[a.subject] || 0) + a.score;
+    });
+
+    const sLabels = Object.keys(subjectMap);
 
     this.subjectChartData = {
-      labels: [...this.subjectLabels],
+      labels: sLabels,
       datasets: [{
-        data: [...this.subjectData],
-        backgroundColor: this.subjectLabels.map(
-          (_, i) => this.subjectColors[i % this.subjectColors.length]
+        data: sLabels.map(l => subjectMap[l]),
+        backgroundColor: sLabels.map(
+          (_, i) =>
+            this.subjectColors[
+              i % this.subjectColors.length
+            ]
         )
       }]
     };
 
   } catch (err) {
-    console.error('❌ Failed to load user progress:', err);
+    console.error('🔥 Firestore load failed:', err);
   }
 }
 
-  setSegment(s: 'daily' | 'weekly' | 'subjects') {
-    this.segment = s;
+
+  // --------------------------------------------------
+  setSegment(v: 'daily' | 'weekly' | 'subjects') {
+    this.segment = v;
   }
+
 }

@@ -4,6 +4,7 @@ import { IonicModule, AlertController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ToastService } from '../services/toast.service';
+import { ProgressService } from '../services/progress.service';
 
 @Component({
   selector: 'app-test-questions',
@@ -31,7 +32,8 @@ export class TestQuestionsPage implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private alertCtrl: AlertController,
     private router: Router,
-    private toast: ToastService
+    private toast: ToastService,
+    private progressService: ProgressService 
   ) {}
 
   // ======================
@@ -268,7 +270,21 @@ private async showSummaryAlert() {
     unattempted++;
   }
   });
+  const subject = this.meta.subject || 'Unknown';
+  const totalQuestions = this.questions.length;
+  const durationSeconds = this.meta.timeSeconds || 0;
 
+  // 🔥 SAVE TO FIRESTORE
+  await this.progressService.saveTestProgress({
+    subject,
+    attempted,
+    unattempted,
+    correct: right,
+    wrong,
+    totalQuestions,
+    durationSeconds,
+    score: right
+  });
  
 const labelWidth = 10;   // 🔥 controls left column
 const valueWidth = 3;   // 🔥 controls number spacing

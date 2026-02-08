@@ -43,7 +43,7 @@ ion-tab-button {
   position: relative;
   flex-direction: column;
 
-  background-color: #bbf7d0;
+  
   font-size: 11px;
 
   z-index: 1;
@@ -133,6 +133,19 @@ ion-tab-button.tab-selected .settings-icon {
 /* ===================================== */
 /* MOBILE */
 /* ===================================== */
+/* ===================================== */
+/* TEXT COLOR CONTROL */
+/* ===================================== */
+
+/* Default (unselected) */
+ion-tab-button ion-label {
+  color: #C9C9C9 !important;
+}
+
+/* Selected */
+ion-tab-button.tab-selected ion-label {
+  color: #16a34a !important;
+}
 
 @media (max-width: 480px) {
   .green-tab-bar {
