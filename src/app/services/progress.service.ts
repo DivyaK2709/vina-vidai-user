@@ -12,20 +12,27 @@ export class ProgressService {
     private auth: Auth
   ) {}
 
-  async saveTestProgress(data: any) {
+ async saveTestProgress(data: any) {
 
-    const user = this.auth.currentUser;
-
-    if (!user) throw new Error('User not logged in');
-
-    const ref = collection(
-      this.firestore,
-      `users/${user.uid}/testProgress`
-    );
-
-    return addDoc(ref, {
-      ...data,
-      timestamp: new Date()
+  const user = await new Promise<any>((resolve) => {
+    const unsub = this.auth.onAuthStateChanged(u => {
+      unsub();
+      resolve(u);
     });
+  });
+
+  if (!user) {
+    console.error("User not logged in");
+    return;
   }
-}
+
+  const ref = collection(
+    this.firestore,
+    `users/${user.uid}/testProgress`
+  );
+
+  return addDoc(ref, {
+    ...data,
+    timestamp: new Date()
+  });
+}}

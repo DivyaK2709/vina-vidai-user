@@ -32,7 +32,7 @@ export class SigninPage {
     private toastCtrl: ToastController,
     private toast: ToastService
   ) {}
-
+  
   setActive(field: 'email' | 'password') {
     this.activeField = field;
   }

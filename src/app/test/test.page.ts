@@ -130,12 +130,13 @@ private async fetchQuestionsBySubject(subject: string, limit: number): Promise<a
     const ref = collection(this.firestore, 'questions');
 
     // 1) Try exact match fields
-    const fieldsToTry = [
-      'subject',
-      'Subject',
-      'subjectName',
-      'subject name'
-    ];
+  const fieldsToTry = [
+  'subject',
+  'subject_name',
+  'Subject',
+  'subjectName',
+  'subject name'
+];
 
     let items: any[] = [];
 
@@ -155,8 +156,14 @@ private async fetchQuestionsBySubject(subject: string, limit: number): Promise<a
       const snap = await getDocs(ref);
       snap.forEach(doc => {
         const d: any = doc.data();
-        const sub = (d.subject || d.Subject || d.subjectName || d["subject name"] || '').toLowerCase();
-        if (sub === subject.toLowerCase()) {
+      const sub = (
+  d.subject ||
+  d.subject_name ||
+  d.Subject ||
+  d.subjectName ||
+  d["subject name"] ||
+  ''
+).toLowerCase();        if (sub === subject.toLowerCase()) {
           items.push({ id: doc.id, ...doc.data() });
         }
       });
