@@ -2,100 +2,93 @@
   <div class="signin-container">
     <div class="signin-card">
 
-      <h1 class="logo">QUIZER</h1>
+      <div class="logo-wrapper">
+        <span class="logo">QUIZER</span>
+      </div>
       <h2 class="title">Welcome Back</h2>
-      <p class="subtitle">Login using Username or Email</p>
+      <p class="subtitle">Sign in with your email or username</p>
 
-      <form
-        #signinForm="ngForm"
-        (ngSubmit)="onSignIn()"
-        autocomplete="off"
-        id="disable-autofill"
-        novalidate>
+      <form #signinForm="ngForm" (ngSubmit)="onSignIn()" autocomplete="off" novalidate>
 
-        <!-- Hidden autofill breakers -->
+        <!-- Autofill breakers -->
         <input type="text" style="display:none" autocomplete="off">
         <input type="password" style="display:none" autocomplete="new-password">
 
-        <!-- EMAIL FIELD -->
+        <!-- EMAIL / USERNAME -->
         <div class="input-wrapper">
-          <ion-item
-            class="input-item"
-            lines="none"
-            [class.active-label]="activeField==='email'">
-
-            <ion-label position="floating">Email or Username</ion-label>
-
+          <ion-item lines="none" class="input-item"
+            [class.valid-item]="emailOrUsername && !usernameError"
+            [class.error-item]="usernameError">
+            <ion-icon slot="start" name="person-outline" class="inline-icon"></ion-icon>
             <ion-input
               type="text"
               [(ngModel)]="emailOrUsername"
               name="emailOrUsername"
               required
               autocomplete="off"
+              placeholder="Email or Username"
               (ionFocus)="setActive('email')"
               (ionBlur)="clearActive('email')"
-              (ionInput)="validateEmailOrUsername()"
-              placeholder="john@example.com or johnsmith">
+              (ionInput)="validateEmailOrUsername()">
             </ion-input>
+            <ion-icon slot="end" *ngIf="emailOrUsername"
+              [name]="usernameError ? 'close-circle' : 'checkmark-circle'"
+              [color]="usernameError ? 'danger' : 'success'"
+              class="status-icon">
+            </ion-icon>
           </ion-item>
           <p *ngIf="usernameError" class="error-msg">
-  {{ usernameError }}
-</p>
-
-
-          <img
-            class="field-icon"
-            [src]="isEmailValid ? 'assets/icon/email_click.png' : 'assets/icon/email.png'">
+            <ion-icon name="alert-circle-outline"></ion-icon>{{ usernameError }}
+          </p>
         </div>
 
-        <!-- PASSWORD FIELD -->
-       <!-- PASSWORD FIELD -->
-<div class="input-wrapper">
-  <ion-item
-    class="input-item"
-    lines="none"
-    [class.active-label]="activeField==='password'">
-
-    <ion-label position="floating">Password</ion-label>
-
-    <ion-input
-      [type]="showPassword ? 'text' : 'password'"
-      [(ngModel)]="password"
-      name="password"
-      required
-      minlength="6"
-      autocomplete="new-password"
-      (ionFocus)="setActive('password')"
-      (ionBlur)="clearActive('password')"
-       (ionInput)="validatePassword()"
-      placeholder="At least 6 characters">
-    </ion-input>
-  </ion-item>
-
-  <!-- CUSTOM EYE ICON -->
-  <img
-    class="eye-icon"
-    [src]="showPassword ? 'assets/icon/password_click.png' : 'assets/icon/password.png'"
-    (click)="togglePassword()">
-</div>
-
-
-        <p *ngIf="passwordError" class="error-msg">
-  {{ passwordError }}
-</p>
-
-
-        <div class="signin-button-wrapper">
-          <ion-button expand="block" class="signin-button" type="submit" [disabled]="!signinForm.valid">
-            Sign In
-          </ion-button>
+        <!-- PASSWORD -->
+        <div class="input-wrapper">
+          <ion-item lines="none" class="input-item"
+            [class.valid-item]="password && !passwordError"
+            [class.error-item]="passwordError">
+            <ion-icon slot="start" name="lock-closed-outline" class="inline-icon"></ion-icon>
+            <ion-input
+              [type]="showPassword ? 'text' : 'password'"
+              [(ngModel)]="password"
+              name="password"
+              required
+              minlength="6"
+              autocomplete="new-password"
+              placeholder="Password"
+              (ionFocus)="setActive('password')"
+              (ionBlur)="clearActive('password')"
+              (ionInput)="validatePassword()">
+            </ion-input>
+            <ion-icon slot="end" class="eye-toggle"
+              [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
+              (click)="togglePassword()">
+            </ion-icon>
+          </ion-item>
+          <p *ngIf="passwordError" class="error-msg">
+            <ion-icon name="alert-circle-outline"></ion-icon>{{ passwordError }}
+          </p>
         </div>
+
+        <!-- FORGOT PASSWORD -->
+        <div class="forgot-row">
+          <span class="forgot-text" (click)="goToForgotPassword()">Forgot password?</span>
+        </div>
+
+        <!-- SUBMIT -->
+        <ion-button expand="block" class="signin-button" type="submit"
+          [disabled]="!signinForm.valid || isLoading">
+          <ion-spinner *ngIf="isLoading" name="crescent" slot="start"></ion-spinner>
+          {{ isLoading ? 'Signing in...' : 'Sign In' }}
+        </ion-button>
 
       </form>
 
+      <div class="divider"><span>or</span></div>
+
       <div class="signup-link">
-        <ion-text>Don't have an account?</ion-text>
-        <ion-text class="signup-text" (click)="goToSignup()"> Create an account</ion-text>
+        Don't have an account?
+        <span class="signup-text" (click)="goToSignup()">Create one</span>
       </div>
 
     </div>

@@ -1,58 +1,103 @@
+<ion-header class="question-header">
+  <ion-toolbar>
+    <ion-title>Quiz Setup</ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content class="center-content" fullscreen>
   <div class="card-wrapper">
 
+    <!-- PROGRESS DOTS -->
+    <div class="step-indicator">
+      <div class="step-dot" [class.active]="step >= 1" [class.done]="step > 1">
+        <ion-icon *ngIf="step > 1" name="checkmark"></ion-icon>
+        <span *ngIf="step <= 1">1</span>
+      </div>
+      <div class="step-line" [class.active]="step > 1"></div>
+      <div class="step-dot" [class.active]="step >= 2">
+        <span>2</span>
+      </div>
+    </div>
+
     <!-- STEP 1 -->
-    <div *ngIf="step === 1" class="card">
-      <h2 class="quiz-title">Step 1</h2>
+    <div *ngIf="step === 1" class="card animate-in">
+      <div class="card-icon">
+        <ion-icon name="help-circle-outline"></ion-icon>
+      </div>
+      <h2 class="quiz-title">Questions</h2>
       <p class="quiz-subtitle">How many questions do you want to attempt?</p>
+
+      <!-- QUICK SELECT CHIPS -->
+      <div class="chip-row">
+        <span class="chip" *ngFor="let n of quickCounts"
+          [class.selected]="numQuestions === n"
+          (click)="numQuestions = n">
+          {{ n }}
+        </span>
+      </div>
+
+      <div class="divider-text">or enter manually</div>
 
       <ion-item class="no-bg-item">
         <ion-input
           type="number"
-          placeholder="Enter number"
-          [(ngModel)]="numQuestions">
+          placeholder="e.g. 15"
+          [(ngModel)]="numQuestions"
+          min="1" max="100">
         </ion-input>
       </ion-item>
 
+      <p class="hint" *ngIf="numQuestions && numQuestions > 100" class="error-hint">
+        Max 100 questions allowed
+      </p>
+
       <div class="button-row single">
-        <ion-button class="green-btn small-btn"
-                    (click)="nextStep()"
-                    [disabled]="!numQuestions">
-          Next →
+        <ion-button class="primary-btn" expand="block"
+          (click)="nextStep()"
+          [disabled]="!numQuestions || numQuestions < 1 || numQuestions > 100">
+          Continue
+          <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
         </ion-button>
       </div>
     </div>
 
     <!-- STEP 2 -->
-    <div *ngIf="step === 2" class="card">
-      <h2 class="quiz-title">Step 2</h2>
-      <p class="quiz-subtitle">How much time do you want?</p>
+    <div *ngIf="step === 2" class="card animate-in">
+      <div class="card-icon">
+        <ion-icon name="timer-outline"></ion-icon>
+      </div>
+      <h2 class="quiz-title">Time Limit</h2>
+      <p class="quiz-subtitle">Select how much time you want for the quiz</p>
 
-      <ion-item class="no-bg-item">
-        <ion-select
-          placeholder="Select duration"
-          [(ngModel)]="timeSelected">
-          <ion-select-option value="1">10 minutes</ion-select-option>
-          <ion-select-option value="2">20 minutes</ion-select-option>
-          <ion-select-option value="3">30 minutes</ion-select-option>
-          <ion-select-option value="4">10 minutes 5 seconds</ion-select-option>
-          <ion-select-option value="5">10 minutes 10 seconds</ion-select-option>
-        </ion-select>
-      </ion-item>
+      <!-- TIME OPTION CARDS -->
+      <div class="time-options">
+        <div class="time-card"
+          *ngFor="let opt of timeOptions"
+          [class.selected]="timeSelected === opt.value"
+          (click)="timeSelected = opt.value">
+          <ion-icon [name]="opt.icon"></ion-icon>
+          <span class="time-label">{{ opt.label }}</span>
+          <span class="time-sub">{{ opt.sub }}</span>
+        </div>
+      </div>
 
-      <!-- 🔥 BACK + START IN SAME ROW -->
       <div class="button-row">
-        <ion-button class="green-btn back-btn small-btn"
-                    (click)="prevStep()">
-          ← Back
+        <ion-button class="back-btn" (click)="prevStep()">
+          <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+          Back
         </ion-button>
-
-        <ion-button class="green-btn small-btn"
-                    (click)="nextStep()"
-                    [disabled]="!timeSelected">
-          Start Test →
+        <ion-button class="primary-btn" (click)="nextStep()"
+          [disabled]="!timeSelected">
+          Start Test
+          <ion-icon slot="end" name="play-outline"></ion-icon>
         </ion-button>
       </div>
+    </div>
+
+    <!-- SUMMARY CHIP -->
+    <div class="summary-bar" *ngIf="step === 2 && numQuestions">
+      <ion-icon name="information-circle-outline"></ion-icon>
+      {{ numQuestions }} questions selected
     </div>
 
   </div>

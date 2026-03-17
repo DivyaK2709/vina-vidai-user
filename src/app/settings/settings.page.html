@@ -1,18 +1,108 @@
-<ion-header [translucent]="true">
+<ion-header class="settings-header">
   <ion-toolbar>
-    <ion-title>settings</ion-title>
+    <ion-title>Settings</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  
-</ion-content>
-<ion-footer>
-  <ion-toolbar>
-    <div style="width: 100%; display: flex; justify-content: center;">
-      <ion-button shape="round" color="danger" (click)="goTologout()">
-        Logout
-      </ion-button>
+<ion-content class="settings-content">
+
+  <!-- PROFILE CARD -->
+  <div class="profile-card">
+    <div class="avatar">
+      <ion-icon name="person-outline"></ion-icon>
     </div>
-  </ion-toolbar>
-</ion-footer>
+    <div class="profile-info">
+      <h3 class="profile-name">{{ userName || 'User' }}</h3>
+      <p class="profile-email">{{ userEmail || '' }}</p>
+    </div>
+  </div>
+
+  <!-- ACCOUNT -->
+  <div class="section">
+    <p class="section-label">Account</p>
+    <div class="settings-list">
+
+      <div class="settings-row">
+        <div class="row-left">
+          <div class="row-icon green"><ion-icon name="person-circle-outline"></ion-icon></div>
+          <span>Edit Profile</span>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+      </div>
+
+      <div class="settings-row">
+        <div class="row-left">
+          <div class="row-icon blue"><ion-icon name="lock-closed-outline"></ion-icon></div>
+          <span>Change Password</span>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PREFERENCES -->
+  <div class="section">
+    <p class="section-label">Preferences</p>
+    <div class="settings-list">
+
+      <div class="settings-row">
+        <div class="row-left">
+          <div class="row-icon purple"><ion-icon name="notifications-outline"></ion-icon></div>
+          <span>Notifications</span>
+        </div>
+        <ion-toggle [(ngModel)]="notificationsEnabled" class="green-toggle"></ion-toggle>
+      </div>
+
+      <div class="settings-row">
+        <div class="row-left">
+          <div class="row-icon orange"><ion-icon name="moon-outline"></ion-icon></div>
+          <span>Dark Mode</span>
+        </div>
+        <ion-toggle [(ngModel)]="darkMode" class="green-toggle" (ionChange)="toggleDarkMode()"></ion-toggle>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SUPPORT -->
+  <div class="section">
+    <p class="section-label">Support</p>
+    <div class="settings-list">
+
+      <div class="settings-row" (click)="comingSoon()">
+        <div class="row-left">
+          <div class="row-icon teal"><ion-icon name="help-circle-outline"></ion-icon></div>
+          <span>Help & FAQ</span>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+      </div>
+
+      <div class="settings-row" (click)="comingSoon()">
+        <div class="row-left">
+          <div class="row-icon gray"><ion-icon name="information-circle-outline"></ion-icon></div>
+          <span>About App</span>
+        </div>
+        <ion-label class="version-label">v1.0.0</ion-label>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LOGOUT -->
+  <div class="logout-section">
+    <ion-button class="logout-btn" (click)="confirmLogout()">
+      <ion-icon slot="start" name="log-out-outline"></ion-icon>
+      Log Out
+    </ion-button>
+  </div>
+
+</ion-content>
+
+<!-- LOGOUT CONFIRM ALERT -->
+<ion-alert
+  [isOpen]="showLogoutAlert"
+  header="Log Out"
+  message="Are you sure you want to log out?"
+  [buttons]="alertButtons">
+</ion-alert>

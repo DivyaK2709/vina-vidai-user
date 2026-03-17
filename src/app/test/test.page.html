@@ -4,136 +4,151 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="test-content">
 
-<!-- SEGMENT CONTROL -->
-<div class="custom-segment">
-  <ion-segment [value]="selectedSegment" (ionChange)="onSegmentChange($event)">
-    <ion-segment-button value="history">
-      <ion-label>History</ion-label>
-    </ion-segment-button>
+  <!-- SEGMENT -->
+  <div class="segment-wrapper">
+    <ion-segment [value]="selectedSegment" (ionChange)="onSegmentChange($event)">
+      <ion-segment-button value="history">
+        <ion-icon name="time-outline"></ion-icon>
+        <ion-label>History</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="series">
+        <ion-icon name="create-outline"></ion-icon>
+        <ion-label>Custom Test</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
 
-    <ion-segment-button value="series">
-      <ion-label>Test Series</ion-label>
-    </ion-segment-button>
-  </ion-segment>
-</div>
+  <!-- HISTORY -->
+  <div *ngIf="selectedSegment==='history'" class="section-body">
 
-<!-- HISTORY SECTION -->
-<div *ngIf="selectedSegment==='history'" class="segment-section">
+    <div *ngIf="loadingHistory" class="center-spinner">
+      <ion-spinner name="crescent" color="success"></ion-spinner>
+      <p>Loading history...</p>
+    </div>
 
-  <ng-container *ngIf="loadingHistory; else historyLoaded">
-    <ion-spinner></ion-spinner>
-  </ng-container>
+    <div *ngIf="!loadingHistory && testHistory.length===0" class="empty-state">
+      <ion-icon name="document-text-outline"></ion-icon>
+      <p>No test history yet.</p>
+      <span>Complete a test to see it here.</span>
+    </div>
 
-  <ng-template #historyLoaded>
-    <div *ngIf="testHistory.length===0" class="empty-msg">No history found.</div>
-
-    <ion-card *ngFor="let h of testHistory" class="history-card">
-      <ion-card-header>
-        <ion-card-subtitle>{{h.subject}}</ion-card-subtitle>
-        <ion-card-title>{{h.title}}</ion-card-title>
-      </ion-card-header>
-
-      <ion-card-content>
-
-        <div class="meta-row">
-          <div><strong>Questions:</strong> {{h.questionsCount}}</div>
-          <div><strong>Time:</strong> {{formatSeconds(h.timeSeconds)}}</div>
-          <div><strong>Score:</strong> {{h.score}}</div>
+    <div *ngFor="let h of testHistory" class="history-card">
+      <div class="history-top">
+        <div class="subject-badge">{{ h.subject }}</div>
+        <div class="score-pill" [class.good]="(h.score||0) >= 50">
+          {{ h.score ?? 0 }} pts
         </div>
-
-        <div class="history-actions">
-          <ion-button size="small" fill="outline" (click)="viewDetails(h)">View</ion-button>
-          <ion-button size="small" color="primary" (click)="reAttempt(h)">Re-attempt</ion-button>
-        </div>
-
-      </ion-card-content>
-    </ion-card>
-
-  </ng-template>
-
-</div>
-
-<!-- SERIES SECTION -->
-<div *ngIf="selectedSegment==='series'" class="segment-section">
-
-  <ion-card class="series-config-card">
-    <ion-card-header>
-      <ion-card-title>Create Custom Test</ion-card-title>
-      <ion-card-subtitle>Set your preferences</ion-card-subtitle>
-    </ion-card-header>
-
-    <ion-card-content>
-
-      <div class="table-3col">
-
-        <div class="header-row">
-          <div class="col head">Subject</div>
-          <div class="col head">Number of Questions</div>
-          <div class="col head">Time Duration</div>
-        </div>
-
-        <div class="data-row">
-          
-          <!-- SUBJECT -->
-          <div class="col">
-            <ion-select interface="popover" placeholder="Select"
-              [(ngModel)]="selectedSubject">
-              <ion-select-option value="current affairs">current affairs</ion-select-option>
-              <ion-select-option value="social science">social science</ion-select-option>
-              <ion-select-option value="history">history</ion-select-option>
-              <ion-select-option value="English">English</ion-select-option>
-            </ion-select>
-          </div>
-
-          <!-- QUESTIONS -->
-          <div class="col">
-            <ion-input type="number" placeholder="Min 10"
-              [(ngModel)]="selectedQuestions"
-              (ionInput)="validateQuestionCount($event)">
-            </ion-input>
-          </div>
-
-          <!-- TIME -->
-          <div class="col">
-            <ion-select interface="popover" placeholder="Duration"
-              [(ngModel)]="selectedTime">
-              <ion-select-option value="600">10 minutes</ion-select-option>
-              <ion-select-option value="1200">20 minutes</ion-select-option>
-              <ion-select-option value="1800">30 minutes</ion-select-option>
-              <ion-select-option value="3600">1 hour</ion-select-option>
-            </ion-select>
-          </div>
-
-        </div>
-
       </div>
 
-     
+      <h4 class="history-title">{{ h.title || 'Test Attempt' }}</h4>
 
-      <!-- START BUTTON (WHITE TEXT) -->
-<div class="start-btn-wrapper">
-  <ion-button
-    shape="round"
-    class="start-test-btn"
-    (click)="startCustomTest()"
-    [disabled]="!selectedSubject || !selectedQuestions || !selectedTime">
-    START TEST
-  </ion-button>
-</div>
+      <div class="meta-row">
+        <div class="meta-chip">
+          <ion-icon name="help-circle-outline"></ion-icon>
+          {{ h.questionsCount }} Qs
+        </div>
+        <div class="meta-chip">
+          <ion-icon name="timer-outline"></ion-icon>
+          {{ formatSeconds(h.timeSeconds) }}
+        </div>
+        <div class="meta-chip">
+          <ion-icon name="trophy-outline"></ion-icon>
+          Score: {{ h.score ?? 0 }}
+        </div>
+      </div>
 
+      <div class="history-actions">
+        <ion-button size="small" fill="outline" class="view-btn" (click)="viewDetails(h)">
+          <ion-icon slot="start" name="eye-outline"></ion-icon>
+          View
+        </ion-button>
+        <ion-button size="small" class="retry-btn" (click)="reAttempt(h)">
+          <ion-icon slot="start" name="refresh-outline"></ion-icon>
+          Re-attempt
+        </ion-button>
+      </div>
+    </div>
 
+  </div>
 
-      <!-- VIEW MORE BUTTON -->
-      <ion-button expand="block" fill="clear" class="view-more-btn"
-        (click)="goToProgress()">
-        VIEW MORE
+  <!-- CUSTOM TEST / SERIES -->
+  <div *ngIf="selectedSegment==='series'" class="section-body">
+
+    <div class="series-card">
+      <div class="series-card-header">
+        <div class="series-icon-wrap">
+          <ion-icon name="flask-outline"></ion-icon>
+        </div>
+        <div>
+          <h3>Custom Test</h3>
+          <p>Configure and start your test</p>
+        </div>
+      </div>
+
+      <!-- SUBJECT -->
+      <div class="field-group">
+        <label class="field-label">
+          <ion-icon name="book-outline"></ion-icon> Subject
+        </label>
+        <ion-select interface="popover" placeholder="Choose a subject"
+          [(ngModel)]="selectedSubject" class="styled-select">
+          <ion-select-option value="current affairs">Current Affairs</ion-select-option>
+          <ion-select-option value="social science">Social Science</ion-select-option>
+          <ion-select-option value="history">History</ion-select-option>
+          <ion-select-option value="English">English</ion-select-option>
+        </ion-select>
+      </div>
+
+      <!-- QUESTIONS -->
+      <div class="field-group">
+        <label class="field-label">
+          <ion-icon name="help-circle-outline"></ion-icon> Number of Questions
+        </label>
+        <div class="chip-row">
+          <span class="q-chip" *ngFor="let n of quickCounts"
+            [class.selected]="selectedQuestions === n"
+            (click)="selectedQuestions = n">{{ n }}</span>
+        </div>
+        <ion-item lines="none" class="number-input-item">
+          <ion-input type="number" placeholder="Or enter manually (min 10)"
+            [(ngModel)]="selectedQuestions"
+            (ionInput)="validateQuestionCount($event)">
+          </ion-input>
+        </ion-item>
+      </div>
+
+      <!-- TIME -->
+      <div class="field-group">
+        <label class="field-label">
+          <ion-icon name="timer-outline"></ion-icon> Time Duration
+        </label>
+        <div class="time-grid">
+          <div class="time-card" *ngFor="let t of timeOptions"
+            [class.selected]="selectedTime === t.value"
+            (click)="selectedTime = t.value">
+            <ion-icon [name]="t.icon"></ion-icon>
+            <span class="t-label">{{ t.label }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- START -->
+      <ion-button expand="block" class="start-btn"
+        (click)="startCustomTest()"
+        [disabled]="!selectedSubject || !selectedQuestions || !selectedTime || loadingStart">
+        <ion-spinner *ngIf="loadingStart" name="crescent" slot="start"></ion-spinner>
+        <ion-icon *ngIf="!loadingStart" slot="start" name="play-outline"></ion-icon>
+        {{ loadingStart ? 'Starting...' : 'Start Test' }}
       </ion-button>
 
-    </ion-card-content>
-  </ion-card>
+      <ion-button expand="block" fill="clear" class="view-more-btn" (click)="goToProgress()">
+        <ion-icon slot="start" name="bar-chart-outline"></ion-icon>
+        View Progress
+      </ion-button>
 
-</div>
+    </div>
+  </div>
 
 </ion-content>

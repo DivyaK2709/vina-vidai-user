@@ -1,164 +1,246 @@
+/* ===============================
+   HEADER
+   =============================== */
+.test-header ion-toolbar {
+  --background: linear-gradient(135deg, #022c22, #064e3b);
+  --color: #ffffff;
+}
+
+.test-header ion-title {
+  color: #ffffff;
+  font-weight: 700;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.exit-btn {
+  --color: #ffffff;
+  font-size: 22px;
+}
+
 .timer-box {
-  position: absolute;
-  top: 12px;
-  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  padding-right: 12px;
+  font-variant-numeric: tabular-nums;
+
+  ion-icon { font-size: 16px; }
+
+  &.warning {
+    color: #fbbf24;
+    animation: pulse 1s infinite;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* PROGRESS BAR */
+.progress-bar-wrap {
+  height: 4px;
+  background: rgba(255,255,255,0.2);
+  width: 100%;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #4ade80;
+  transition: width 0.4s ease;
+  border-radius: 0 4px 4px 0;
+}
+
+/* ===============================
+   PAGE
+   =============================== */
+.test-content {
+  --background: #f0fdf4;
+}
+
+/* ===============================
+   QUESTION META ROW
+   =============================== */
+.q-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px 8px;
+}
+
+.q-counter {
+  font-size: 13px;
+  font-weight: 700;
+  color: #064e3b;
+  background: #d1fae5;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.q-status {
+  font-size: 12px;
+  font-weight: 600;
+  color: #9ca3af;
+
+  &.answered { color: #16a34a; }
+}
+
+/* ===============================
+   QUESTION CARD
+   =============================== */
+.q-card {
+  background: #ffffff;
+  margin: 0 16px 16px;
+  border-radius: 16px;
+  padding: 18px 16px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+  border-left: 4px solid #16a34a;
+}
+
+.q-text {
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: #1f2937;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ===============================
+   OPTIONS
+   =============================== */
+.option-item {
   display: flex;
   align-items: center;
-  gap: 6px;
-}
-
-/* QUESTION NUMBER */
-.q-num {
-  margin-top: 10px;
-  font-size: 18px;
-  color: #444;
-  font-weight: 600;
-}
-
-/* QUESTION TEXT */
-.q-text {
-  font-size: 22px;
-  font-weight: 700;
-  margin-top: 10px;
-  margin-bottom: 20px;
-}
-
-/* OPTIONS RADIO LIST */
-.options-list {
-  margin-top: 20px;
-  border-radius: 12px;
-  background: #fafafa;
-  padding: 5px;
-}
-
-ion-item {
-  --background: transparent;
-}
-
-/* Navigation buttons */
-.nav-buttons {
-  margin-top: 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-ion-button.submit-btn {
-  --background: #059669 !important; /* GREEN */
-  --color: white !important;        /* TEXT WHITE */
-  padding: 12px 22px;
-  border-radius: 25px !important;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-
-
-.prev-btn {
- --background: green!important; /* GREEN */
-  --color: white !important;        /* TEXT WHITE */
-  padding: 12px 22px;
-  border-radius: 25px !important;
-  font-weight: 600;
-  text-transform: capitalize !important;
-  
-}
-.next-btn{
-   --background: green!important; /* GREEN */
-  --color: white !important;        /* TEXT WHITE */
-  padding: 12px 22px;
-  border-radius: 25px !important;
-  font-weight: 600;
-   text-transform: capitalize !important;
-  
-}
-
-
-/* === CUSTOM ALERT WRAPPER === */
-.custom-submit-alert {
-  --background: #ffffff !important;
-  --max-width: 90%;
-}
-
-/* Align buttons */
-/* Wrap the alert */
-.custom-submit-alert .alert-button-group {
-  display: flex;
-  justify-content: space-between;
   gap: 12px;
+  margin: 0 16px 10px;
+  padding: 14px 14px;
+  background: #ffffff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+
+  &.selected {
+    border-color: #16a34a;
+    background: #f0fdf4;
+
+    .option-label {
+      background: #16a34a;
+      color: #ffffff;
+    }
+
+    .option-text { color: #064e3b; font-weight: 600; }
+  }
+
+  &:active { transform: scale(0.98); }
 }
 
-/* CANCEL BUTTON (Left Button) */
-.custom-submit-alert .alert-button[button-role="cancel"]::part(native) {
-  color: #dc2626 !important; /* Red */
-  border: 2px solid #dc2626 !important;
-  background: transparent !important;
-  border-radius: 10px !important;
-  padding: 10px 20px !important;
-  font-weight: 600;
-  text-transform: uppercase;
+.option-label {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
 }
 
-/* SUBMIT BUTTON (Right Button) */
-.custom-submit-alert .alert-button:not([button-role="cancel"])::part(native) {
-  background: #059669 !important; /* Green */
-  color: white !important;
-  border-radius: 10px !important;
-  padding: 10px 20px !important;
-  font-weight: 600;
-  text-transform: uppercase;
+.option-text {
+  font-size: 14px;
+  color: #374151;
+  flex: 1;
+  line-height: 1.4;
 }
-/* =========================
-   TEST SUMMARY ALERT
-========================= */
-.test-summary-alert {
 
-  /* Header */
-  ion-alert::part(title) {
-    text-align: center;
-    font-weight: 700;
-    font-size: 18px;
+.hidden-radio { display: none; }
+
+/* ===============================
+   DOT NAVIGATOR
+   =============================== */
+.dot-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 16px;
+  justify-content: center;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #d1d5db;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &.answered { background: #16a34a; }
+  &.current  { background: #064e3b; transform: scale(1.3); }
+}
+
+/* ===============================
+   EMPTY STATE
+   =============================== */
+.empty-state {
+  text-align: center;
+  padding: 60px 16px;
+  color: #9ca3af;
+
+  ion-icon { font-size: 52px; color: #bbf7d0; display: block; margin-bottom: 12px; }
+  p { font-size: 15px; font-weight: 600; }
+}
+
+/* ===============================
+   FOOTER NAV
+   =============================== */
+.nav-footer {
+  background: #ffffff;
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+  padding: 10px 16px 14px;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.nav-btn {
+  flex: 1;
+  height: 46px;
+  font-weight: 700;
+  font-size: 14px;
+  --border-radius: 12px;
+
+  &.prev {
+    --background: transparent;
+    --color: #064e3b;
+    --border-color: #064e3b;
+    --border-width: 1.5px;
+    --border-style: solid;
+    --box-shadow: none;
   }
 
-  /* 🔥 COLUMN ALIGNMENT */
-  ion-alert::part(sub-title) {
-    white-space: pre;                 /* KEEP SPACES */
-    font-family: monospace;           /* FIXED WIDTH */
-    font-size: 15px;
-    line-height: 1.8;
-    margin-top: 10px;
-    padding-left: 16px;
+  &.next {
+    --background: linear-gradient(135deg, #16a34a, #059669);
+    --color: #ffffff;
+    --box-shadow: 0 4px 12px rgba(22,163,74,0.3);
   }
 
-  /* BUTTON ALIGNMENT */
-  ion-alert::part(button-group) {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    padding-top: 12px;
-  }
-
-  /* CLOSE BUTTON (RED) */
-  ion-alert button.close-btn::part(native) {
-    color: #dc2626;
-    border: 2px solid #dc2626;
-    background: transparent;
-    border-radius: 10px;
-    padding: 10px 18px;
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-
-  /* VIEW MORE BUTTON (GREEN) */
-  ion-alert button.view-btn::part(native) {
-    background: #059669;
-    color: #ffffff;
-    border-radius: 10px;
-    padding: 10px 18px;
-    font-weight: 600;
-    text-transform: uppercase;
+  &.submit {
+    --background: linear-gradient(135deg, #059669, #047857);
+    --color: #ffffff;
+    --box-shadow: 0 4px 12px rgba(5,150,105,0.3);
   }
 }
+
+ion-button[disabled] { opacity: 0.4; }

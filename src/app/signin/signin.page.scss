@@ -1,138 +1,201 @@
-/* Background */
+/* ===============================
+   BACKGROUND
+   =============================== */
 .signin-bg {
-  --background: linear-gradient(180deg, #f2fbf8, #f6fff9);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
+  --background: linear-gradient(160deg, #e8fdf2 0%, #f0fff8 100%);
 }
 
-/* Center container */
 .signin-container {
-  width: 100%;
   display: flex;
   justify-content: center;
-  padding: 0px;
   align-items: center;
+  min-height: 100%;
+  padding: 24px 16px;
 }
 
-/* Card */
+/* ===============================
+   CARD
+   =============================== */
 .signin-card {
-  width: 92%;
-  max-width: 430px;
+  width: 100%;
+  max-width: 420px;
   background: #ffffff;
-  border-radius: 14px;
-  padding: 24px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+  padding: 28px 24px 24px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.1);
   text-align: center;
 }
 
-/* Logo */
-.logo {
-  font-size: 28px;
-  color: #00c9a7;
-  font-weight: 800;
+/* ===============================
+   LOGO & HEADINGS
+   =============================== */
+.logo-wrapper {
+  margin-bottom: 16px;
 }
 
-/* Title text */
+.logo {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  background: linear-gradient(90deg, #56ab2f, #00c9a7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .title {
   font-size: 20px;
-  color: #222;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 4px;
 }
 
 .subtitle {
-  color: #666;
-  font-size: 14px;
+  font-size: 13px;
+  color: #9ca3af;
+  margin: 0 0 20px;
 }
 
-/* INPUT WRAPPER WITH ICON */
+/* ===============================
+   INPUT ITEMS
+   =============================== */
 .input-wrapper {
-  position: relative;
-  margin-bottom: 20px;
+  margin-bottom: 4px;
 }
 
-/* Icon inside input */
-.field-icon,
-.eye-icon {
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 22px;
-  z-index: 20;
-}
-
-/* Input item style */
 .input-item {
-  --background: #fff;
-  border-radius: 10px;
-  margin: 10px 0;
-    --padding-top: 14px;
-  --padding-bottom: 10px;
-  border: 1px solid #eee;
-  overflow: visible !important;   /* IMPORTANT FIX */
-}
-/* Add space between floating label and input text */
+  --background: #f9fafb;
+  --border-radius: 12px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --inner-padding-end: 0;
+  --min-height: 52px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 12px;
+  margin: 0 0 4px;
+  transition: border-color 0.2s ease;
+  overflow: visible !important;
 
-/* Push label slightly up for clean spacing */
-.input-item ion-label {
-  margin-bottom: 12px;
+  &.valid-item { border-color: #56ab2f; --background: #f0fdf4; }
+  &.error-item { border-color: #ef4444; --background: #fff5f5; }
 }
 
+.inline-icon {
+  font-size: 18px;
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.status-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.eye-toggle {
+  font-size: 20px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px;
+  flex-shrink: 0;
+}
 
 ion-input {
-  color: #222;
+  --padding-start: 8px;
+  font-size: 14px;
+  color: #1a1a1a;
 }
 
-/* Error text */
+/* ===============================
+   ERROR
+   =============================== */
 .error-msg {
-  color: #e53935;
-  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #ef4444;
+  font-size: 11.5px;
+  margin: 0 2px 8px;
   text-align: left;
-  margin: -4px 0 10px 6px;
+
+  ion-icon { font-size: 13px; flex-shrink: 0; }
 }
 
-/* Sign-in button */
+/* ===============================
+   FORGOT PASSWORD
+   =============================== */
+.forgot-row {
+  text-align: right;
+  margin: 0 2px 16px;
+}
+
+.forgot-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: #00c9a7;
+  cursor: pointer;
+
+  &:hover { text-decoration: underline; }
+}
+
+/* ===============================
+   BUTTON
+   =============================== */
 .signin-button {
-  --background: linear-gradient(90deg, #a8e063, #56ab2f);
-  --color: #fff;
-  border-radius: 10px;
-  height: 46px;
+  --background: linear-gradient(90deg, #56ab2f, #00c9a7);
+  --background-activated: linear-gradient(90deg, #4a9a28, #00b090);
+  --color: #ffffff;
+  --border-radius: 12px;
+  --box-shadow: 0 4px 14px rgba(86,171,47,0.4);
+  height: 50px;
   font-weight: 700;
   font-size: 15px;
+  letter-spacing: 0.3px;
 }
+
+.signin-button[disabled] {
+  --background: #d1d5db;
+  --box-shadow: none;
+  opacity: 1;
+}
+
+/* ===============================
+   DIVIDER
+   =============================== */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0 14px;
+  color: #d1d5db;
+  font-size: 12px;
+
+  &::before, &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e5e7eb;
+  }
+}
+
+/* ===============================
+   SIGNUP LINK
+   =============================== */
+.signup-link {
+  font-size: 13.5px;
+  color: #6b7280;
+}
+
 .signup-text {
   color: #00c9a7;
   font-weight: 700;
   cursor: pointer;
   margin-left: 4px;
-  text-decoration: underline;
+
+  &:hover { text-decoration: underline; }
 }
-.top-toast {
-  margin-top: 20px; /* optional spacing */
-  text-align: center;
-  font-weight: 600;
-  border-radius: 8px !important;
-  color: white;
-}
-.active-label ion-label {
-  color: #2ecc71 !important;
-  font-weight: 600;
-}
-.field-icon {
-  pointer-events: none;
-}
-.eye-icon {
-  width: 22px;
-  position: absolute;
-  right: 16px;
-  top: 18px;
-  z-index: 20;
-  cursor: pointer;
-}
+
+/* Hide browser password eye */
 input[type='password']::-ms-reveal,
 input[type='password']::-ms-clear,
 input::-webkit-credentials-auto-fill-button,
-input::-webkit-password-toggle {
-  display: none !important;
-}
+input::-webkit-password-toggle { display: none !important; }

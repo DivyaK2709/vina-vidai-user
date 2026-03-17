@@ -1,52 +1,92 @@
-
+<ion-header class="progress-header">
+  <ion-toolbar>
+    <ion-title>My Progress</ion-title>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content class="progress-page">
-  <div class="summary">
-    <div class="summary-right">
-      <ion-segment [(ngModel)]="segment" (ionChange)="setSegment(segment)" mode="md">
-        <ion-segment-button value="daily">Daily</ion-segment-button>
-        <ion-segment-button value="weekly">Weekly</ion-segment-button>
-        <ion-segment-button value="subjects">Subjects</ion-segment-button>
-      </ion-segment>
+
+  <!-- STAT CARDS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <ion-icon name="trophy-outline"></ion-icon>
+      <span class="stat-value">{{ totalPoints }}</span>
+      <span class="stat-label">Total Points</span>
+    </div>
+    <div class="stat-card">
+      <ion-icon name="calendar-outline"></ion-icon>
+      <span class="stat-value">{{ totalTests }}</span>
+      <span class="stat-label">Tests Taken</span>
+    </div>
+    <div class="stat-card">
+      <ion-icon name="time-outline"></ion-icon>
+      <span class="stat-value">{{ lastUpdated || '—' }}</span>
+      <span class="stat-label">Last Active</span>
     </div>
   </div>
-  <div class="bottom-bar">
-    <div class="bottom-left">Total: {{ totalPoints }}</div>
-    <div class="bottom-right">Date: {{ lastUpdated }}</div>
+
+  <!-- SEGMENT -->
+  <div class="segment-wrapper">
+    <ion-segment [(ngModel)]="segment" (ionChange)="setSegment(segment)" mode="md">
+      <ion-segment-button value="daily">
+        <ion-icon name="today-outline"></ion-icon>
+        <ion-label>Daily</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="weekly">
+        <ion-icon name="bar-chart-outline"></ion-icon>
+        <ion-label>Weekly</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="subjects">
+        <ion-icon name="pie-chart-outline"></ion-icon>
+        <ion-label>Subjects</ion-label>
+      </ion-segment-button>
+    </ion-segment>
   </div>
 
+  <!-- CHARTS -->
   <div class="charts">
+
     <!-- DAILY -->
     <div *ngIf="segment === 'daily'" class="chart-container">
-      <h4>Daily Progress</h4>
-      <canvas baseChart
-        [data]="dailyChartData"
-        [type]="'bar'"
-        [options]="dailyOptions">
-      </canvas>
+      <div class="chart-header">
+        <h4>Today's Performance</h4>
+        <p>Score breakdown by subject</p>
+      </div>
+      <div *ngIf="dailyChartData.labels.length; else emptyState">
+        <canvas baseChart [data]="dailyChartData" [type]="'bar'" [options]="dailyOptions"></canvas>
+      </div>
     </div>
 
     <!-- WEEKLY -->
     <div *ngIf="segment === 'weekly'" class="chart-container">
-      <h4>Weekly Progress</h4>
-      <canvas baseChart
-        [data]="weeklyChartData"
-        [type]="'line'"
-        [options]="weeklyOptions">
-      </canvas>
+      <div class="chart-header">
+        <h4>This Week's Trend</h4>
+        <p>Points earned per day</p>
+      </div>
+      <div *ngIf="weeklyChartData.labels.length; else emptyState">
+        <canvas baseChart [data]="weeklyChartData" [type]="'line'" [options]="weeklyOptions"></canvas>
+      </div>
     </div>
 
     <!-- SUBJECTS -->
     <div *ngIf="segment === 'subjects'" class="chart-container">
-      <h4>Subjects</h4>
-      <canvas baseChart
-        [data]="subjectChartData"
-        [type]="'pie'"
-        [options]="subjectOptions">
-      </canvas>
+      <div class="chart-header">
+        <h4>Subject Distribution</h4>
+        <p>All-time score per subject</p>
+      </div>
+      <div *ngIf="subjectChartData.labels.length; else emptyState" class="pie-wrapper">
+        <canvas baseChart [data]="subjectChartData" [type]="'pie'" [options]="subjectOptions"></canvas>
+      </div>
     </div>
+
   </div>
 
-  <!-- Bottom Info -->
-  
+  <!-- EMPTY STATE -->
+  <ng-template #emptyState>
+    <div class="empty-state">
+      <ion-icon name="analytics-outline"></ion-icon>
+      <p>No data yet. Complete a test to see your progress!</p>
+    </div>
+  </ng-template>
+
 </ion-content>

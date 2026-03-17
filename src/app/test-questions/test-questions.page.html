@@ -1,75 +1,99 @@
-<ion-header>
+<ion-header class="test-header">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="confirmSubmit()" fill="clear" class="exit-btn">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
     <ion-title>{{ meta.subject || 'Test' }}</ion-title>
 
-    <div class="timer-box">
-      <ion-icon name="hourglass-outline"></ion-icon>
+    <div slot="end" class="timer-box" [class.warning]="timeLeft <= 60">
+      <ion-icon name="timer-outline"></ion-icon>
       {{ formattedTime }}
     </div>
   </ion-toolbar>
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-bar-wrap">
+    <div class="progress-fill"
+      [style.width.%]="((currentIndex + 1) / questions.length) * 100">
+    </div>
+  </div>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="test-content">
 
   <div *ngIf="questions.length > 0; else noQuestions">
+    <ng-container *ngIf="currentQuestion">
 
-  
+      <!-- QUESTION COUNTER + STATUS ROW -->
+      <div class="q-meta-row">
+        <span class="q-counter">Q {{ currentIndex + 1 }} / {{ questions.length }}</span>
+        <span class="q-status" [class.answered]="userAnswer">
+          {{ userAnswer ? '✔ Answered' : 'Not answered' }}
+        </span>
+      </div>
 
-  <ng-container *ngIf="currentQuestion">
+      <!-- QUESTION TEXT -->
+      <div class="q-card">
+        <p class="q-text">{{ currentQuestion.question }}</p>
+      </div>
 
-    <h3 class="q-num">
-      Question {{ currentIndex + 1 }} / {{ questions.length }}
-    </h3>
-
-    <h2 class="q-text">{{ currentQuestion.question }}</h2>
-
-    <ion-list class="options-list">
+      <!-- OPTIONS -->
       <ion-radio-group [(ngModel)]="userAnswer" (ionChange)="onSelectOption()">
-        <ion-item
-          *ngFor="let opt of currentQuestion.options; trackBy: trackByOption"
-          [class.selected]="userAnswer === opt">
-
-          <ion-radio slot="start" [value]="opt" color="success"></ion-radio>
-          <ion-label>{{ opt }}</ion-label>
-
-        </ion-item>
+        <div class="option-item"
+          *ngFor="let opt of currentQuestion.options; let i = index; trackBy: trackByOption"
+          [class.selected]="userAnswer === opt"
+          (click)="userAnswer = opt; onSelectOption()">
+          <div class="option-label">{{ ['A','B','C','D'][i] }}</div>
+          <span class="option-text">{{ opt }}</span>
+          <ion-radio slot="end" [value]="opt" color="success" class="hidden-radio"></ion-radio>
+        </div>
       </ion-radio-group>
-    </ion-list>
 
-    <div class="nav-buttons">
-      <ion-button
-        class="prev-btn"
-        shape="round"
-        [disabled]="currentIndex === 0"
-        (click)="previous()">
-        ← Previous
-      </ion-button>
+      <!-- QUESTION DOT NAVIGATOR -->
+      <div class="dot-nav">
+        <div class="dot"
+          *ngFor="let q of questions; let i = index"
+          [class.current]="i === currentIndex"
+          [class.answered]="q.selected"
+          (click)="loadQuestion(i)">
+        </div>
+      </div>
 
-      <ion-button
-        class="next-btn"
-        shape="round"
-        *ngIf="currentIndex < questions.length - 1"
-        (click)="next()">
-        Next →
-      </ion-button>
-
-      <ion-button
-        class="submit-btn"
-        shape="round"
-        *ngIf="currentIndex === questions.length - 1"
-        (click)="confirmSubmit()">
-        Submit Test ✔
-      </ion-button>
-    </div>
-
-  </ng-container>
-
-
-
-
+    </ng-container>
   </div>
 
   <ng-template #noQuestions>
-    <p>No questions loaded.</p>
+    <div class="empty-state">
+      <ion-icon name="alert-circle-outline"></ion-icon>
+      <p>No questions loaded.</p>
+    </div>
   </ng-template>
+
 </ion-content>
+
+<!-- FIXED BOTTOM NAV -->
+<ion-footer class="nav-footer">
+  <div class="nav-buttons">
+    <ion-button class="nav-btn prev" [disabled]="currentIndex === 0" (click)="previous()">
+      <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+      Previous
+    </ion-button>
+
+    <ion-button class="nav-btn next"
+      *ngIf="currentIndex < questions.length - 1"
+      (click)="next()">
+      Next
+      <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
+    </ion-button>
+
+    <ion-button class="nav-btn submit"
+      *ngIf="currentIndex === questions.length - 1"
+      (click)="confirmSubmit()">
+      <ion-icon slot="start" name="checkmark-done-outline"></ion-icon>
+      Submit
+    </ion-button>
+  </div>
+</ion-footer>

@@ -1,141 +1,250 @@
+/* ===============================
+   BACKGROUND
+   =============================== */
 .signup-bg {
-  --background: linear-gradient(180deg, #f2fbf8, #f6fff9);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
+  --background: linear-gradient(160deg, #e8fdf2 0%, #f0fff8 100%);
 }
 
 .signup-container {
-  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 14px;
-  margin-top:14px;
+  min-height: 100%;
+  padding: 24px 16px;
 }
 
+/* ===============================
+   CARD
+   =============================== */
 .signup-card {
-  width: 92%;
-  max-width: 430px;
+  width: 100%;
+  max-width: 420px;
   background: #ffffff;
-  border-radius: 14px;
-  padding: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+  padding: 28px 24px 24px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
-/* Wrapper for icon inside input */
-.input-wrapper {
-  position: relative;
+/* ===============================
+   LOGO & HEADINGS
+   =============================== */
+.logo-wrapper {
+  margin-bottom: 16px;
 }
 
-/* ion-item should not hide icon */
+.logo {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  background: linear-gradient(90deg, #56ab2f, #00c9a7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 4px;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: #9ca3af;
+  margin: 0 0 20px;
+}
+
+/* ===============================
+   INPUT ITEMS
+   =============================== */
+.input-wrapper {
+  margin-bottom: 4px;
+}
+
 .input-item {
-  --background: #fff;
-  border-radius: 10px;
-   display: flex;
-  align-items: center; 
- --padding-start: 14px;
-  --padding-end: 46px;              /* space for icon */
-  --padding-top: 16px;
-  --padding-bottom: 16px;
-  margin: 8px 0;
-  border: 1px solid #eee;
+  --background: #f9fafb;
+  --border-radius: 12px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --inner-padding-end: 0;
+  --min-height: 52px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 12px;
+  margin: 0 0 4px 0;
+  transition: border-color 0.2s ease;
   overflow: visible !important;
 }
-/* Space between title/subtitle and first input */
-/* Add space between floating label and input text */
 
-
-/* Push label slightly up for clean spacing */
-.input-item ion-label {
-  margin-bottom: 2px;
+.input-item.valid-item {
+  border-color: #56ab2f;
+  --background: #f0fdf4;
 }
+
 .input-item ion-input {
-  min-height: 42px;
+  --padding-start: 8px;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+/* Left icon inside input */
+.field-icon-left,
+.inline-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: #9ca3af;
+  font-size: 18px;
+}
+
+/* Right status icon */
+.status-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* Eye toggle */
+.eye-toggle {
+  font-size: 20px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px;
+  flex-shrink: 0;
+}
+
+/* ===============================
+   PASSWORD STRENGTH
+   =============================== */
+.strength-bar-wrapper {
   display: flex;
   align-items: center;
+  gap: 8px;
+  margin: 4px 2px 6px;
 }
 
-
-/* Icon inside field */
-.field-icon,
- .eye-icon {
- position: absolute;
-  right: 14px;
-
-  /* 🔥 REAL CENTER FIX */
-  top: 50%;
-  transform: translateY(-50%);
-
-  width: 22px;
-  height: 22px;
-
-  z-index: 30;
-}
-
-.error-msg {
-  color: #e53935;
-  margin: 4px 0 8px 6px;
-  font-size: 12px;
-}
-
-.signup-button {
-  --background: linear-gradient(90deg, #a8e063, #56ab2f);
-  --color: #fff;
+.strength-bar {
+  flex: 1;
+  height: 5px;
+  background: #e5e7eb;
   border-radius: 10px;
-  height: 44px;
-  font-weight: 700;
+  overflow: hidden;
 }
 
-.signup-button-wrapper {
-  margin-top: 14px;
+.strength-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.3s ease, background 0.3s ease;
+
+  &.weak   { background: #ef4444; }
+  &.fair   { background: #f59e0b; }
+  &.strong { background: #56ab2f; }
+}
+
+.strength-label {
+  font-size: 11px;
+  font-weight: 600;
+  width: 44px;
+  text-align: right;
+
+  &.weak   { color: #ef4444; }
+  &.fair   { color: #f59e0b; }
+  &.strong { color: #56ab2f; }
+}
+
+/* ===============================
+   ERROR MESSAGES
+   =============================== */
+.error-msg {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #ef4444;
+  font-size: 11.5px;
+  margin: 0 2px 8px;
+  text-align: left;
+
+  ion-icon {
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+}
+
+/* ===============================
+   BUTTON
+   =============================== */
+.signup-button {
+  --background: linear-gradient(90deg, #56ab2f, #00c9a7);
+  --background-activated: linear-gradient(90deg, #4a9a28, #00b090);
+  --color: #ffffff;
+  --border-radius: 12px;
+  --box-shadow: 0 4px 14px rgba(86, 171, 47, 0.4);
+  height: 50px;
+  font-weight: 700;
+  font-size: 15px;
+  margin-top: 16px;
+  letter-spacing: 0.3px;
+}
+
+.signup-button[disabled] {
+  --background: #d1d5db;
+  --box-shadow: none;
+  opacity: 1;
+}
+
+/* ===============================
+   DIVIDER
+   =============================== */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0 14px;
+  color: #d1d5db;
+  font-size: 12px;
+
+  &::before, &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e5e7eb;
+  }
+}
+
+/* ===============================
+   SIGN IN LINK
+   =============================== */
+.signin-link {
+  font-size: 13.5px;
+  color: #6b7280;
 }
 
 .signin-text {
   color: #00c9a7;
   font-weight: 700;
   cursor: pointer;
+  margin-left: 4px;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
+
+/* ===============================
+   TOAST
+   =============================== */
 .top-toast {
-  margin-top: 20px;                /* optional spacing */
   text-align: center;
-  color: white;
   font-weight: 600;
   border-radius: 10px !important;
 }
-/* Label turns green when field valid */
-/* Username label green when focused OR valid */
-.valid-label ion-label {
-  color: #2ecc71 !important;
-  font-weight: 600;
-}
 
-/* Remove eye icon */
-ion-input::-ms-reveal, 
-ion-input::-ms-clear {
-  display: none !important;
-}
-ion-input {
-  --padding-top: 6px;
-  --padding-bottom: 6px;
-}
-ion-item::part(native) {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  align-items: center !important;
-}
-
-/* Disable browser default password eye */
+/* Hide browser native password eye */
 input[type='password']::-ms-reveal,
 input[type='password']::-ms-clear,
 input::-webkit-credentials-auto-fill-button,
 input::-webkit-password-toggle {
   display: none !important;
 }
-.eye-icon {
- pointer-events: auto;
-  cursor: pointer;
-}
-

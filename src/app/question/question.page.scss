@@ -1,145 +1,301 @@
+/* ===============================
+   HEADER
+   =============================== */
+.question-header ion-toolbar {
+  --background: linear-gradient(135deg, #022c22, #064e3b);
+  --color: #ffffff;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
 
-/* Center content */
+.question-header ion-title {
+  color: #ffffff;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ===============================
+   PAGE
+   =============================== */
 .center-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
+  --background: linear-gradient(180deg, #f0fdf4, #dcfce7);
 }
 
 .card-wrapper {
-  width: 100%;
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-}
-.green-btn.outline-btn.small-btn {
-  --background: transparent !important;
-  --color: #10B981;
-  --border-color: #10B981;
-  --border-width: 2px;
-  --border-style: solid;
-
-  border-radius: 8px;
-  font-weight: 600;
-}
-.green-btn.small-btn:not(.outline-btn) {
-  --background: transparent !important;
-  --color: #10B981;
-  --border-color: #10B981;
-  --border-width: 2px;
-  --border-style: solid;
-
-  border-radius: 8px;
-  font-weight: 600;
+  min-height: 100%;
+  padding: 24px 16px;
+  gap: 16px;
 }
 
+/* ===============================
+   STEP INDICATOR
+   =============================== */
+.step-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 4px;
+}
+
+.step-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #d1d5db;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #9ca3af;
+  transition: all 0.3s ease;
+
+  &.active {
+    border-color: #10b981;
+    color: #10b981;
+  }
+
+  &.done {
+    background: #10b981;
+    border-color: #10b981;
+    color: #ffffff;
+  }
+}
+
+.step-line {
+  width: 60px;
+  height: 2px;
+  background: #d1d5db;
+  transition: background 0.3s ease;
+
+  &.active {
+    background: #10b981;
+  }
+}
+
+/* ===============================
+   CARD
+   =============================== */
 .card {
   background: #ffffff;
-  padding: 24px;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  width: 90%;
+  padding: 28px 24px 24px;
+  border-radius: 20px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.09);
+  width: 100%;
   max-width: 400px;
   text-align: center;
 }
 
-/* Titles */
+.animate-in {
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card-icon {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+
+  ion-icon {
+    font-size: 28px;
+    color: #064e3b;
+  }
+}
+
 .quiz-title {
-  font-size: 1.6rem;
-  font-weight: bold;
-  margin-bottom: 8px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #064e3b;
+  margin: 0 0 6px;
 }
 
 .quiz-subtitle {
-  margin-bottom: 20px;
-  color: #555;
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 20px;
+  line-height: 1.5;
 }
 
-/* 🔥 REMOVE INPUT BACKGROUND */
+/* ===============================
+   QUICK CHIPS
+   =============================== */
+.chip-row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.chip {
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1.5px solid #d1d5db;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &.selected {
+    background: #10b981;
+    border-color: #10b981;
+    color: #ffffff;
+  }
+}
+
+.divider-text {
+  font-size: 11px;
+  color: #9ca3af;
+  margin: 8px 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ===============================
+   INPUT
+   =============================== */
 .no-bg-item {
-  --background: transparent;
-  --border-color: #ddd;
-  --highlight-height: 0;
-  border-radius: 10px;
+  --background: #f9fafb;
+  --border-radius: 12px;
+  --padding-start: 14px;
+  --min-height: 50px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 12px;
+  margin-bottom: 8px;
+
+  ion-input {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1a1a;
+    text-align: center;
+  }
+}
+
+.error-hint {
+  font-size: 11px;
+  color: #ef4444;
+  margin: 0 0 8px;
+}
+
+.hint {
+  font-size: 11px;
+  color: #ef4444;
+  margin: 0 0 8px;
+}
+
+/* ===============================
+   TIME OPTION CARDS
+   =============================== */
+.time-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
   margin-bottom: 20px;
 }
 
-/* Button Row */
+.time-card {
+  border: 1.5px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+  background: #f9fafb;
+
+  ion-icon {
+    font-size: 22px;
+    color: #9ca3af;
+  }
+
+  .time-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #374151;
+  }
+
+  .time-sub {
+    font-size: 10px;
+    color: #9ca3af;
+  }
+
+  &.selected {
+    border-color: #10b981;
+    background: #f0fdf4;
+
+    ion-icon { color: #10b981; }
+    .time-label { color: #064e3b; }
+  }
+}
+
+/* ===============================
+   BUTTONS
+   =============================== */
 .button-row {
   display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 16px;
-}
-.button-row ion-button {
-  flex: 1;                /* 🔥 key fix */
-  max-width: 100%;
+  gap: 10px;
+
+  &.single { justify-content: center; }
+
+  ion-button { flex: 1; }
 }
 
-/* Single button center */
-.button-row.single {
-  justify-content: center;
-}
-
-/* Button styles */
-.green-btn {
-  --background: transparent !important;
-  --background-hover: transparent !important;
-  --background-activated: transparent !important;
-  --background-focused: transparent !important;
-
-  --color: #10B981;               /* text color */
-  --border-color: #10B981;
-  --border-width: 2px;
-  --border-style: solid;
-  width: 50px;
-  border-radius: 8px;
-  font-weight: 600;
-  box-shadow: none;
-}
-.back-btn::part(native) {
-  background: transparent;
-  color: gray;
-  border: 2px solid gray;
-  border-radius: 8px;
-  
-  width: 110px;   /* ⬅️ reduce width */
-  height: 38px;       /* optional: reduce height */
-  padding: 0 12px;    /* controls inner spacing */
-  font-size: 13px;
-
-  transition: color 0.25s ease, border-color 0.25s ease;
-}
-.back-btn:hover::part(native),
-.back-btn:focus::part(native),
-.back-btn.ion-focused::part(native),
-.back-btn:active::part(native) {
-  color: #10B981;
-  border-color: #10B981;
-}
-
-
-
-/* Small buttons (logout style) */
-.small-btn {
-  
-  
-  padding: 0 10px;
-  min-width: unset;
-  height: 42px;
+.primary-btn {
+  --background: linear-gradient(135deg, #10b981, #059669);
+  --background-activated: #047857;
+  --color: #ffffff;
+  --border-radius: 12px;
+  --box-shadow: 0 4px 12px rgba(16,185,129,0.35);
+  height: 46px;
+  font-weight: 700;
   font-size: 14px;
 }
 
-/* Outline back button */
-.outline-btn {
-  --background: #10B981;
-  --border-color: #10B981;
-  --color: #10B981;
- 
- min-width: 2px;
+.back-btn {
+  --background: transparent;
+  --color: #6b7280;
+  --border-color: #d1d5db;
+  --border-width: 1.5px;
+  --border-style: solid;
+  --border-radius: 12px;
+  --box-shadow: none;
+  height: 46px;
+  font-weight: 600;
+  font-size: 14px;
 }
 
-/* Disabled state */
-ion-button[disabled] {
-  opacity: 0.5;
+/* ===============================
+   SUMMARY BAR
+   =============================== */
+.summary-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #d1fae5;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #064e3b;
+
+  ion-icon { color: #10b981; font-size: 16px; }
 }
+
+ion-button[disabled] { opacity: 0.45; }

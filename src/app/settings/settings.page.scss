@@ -1,0 +1,172 @@
+/* ===============================
+   HEADER
+   =============================== */
+.settings-header ion-toolbar {
+  --background: linear-gradient(135deg, #022c22, #064e3b);
+  --color: #ffffff;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+
+.settings-header ion-title {
+  color: #ffffff;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ===============================
+   PAGE
+   =============================== */
+.settings-content {
+  --background: linear-gradient(180deg, #f0fdf4, #dcfce7);
+}
+
+/* ===============================
+   PROFILE CARD
+   =============================== */
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #ffffff;
+  margin: 16px;
+  border-radius: 16px;
+  padding: 18px 16px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+.avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #d1fae5, #6ee7b7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  ion-icon {
+    font-size: 28px;
+    color: #064e3b;
+  }
+}
+
+.profile-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #064e3b;
+  margin: 0 0 3px;
+}
+
+.profile-email {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+/* ===============================
+   SECTIONS
+   =============================== */
+.section {
+  margin: 0 16px 16px;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin: 0 4px 8px;
+}
+
+.settings-list {
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+
+/* ===============================
+   ROWS
+   =============================== */
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid #f3f4f6;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:last-child { border-bottom: none; }
+  &:active { background: #f9fafb; }
+}
+
+.row-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.row-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon { font-size: 18px; color: #ffffff; }
+
+  &.green  { background: #10b981; }
+  &.blue   { background: #3b82f6; }
+  &.purple { background: #8b5cf6; }
+  &.orange { background: #f59e0b; }
+  &.teal   { background: #06b6d4; }
+  &.gray   { background: #6b7280; }
+}
+
+.chevron {
+  font-size: 16px;
+  color: #d1d5db;
+}
+
+.version-label {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* ===============================
+   TOGGLES
+   =============================== */
+.green-toggle {
+  --track-background-checked: #10b981;
+  --handle-background: #ffffff;
+}
+
+/* ===============================
+   LOGOUT
+   =============================== */
+.logout-section {
+  padding: 8px 16px 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.logout-btn {
+  --background: transparent;
+  --color: #ef4444;
+  --border-color: #ef4444;
+  --border-width: 1.5px;
+  --border-style: solid;
+  --border-radius: 20px;
+  --box-shadow: none;
+  --padding-start: 28px;
+  --padding-end: 28px;
+  height: 38px;
+  font-weight: 700;
+  font-size: 13px;
+}

@@ -61,6 +61,7 @@ export class TestPage implements OnInit {
     private router: Router,
     private toast: ToastService
   ) {}
+  
 
   ngOnInit() {
     this.loadHistory();
@@ -97,7 +98,15 @@ export class TestPage implements OnInit {
       this.loadingHistory = false;
     }
   }
+// Add inside class:
+quickCounts = [10, 15, 20, 25, 30];
 
+timeOptions = [
+  { value: 600,  label: '10 min',  icon: 'time-outline'       },
+  { value: 1200, label: '20 min',  icon: 'hourglass-outline'  },
+  { value: 1800, label: '30 min',  icon: 'alarm-outline'      },
+  { value: 3600, label: '1 hour',  icon: 'timer-outline'      },
+];
   async loadSeries() {
     this.loadingSeries = true;
     try {

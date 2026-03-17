@@ -1,58 +1,101 @@
-<ion-content fullscreen class="ion-padding">
-  <ion-header class="dark-header">
+<ion-header class="dark-header">
   <ion-toolbar>
-    <ion-title class="home-title">Home</ion-title>
+    <ion-title class="home-title">StudyApp</ion-title>
   </ion-toolbar>
 </ion-header>
 
+<ion-content fullscreen class="ion-padding-horizontal">
 
-  <ion-grid class="ion-text-center">
-    <ion-row>
+  <!-- Greeting Banner -->
+  <div class="greeting-banner">
+    <div class="greeting-text">
+      <h2 class="greeting">{{ greeting }}, Learner 👋</h2>
+      <p class="date-label">{{ todayDate }}</p>
+    </div>
+    <div class="streak-badge">
+      <ion-icon name="flame"></ion-icon>
+      <span>7 Day Streak</span>
+    </div>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-wrapper">
+    <ion-searchbar
+      placeholder="Search subjects..."
+      [(ngModel)]="searchQuery"
+      (ionInput)="filterSubjects()"
+      class="custom-searchbar"
+      animated
+    ></ion-searchbar>
+  </div>
+
+  <!-- Subject Count -->
+  <div class="section-header">
+    <h3 class="section-title">Your Subjects</h3>
+    <span class="subject-count">{{ filteredSubjects.length }} subjects</span>
+  </div>
+
+  <!-- Subject Grid -->
+  <ion-grid>
+    <ion-row class="ion-justify-content-start">
       <ion-col
         size="6"
         size-md="4"
         size-lg="3"
-        *ngFor="let subject of subjects"
+        *ngFor="let subject of filteredSubjects"
       >
         <ion-card class="subject-card" (click)="openUploadPage(subject.name)">
-          <ion-card-content>
-            <img
-              [src]="subject.icon"
-              alt="{{ subject.name }} Icon"
-              class="subject-icon"
-            />
+          <ion-card-content class="card-content">
+            <div class="icon-wrapper">
+              <img
+                [src]="subject.icon"
+                alt="{{ subject.name }} Icon"
+                class="subject-icon"
+              />
+            </div>
             <p class="subject-name">{{ subject.name }}</p>
+            <div class="card-footer-info">
+              <span class="topic-count">{{ subject.topicCount || 0 }} topics</span>
+              <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+            </div>
           </ion-card-content>
         </ion-card>
       </ion-col>
     </ion-row>
+
+    <!-- Empty State -->
+    <ion-row *ngIf="filteredSubjects.length === 0" class="ion-justify-content-center">
+      <ion-col size="12" class="ion-text-center">
+        <div class="empty-state">
+          <ion-icon name="search-outline" class="empty-icon"></ion-icon>
+          <p>No subjects found for "<strong>{{ searchQuery }}</strong>"</p>
+        </div>
+      </ion-col>
+    </ion-row>
   </ion-grid>
+
 </ion-content>
 
 <!-- Footer Tabs -->
 <ion-footer>
   <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="home">
+    <ion-tab-button tab="home" [selected]="activeTab === 'home'" (click)="setTab('home')">
       <ion-icon name="home"></ion-icon>
       <ion-label>Home</ion-label>
     </ion-tab-button>
-
-    <ion-tab-button tab="test">
+    <ion-tab-button tab="test" [selected]="activeTab === 'test'" (click)="setTab('test')">
       <ion-icon name="list"></ion-icon>
       <ion-label>Test</ion-label>
     </ion-tab-button>
-
-    <ion-tab-button tab="progress">
+    <ion-tab-button tab="progress" [selected]="activeTab === 'progress'" (click)="setTab('progress')">
       <ion-icon name="bar-chart"></ion-icon>
       <ion-label>Progress</ion-label>
     </ion-tab-button>
-
-    <ion-tab-button tab="search">
+    <ion-tab-button tab="search" [selected]="activeTab === 'search'" (click)="setTab('search')">
       <ion-icon name="search"></ion-icon>
       <ion-label>Search</ion-label>
     </ion-tab-button>
-
-    <ion-tab-button tab="settings">
+    <ion-tab-button tab="settings" [selected]="activeTab === 'settings'" (click)="setTab('settings')">
       <ion-icon name="settings"></ion-icon>
       <ion-label>Settings</ion-label>
     </ion-tab-button>
