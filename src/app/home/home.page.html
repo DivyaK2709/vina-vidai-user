@@ -4,100 +4,183 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content fullscreen class="ion-padding-horizontal">
+<ion-content fullscreen class="home-content">
 
-  <!-- Greeting Banner -->
+  <!-- GREETING -->
   <div class="greeting-banner">
-    <div class="greeting-text">
-      <h2 class="greeting">{{ greeting }}, Learner 👋</h2>
+    <div>
+      <h2 class="greeting">{{ greeting }}, {{ userName }} 👋</h2>
       <p class="date-label">{{ todayDate }}</p>
     </div>
     <div class="streak-badge">
       <ion-icon name="flame"></ion-icon>
-      <span>7 Day Streak</span>
+      <span>{{ totalCount }} Topics</span>
     </div>
   </div>
 
-  <!-- Search Bar -->
+  <!-- SEARCH -->
   <div class="search-wrapper">
     <ion-searchbar
-      placeholder="Search subjects..."
       [(ngModel)]="searchQuery"
-      (ionInput)="filterSubjects()"
+      (ionInput)="filterAll($event)"
+      placeholder="Search subjects or exams..."
       class="custom-searchbar"
-      animated
-    ></ion-searchbar>
+      animated="true">
+    </ion-searchbar>
   </div>
 
-  <!-- Subject Count -->
-  <div class="section-header">
-    <h3 class="section-title">Your Subjects</h3>
-    <span class="subject-count">{{ filteredSubjects.length }} subjects</span>
-  </div>
-
-  <!-- Subject Grid -->
-  <ion-grid>
-    <ion-row class="ion-justify-content-start">
-      <ion-col
-        size="6"
-        size-md="4"
-        size-lg="3"
-        *ngFor="let subject of filteredSubjects"
-      >
-        <ion-card class="subject-card" (click)="openUploadPage(subject.name)">
-          <ion-card-content class="card-content">
-            <div class="icon-wrapper">
-              <img
-                [src]="subject.icon"
-                alt="{{ subject.name }} Icon"
-                class="subject-icon"
-              />
-            </div>
-            <p class="subject-name">{{ subject.name }}</p>
-            <div class="card-footer-info">
-              <span class="topic-count">{{ subject.topicCount || 0 }} topics</span>
-              <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
-            </div>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-
-    <!-- Empty State -->
-    <ion-row *ngIf="filteredSubjects.length === 0" class="ion-justify-content-center">
-      <ion-col size="12" class="ion-text-center">
-        <div class="empty-state">
-          <ion-icon name="search-outline" class="empty-icon"></ion-icon>
-          <p>No subjects found for "<strong>{{ searchQuery }}</strong>"</p>
+  <!-- SKELETON -->
+  <ion-grid *ngIf="isLoading">
+    <ion-row>
+      <ion-col size="6" *ngFor="let i of [1,2,3,4,5,6]">
+        <div class="skeleton-card">
+          <ion-skeleton-text animated
+            style="width:56px;height:56px;border-radius:14px;margin:0 auto 10px;">
+          </ion-skeleton-text>
+          <ion-skeleton-text animated
+            style="width:70%;height:13px;margin:0 auto 6px;">
+          </ion-skeleton-text>
+          <ion-skeleton-text animated
+            style="width:40%;height:11px;margin:0 auto;">
+          </ion-skeleton-text>
         </div>
       </ion-col>
     </ion-row>
   </ion-grid>
 
-</ion-content>
+  <div *ngIf="!isLoading">
 
-<!-- Footer Tabs -->
-<ion-footer>
-  <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="home" [selected]="activeTab === 'home'" (click)="setTab('home')">
-      <ion-icon name="home"></ion-icon>
-      <ion-label>Home</ion-label>
-    </ion-tab-button>
-    <ion-tab-button tab="test" [selected]="activeTab === 'test'" (click)="setTab('test')">
-      <ion-icon name="list"></ion-icon>
-      <ion-label>Test</ion-label>
-    </ion-tab-button>
-    <ion-tab-button tab="progress" [selected]="activeTab === 'progress'" (click)="setTab('progress')">
-      <ion-icon name="bar-chart"></ion-icon>
-      <ion-label>Progress</ion-label>
-    </ion-tab-button>
-    <ion-tab-button tab="search" [selected]="activeTab === 'search'" (click)="setTab('search')">
-      <ion-icon name="search"></ion-icon>
-      <ion-label>Search</ion-label>
-    </ion-tab-button>
-    <ion-tab-button tab="settings" [selected]="activeTab === 'settings'" (click)="setTab('settings')">
-      <ion-icon name="settings"></ion-icon>
-      <ion-label>Settings</ion-label>
-    </ion-tab-button>
-  </ion-tab-bar>
-</ion-footer>
+    <!-- ── EXAM CATEGORIES ── -->
+    <div class="section-header" *ngIf="filteredExams.length > 0">
+      <div class="section-line"></div>
+      <span class="section-label">Exam Categories</span>
+      <div class="section-line"></div>
+    </div>
+
+    <ion-grid *ngIf="filteredExams.length > 0">
+      <ion-row>
+        <ion-col size="4" *ngFor="let exam of filteredExams">
+          <div class="exam-card"
+            (click)="openUploadPage(exam.name)"
+            [class.pressed]="pressedCard === exam.name"
+            (touchstart)="onCardPress(exam.name)"
+            (touchend)="onCardRelease()">
+            <div class="exam-icon-wrap" [style.background]="exam.color">
+              <ion-icon [name]="exam.icon"></ion-icon>
+            </div>
+            <p class="exam-name">{{ exam.name }}</p>
+            <span class="q-count">{{ questionCounts[exam.name] ?? 0 }} Qs</span>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <!-- ── SUBJECTS ── -->
+    <div class="section-header"
+      *ngIf="filteredSubjects.length > 0 || showStaticSubjects">
+      <div class="section-line"></div>
+      <span class="section-label">Subjects</span>
+      <div class="section-line"></div>
+    </div>
+
+    <ion-grid>
+      <ion-row>
+
+        <!-- Dynamic from subjects.json -->
+        <ion-col size="6" *ngFor="let subject of filteredSubjects">
+          <div class="subject-card"
+            (click)="openUploadPage(subject.name)"
+            [class.pressed]="pressedCard === subject.name"
+            (touchstart)="onCardPress(subject.name)"
+            (touchend)="onCardRelease()">
+            <div class="icon-wrapper">
+              <img [src]="subject.icon" alt="{{ subject.name }}"
+                onerror="this.style.display='none';
+                  this.nextElementSibling.style.display='flex'"/>
+              <ion-icon name="book-outline"
+                style="display:none;font-size:28px;color:#16a34a;">
+              </ion-icon>
+            </div>
+            <p class="subject-name">{{ subject.name }}</p>
+            <span class="q-count">{{ questionCounts[subject.name] ?? 0 }} Qs</span>
+          </div>
+        </ion-col>
+
+        <!-- Static subjects -->
+        <ng-container *ngIf="showStaticSubjects">
+
+          <ion-col size="6" *ngIf="matchesSearch('Economics')">
+            <div class="subject-card"
+              (click)="openUploadPage('Economics')"
+              [class.pressed]="pressedCard === 'Economics'"
+              (touchstart)="onCardPress('Economics')"
+              (touchend)="onCardRelease()">
+              <div class="icon-wrapper eco">
+                <ion-icon name="trending-up-outline"></ion-icon>
+              </div>
+              <p class="subject-name">Economics</p>
+              <span class="q-count">{{ questionCounts['Economics'] ?? 0 }} Qs</span>
+            </div>
+          </ion-col>
+
+          <ion-col size="6" *ngIf="matchesSearch('Social Science')">
+            <div class="subject-card"
+              (click)="openUploadPage('Social Science')"
+              [class.pressed]="pressedCard === 'Social Science'"
+              (touchstart)="onCardPress('Social Science')"
+              (touchend)="onCardRelease()">
+              <div class="icon-wrapper social">
+                <ion-icon name="people-outline"></ion-icon>
+              </div>
+              <p class="subject-name">Social Science</p>
+              <span class="q-count">{{ questionCounts['Social Science'] ?? 0 }} Qs</span>
+            </div>
+          </ion-col>
+
+          <ion-col size="6" *ngIf="matchesSearch('Geography')">
+            <div class="subject-card"
+              (click)="openUploadPage('Geography')"
+              [class.pressed]="pressedCard === 'Geography'"
+              (touchstart)="onCardPress('Geography')"
+              (touchend)="onCardRelease()">
+              <div class="icon-wrapper geo">
+                <ion-icon name="globe-outline"></ion-icon>
+              </div>
+              <p class="subject-name">Geography</p>
+              <span class="q-count">{{ questionCounts['Geography'] ?? 0 }} Qs</span>
+            </div>
+          </ion-col>
+
+          <ion-col size="6" *ngIf="matchesSearch('History')">
+            <div class="subject-card"
+              (click)="openUploadPage('History')"
+              [class.pressed]="pressedCard === 'History'"
+              (touchstart)="onCardPress('History')"
+              (touchend)="onCardRelease()">
+              <div class="icon-wrapper hist">
+                <ion-icon name="time-outline"></ion-icon>
+              </div>
+              <p class="subject-name">History</p>
+              <span class="q-count">{{ questionCounts['History'] ?? 0 }} Qs</span>
+            </div>
+          </ion-col>
+
+        </ng-container>
+
+        <!-- Empty -->
+        <ion-col size="12"
+          *ngIf="filteredSubjects.length === 0 &&
+                 !showStaticSubjects &&
+                 filteredExams.length === 0">
+          <div class="empty-state">
+            <ion-icon name="search-outline"></ion-icon>
+            <p>No results for <strong>"{{ searchQuery }}"</strong></p>
+          </div>
+        </ion-col>
+
+      </ion-row>
+    </ion-grid>
+
+  </div>
+
+</ion-content>

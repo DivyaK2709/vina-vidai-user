@@ -1,0 +1,138 @@
+<ion-header class="search-header">
+  <ion-toolbar>
+    <ion-title>Search</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="search-content">
+
+  <!-- SEARCH BAR -->
+  <div class="search-wrapper">
+    <ion-searchbar
+      [(ngModel)]="searchQuery"
+      (ionInput)="onSearch()"
+      (ionClear)="clearSearch()"
+      placeholder="Search questions..."
+      class="custom-searchbar"
+      animated>
+    </ion-searchbar>
+  </div>
+
+  <!-- SUBJECT FILTER CHIPS -->
+  <div class="chip-scroll">
+    <span class="filter-chip"
+      [class.active]="selectedSubject === ''"
+      (click)="setSubject('')">All</span>
+    <span class="filter-chip"
+      *ngFor="let s of subjectList"
+      [class.active]="selectedSubject === s"
+      (click)="setSubject(s)">{{ s }}</span>
+  </div>
+
+  <!-- IDLE STATE (no search yet) -->
+  <div *ngIf="!searchQuery && !selectedSubject">
+
+    <!-- RECENT SEARCHES -->
+    <div *ngIf="recentSearches.length > 0" class="section">
+      <div class="section-row">
+        <span class="section-title">Recent Searches</span>
+        <span class="clear-btn" (click)="clearRecent()">Clear</span>
+      </div>
+      <div class="chip-wrap">
+        <span class="recent-chip"
+          *ngFor="let r of recentSearches"
+          (click)="applyRecent(r)">
+          <ion-icon name="time-outline"></ion-icon> {{ r }}
+        </span>
+      </div>
+    </div>
+
+    <!-- BOOKMARKS -->
+    <div class="section" *ngIf="bookmarks.length > 0">
+      <div class="section-row">
+        <span class="section-title">
+          <ion-icon name="bookmark"></ion-icon> Saved Questions
+        </span>
+        <span class="count-badge">{{ bookmarks.length }}</span>
+      </div>
+      <div class="result-card" *ngFor="let q of bookmarks">
+        <div class="card-top">
+          <span class="subject-tag">{{ q.subject }}</span>
+          <ion-icon name="bookmark" class="bookmark-icon active"
+            (click)="toggleBookmark(q)"></ion-icon>
+        </div>
+        <p class="question-text">{{ q.question }}</p>
+        <div class="answer-row" *ngIf="q.showAnswer">
+          <span class="answer-label">Answer:</span>
+          <span class="answer-text">{{ q.answer }}</span>
+        </div>
+        <ion-button fill="clear" size="small" class="see-ans-btn"
+          (click)="q.showAnswer = !q.showAnswer">
+          {{ q.showAnswer ? 'Hide Answer' : 'See Answer' }}
+          <ion-icon slot="end"
+            [name]="q.showAnswer ? 'chevron-up-outline' : 'chevron-down-outline'">
+          </ion-icon>
+        </ion-button>
+      </div>
+    </div>
+
+    <!-- NO BOOKMARKS -->
+    <div class="empty-state" *ngIf="bookmarks.length === 0 && recentSearches.length === 0">
+      <ion-icon name="search-outline"></ion-icon>
+      <p>Search for any question</p>
+      <span>Results will appear here</span>
+    </div>
+
+  </div>
+
+  <!-- LOADING -->
+  <div class="center-spinner" *ngIf="isLoading">
+    <ion-spinner name="crescent" color="success"></ion-spinner>
+    <p>Searching...</p>
+  </div>
+
+  <!-- RESULTS -->
+  <div *ngIf="!isLoading && (searchQuery || selectedSubject)">
+
+    <div class="results-header" *ngIf="results.length > 0">
+      <span>{{ results.length }} result{{ results.length > 1 ? 's' : '' }} found</span>
+    </div>
+
+    <div class="result-card" *ngFor="let q of results">
+      <div class="card-top">
+        <span class="subject-tag">{{ q.subject }}</span>
+        <ion-icon
+          [name]="isBookmarked(q) ? 'bookmark' : 'bookmark-outline'"
+          class="bookmark-icon"
+          [class.active]="isBookmarked(q)"
+          (click)="toggleBookmark(q)">
+        </ion-icon>
+      </div>
+      <p class="question-text">{{ q.question }}</p>
+      <div class="answer-row" *ngIf="q.showAnswer">
+        <span class="answer-label">Answer:</span>
+        <span class="answer-text">{{ q.answer }}</span>
+        <div class="explanation" *ngIf="q.explanation">
+          <ion-icon name="information-circle-outline"></ion-icon>
+          {{ q.explanation }}
+        </div>
+      </div>
+      <ion-button fill="clear" size="small" class="see-ans-btn"
+        (click)="q.showAnswer = !q.showAnswer">
+        {{ q.showAnswer ? 'Hide Answer' : 'See Answer' }}
+        <ion-icon slot="end"
+          [name]="q.showAnswer ? 'chevron-up-outline' : 'chevron-down-outline'">
+        </ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- NO RESULTS -->
+    <div class="empty-state" *ngIf="results.length === 0">
+      <ion-icon name="document-text-outline"></ion-icon>
+      <p>No questions found</p>
+      <span>Try a different keyword or subject</span>
+    </div>
+
+  </div>
+
+</ion-content>

@@ -1,0 +1,230 @@
+/* ===============================
+   HEADER
+   =============================== */
+.search-header ion-toolbar {
+  --background: linear-gradient(135deg, #022c22, #064e3b);
+  --color: #ffffff;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+.search-header ion-title {
+  color: #ffffff;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ===============================
+   PAGE
+   =============================== */
+.search-content {
+  --background: linear-gradient(180deg, #f0fdf4, #dcfce7);
+}
+
+/* ===============================
+   SEARCH BAR
+   =============================== */
+.search-wrapper {
+  padding: 14px 16px 8px;
+}
+.custom-searchbar {
+  --background: #ffffff;
+  --border-radius: 12px;
+  --box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  --icon-color: #064e3b;
+  --placeholder-color: #9ca3af;
+  --color: #1f2937;
+  padding: 0;
+}
+
+/* ===============================
+   SUBJECT CHIPS
+   =============================== */
+.chip-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 0 16px 12px;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+.filter-chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1.5px solid #d1d5db;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #ffffff;
+
+  &.active {
+    background: #064e3b;
+    border-color: #064e3b;
+    color: #ffffff;
+  }
+}
+
+/* ===============================
+   SECTIONS
+   =============================== */
+.section {
+  padding: 0 16px 16px;
+}
+.section-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #064e3b;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  ion-icon { font-size: 15px; }
+}
+.clear-btn {
+  font-size: 12px;
+  color: #ef4444;
+  font-weight: 600;
+  cursor: pointer;
+}
+.count-badge {
+  font-size: 11px;
+  background: #d1fae5;
+  color: #064e3b;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+/* ===============================
+   RECENT CHIPS
+   =============================== */
+.chip-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.recent-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #064e3b;
+  cursor: pointer;
+  ion-icon { font-size: 12px; }
+}
+
+/* ===============================
+   RESULT CARDS
+   =============================== */
+.results-header {
+  padding: 4px 20px 8px;
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+}
+.result-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin: 0 16px 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.subject-tag {
+  font-size: 10px;
+  font-weight: 700;
+  background: #d1fae5;
+  color: #065f46;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: capitalize;
+}
+.bookmark-icon {
+  font-size: 20px;
+  color: #d1d5db;
+  cursor: pointer;
+  transition: color 0.2s;
+  &.active { color: #f59e0b; }
+}
+.question-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  line-height: 1.5;
+  margin: 0 0 8px;
+}
+.answer-row {
+  background: #f0fdf4;
+  border-left: 3px solid #16a34a;
+  border-radius: 0 8px 8px 0;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+.answer-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #16a34a;
+  display: block;
+  margin-bottom: 3px;
+}
+.answer-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: #064e3b;
+}
+.explanation {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #6b7280;
+  line-height: 1.5;
+  ion-icon { font-size: 14px; color: #16a34a; flex-shrink: 0; margin-top: 1px; }
+}
+.see-ans-btn {
+  --color: #16a34a;
+  font-size: 12px;
+  font-weight: 700;
+  margin: 0;
+  height: 32px;
+}
+
+/* ===============================
+   LOADING
+   =============================== */
+.center-spinner {
+  text-align: center;
+  padding: 48px 16px;
+  color: #6b7280;
+  font-size: 13px;
+  ion-spinner { display: block; margin: 0 auto 10px; }
+}
+
+/* ===============================
+   EMPTY STATE
+   =============================== */
+.empty-state {
+  text-align: center;
+  padding: 48px 16px;
+  color: #9ca3af;
+  ion-icon { font-size: 52px; color: #bbf7d0; display: block; margin-bottom: 12px; }
+  p    { font-size: 15px; font-weight: 600; color: #6b7280; margin: 0 0 4px; }
+  span { font-size: 12px; }
+}
