@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, Injector, runInInjectionContext } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -6,6 +6,7 @@ import { IonicModule, ToastController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { Firestore, collection, getDocs, query, where } from '@angular/fire/firestore';
 import { Auth, authState } from '@angular/fire/auth';
+import { inject, Injector, runInInjectionContext } from '@angular/core';
 
 @Component({
   selector: 'app-home',
@@ -21,7 +22,7 @@ export class HomePage implements OnInit {
 
   subjects        : any[] = [];
   filteredSubjects: any[] = [];
-  questionCounts: { [key: string]: number | undefined } = {};
+  questionCounts  : { [key: string]: number } = {};
   searchQuery     = '';
   isLoading       = true;
   pressedCard     : string | null = null;
@@ -29,19 +30,43 @@ export class HomePage implements OnInit {
   greeting        = '';
   todayDate       = '';
 
-  // ── Exact same exam categories as admin ──────────────────────────
-  examCategories = [
-    { name: 'SSC',   icon: 'school-outline',    color: 'linear-gradient(135deg, #4facfe, #0078ff)' },
-    { name: 'TNPSC', icon: 'ribbon-outline',     color: 'linear-gradient(135deg, #f7971e, #e65100)' },
-    { name: 'UPSC',  icon: 'globe-outline',      color: 'linear-gradient(135deg, #56ab2f, #1b5e20)' },
-    { name: 'NEET',  icon: 'medkit-outline',     color: 'linear-gradient(135deg, #f953c6, #b91d73)' },
-    { name: 'JEE',   icon: 'construct-outline',  color: 'linear-gradient(135deg, #f7971e, #d32f2f)' },
-    { name: 'RRB',   icon: 'train-outline',      color: 'linear-gradient(135deg, #0f9b8e, #005c5c)' },
-  ];
+  // ── Exact same structure as admin ────────────────────────────────
+  examData: { [key: string]: any[] } = {
+    tnpsc: [
+      { name: 'Group 1',  icon: 'star-outline',       color: 'linear-gradient(135deg,#f7971e,#e65100)' },
+      { name: 'Group 2',  icon: 'ribbon-outline',      color: 'linear-gradient(135deg,#f7971e,#e65100)' },
+      { name: 'Group 2A', icon: 'ribbon-outline',      color: 'linear-gradient(135deg,#ff9800,#e65100)' },
+      { name: 'Group 4',  icon: 'document-outline',    color: 'linear-gradient(135deg,#ffa726,#e65100)' },
+      { name: 'Group 7',  icon: 'school-outline',      color: 'linear-gradient(135deg,#fb8c00,#bf360c)' },
+      { name: 'Group 8',  icon: 'briefcase-outline',   color: 'linear-gradient(135deg,#ef6c00,#b71c1c)' },
+    ],
+    rrb: [
+      { name: 'NTPC Graduate',      icon: 'trending-up-outline',  color: 'linear-gradient(135deg,#4facfe,#0078ff)' },
+      { name: 'NTPC Undergraduate', icon: 'book-outline',          color: 'linear-gradient(135deg,#29b6f6,#0277bd)' },
+      { name: 'Group D',            icon: 'construct-outline',     color: 'linear-gradient(135deg,#26c6da,#00838f)' },
+      { name: 'JE',                 icon: 'settings-outline',      color: 'linear-gradient(135deg,#00bcd4,#006064)' },
+      { name: 'ALP',                icon: 'train-outline',         color: 'linear-gradient(135deg,#0288d1,#01579b)' },
+    ],
+    upsc: [
+      { name: 'CDS',  icon: 'shield-outline',      color: 'linear-gradient(135deg,#56ab2f,#1b5e20)' },
+      { name: 'EPFO', icon: 'wallet-outline',       color: 'linear-gradient(135deg,#43a047,#1b5e20)' },
+      { name: 'IAS',  icon: 'globe-outline',        color: 'linear-gradient(135deg,#66bb6a,#2e7d32)' },
+      { name: 'IPS',  icon: 'medal-outline',        color: 'linear-gradient(135deg,#26a69a,#00695c)' },
+      { name: 'NDA',  icon: 'flag-outline',         color: 'linear-gradient(135deg,#00897b,#004d40)' },
+      { name: 'CAPF', icon: 'shield-half-outline',  color: 'linear-gradient(135deg,#00acc1,#006064)' },
+    ],
+    ssc: [
+      { name: 'CGL',  icon: 'trophy-outline',   color: 'linear-gradient(135deg,#ab47bc,#6a1b9a)' },
+      { name: 'CHSL', icon: 'document-outline', color: 'linear-gradient(135deg,#7e57c2,#4527a0)' },
+      { name: 'MTS',  icon: 'people-outline',   color: 'linear-gradient(135deg,#5c6bc0,#283593)' },
+      { name: 'CPO',  icon: 'shield-outline',   color: 'linear-gradient(135deg,#8e24aa,#4a148c)' },
+      { name: 'JE',   icon: 'hammer-outline',   color: 'linear-gradient(135deg,#d81b60,#880e4f)' },
+      { name: 'GD',   icon: 'walk-outline',     color: 'linear-gradient(135deg,#e91e63,#880e4f)' },
+    ],
+  };
 
-  filteredExams = [...this.examCategories];
+  filteredExamData: { [key: string]: any[] } = {};
 
-  // ── Exact same static subjects as admin ──────────────────────────
   private staticSubjects = ['Economics', 'Social Science', 'Geography', 'History'];
 
   get showStaticSubjects(): boolean {
@@ -52,7 +77,8 @@ export class HomePage implements OnInit {
   }
 
   get totalCount(): number {
-    return this.subjects.length + this.staticSubjects.length + this.examCategories.length;
+    return Object.values(this.examData).reduce((t, arr) => t + arr.length, 0)
+      + this.subjects.length + this.staticSubjects.length;
   }
 
   constructor(
@@ -64,6 +90,7 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
     this.setGreeting();
+    this.filteredExamData = { ...this.examData };
     runInInjectionContext(this.injector, () => {
       authState(this.auth).subscribe(user => {
         if (user) {
@@ -82,7 +109,6 @@ export class HomePage implements OnInit {
     });
   }
 
-  // ── Same as admin: load from assets/subjects.json ────────────────
   loadSubjects() {
     this.isLoading = true;
     this.http.get<any[]>('assets/subjects.json').subscribe({
@@ -93,20 +119,21 @@ export class HomePage implements OnInit {
         await this.loadQuestionCounts();
       },
       error: () => {
-        this.isLoading = false;
-        this.presentToast('Failed to load subjects.', 'danger');
+        this.subjects         = [];
+        this.filteredSubjects = [];
+        this.isLoading        = false;
+        this.loadQuestionCounts();
       }
     });
   }
 
-  // ── Same as admin: query Firestore per topic ──────────────────────
   async loadQuestionCounts() {
     const allTopics = [
+      ...Object.values(this.examData).reduce((acc: any[], arr: any[]) => acc.concat(arr), []).map((i: any) => i.name),
+
       ...this.subjects.map((s: any) => s.name),
       ...this.staticSubjects,
-      ...this.examCategories.map(e => e.name)
     ];
-
     const questionsRef = collection(this.firestore, 'questions');
     for (const topic of allTopics) {
       const q = query(questionsRef, where('subject', '==', topic));
@@ -120,13 +147,24 @@ export class HomePage implements OnInit {
     const val = (event.target?.value || '').toLowerCase().trim();
     this.searchQuery = event.target?.value || '';
 
+    // Filter each exam group
+    Object.keys(this.examData).forEach(key => {
+      this.filteredExamData[key] = !val
+        ? this.examData[key]
+        : this.examData[key].filter(i => i.name.toLowerCase().includes(val));
+    });
+
     this.filteredSubjects = !val
       ? this.subjects
-      : this.subjects.filter(s => s.name.toLowerCase().includes(val));
+      : this.subjects.filter((s: any) => s.name.toLowerCase().includes(val));
+  }
 
-    this.filteredExams = !val
-      ? this.examCategories
-      : this.examCategories.filter(e => e.name.toLowerCase().includes(val));
+  showSection(key: string): boolean {
+    return (this.filteredExamData[key]?.length ?? 0) > 0;
+  }
+
+  getFiltered(key: string): any[] {
+    return this.filteredExamData[key] || [];
   }
 
   matchesSearch(name: string): boolean {
@@ -137,7 +175,6 @@ export class HomePage implements OnInit {
   onCardPress(name: string)  { this.pressedCard = name; }
   onCardRelease()            { setTimeout(() => this.pressedCard = null, 200); }
 
-  // ── Navigate to quiz setup ────────────────────────────────────────
   openUploadPage(name: string) {
     this.router.navigate(['/tabs/question'], {
       queryParams: { subject: name }

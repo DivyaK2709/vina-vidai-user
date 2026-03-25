@@ -88,19 +88,61 @@
       </div>
 
       <!-- SUBJECT -->
-      <div class="field-group">
-        <label class="field-label">
-          <ion-icon name="book-outline"></ion-icon> Subject
-        </label>
-        <ion-select interface="popover" placeholder="Choose a subject"
-          [(ngModel)]="selectedSubject" class="styled-select">
-          <ion-select-option value="current affairs">Current Affairs</ion-select-option>
-          <ion-select-option value="social science">Social Science</ion-select-option>
-          <ion-select-option value="history">History</ion-select-option>
-          <ion-select-option value="English">English</ion-select-option>
-        </ion-select>
-      </div>
+      <!-- SUBJECT -->
+<div class="field-group">
+  <label class="field-label">
+    <ion-icon name="book-outline"></ion-icon> Subject
+  </label>
+  <ion-select interface="popover" placeholder="Choose a subject"
+    [(ngModel)]="selectedSubject" class="styled-select">
 
+    <!-- TNPSC -->
+    <ion-select-option disabled class="opt-header">── TNPSC ──</ion-select-option>
+    <ion-select-option value="Group 1">Group 1</ion-select-option>
+    <ion-select-option value="Group 2">Group 2</ion-select-option>
+    <ion-select-option value="Group 2A">Group 2A</ion-select-option>
+    <ion-select-option value="Group 4">Group 4</ion-select-option>
+    <ion-select-option value="Group 7">Group 7</ion-select-option>
+    <ion-select-option value="Group 8">Group 8</ion-select-option>
+
+    <!-- RRB -->
+    <ion-select-option disabled>── RRB ──</ion-select-option>
+    <ion-select-option value="NTPC Graduate">NTPC Graduate</ion-select-option>
+    <ion-select-option value="NTPC Undergraduate">NTPC Undergraduate</ion-select-option>
+    <ion-select-option value="Group D">Group D</ion-select-option>
+    <ion-select-option value="JE">JE</ion-select-option>
+    <ion-select-option value="ALP">ALP</ion-select-option>
+
+    <!-- UPSC -->
+    <ion-select-option disabled>── UPSC ──</ion-select-option>
+    <ion-select-option value="CDS">CDS</ion-select-option>
+    <ion-select-option value="EPFO">EPFO</ion-select-option>
+    <ion-select-option value="IAS">IAS</ion-select-option>
+    <ion-select-option value="IPS">IPS</ion-select-option>
+    <ion-select-option value="NDA">NDA</ion-select-option>
+    <ion-select-option value="CAPF">CAPF</ion-select-option>
+
+    <!-- SSC -->
+    <ion-select-option disabled>── SSC ──</ion-select-option>
+    <ion-select-option value="CGL">CGL</ion-select-option>
+    <ion-select-option value="CHSL">CHSL</ion-select-option>
+    <ion-select-option value="MTS">MTS</ion-select-option>
+    <ion-select-option value="CPO">CPO</ion-select-option>
+    <ion-select-option value="GD">GD</ion-select-option>
+
+    <!-- SUBJECTS -->
+    <ion-select-option disabled>── Subjects ──</ion-select-option>
+    <ion-select-option value="History">History</ion-select-option>
+    <ion-select-option value="Geography">Geography</ion-select-option>
+    <ion-select-option value="Economics">Economics</ion-select-option>
+    <ion-select-option value="Social Science">Social Science</ion-select-option>
+    <ion-select-option value="Current Affairs">Current Affairs</ion-select-option>
+    <ion-select-option value="English">English</ion-select-option>
+    <ion-select-option value="Science">Science</ion-select-option>
+    <ion-select-option value="Mathematics">Mathematics</ion-select-option>
+
+  </ion-select>
+</div>
       <!-- QUESTIONS -->
       <div class="field-group">
         <label class="field-label">

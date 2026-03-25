@@ -71,26 +71,35 @@
 }
 
 /* ===============================
-   SECTION HEADER
+   SECTION HEADERS
    =============================== */
 .section-header {
+  padding: 14px 16px 6px;
+}
+.exam-section-title {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 16px 6px;
+
+  span {
+    font-size: 11px;
+    color: #9ca3af;
+    font-weight: 500;
+  }
 }
-.section-line {
-  flex: 1;
-  height: 1px;
-  background: #d1fae5;
-}
-.section-label {
+.exam-title-badge {
   font-size: 12px;
-  font-weight: 700;
-  color: #064e3b;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  white-space: nowrap;
+  font-weight: 800;
+  padding: 4px 14px;
+  border-radius: 20px;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+
+  &.orange { background: linear-gradient(135deg, #f7971e, #e65100); }
+  &.blue   { background: linear-gradient(135deg, #4facfe, #0078ff); }
+  &.green  { background: linear-gradient(135deg, #56ab2f, #1b5e20); }
+  &.purple { background: linear-gradient(135deg, #ab47bc, #6a1b9a); }
+  &.teal   { background: linear-gradient(135deg, #00bcd4, #006064); }
 }
 
 /* ===============================
@@ -102,12 +111,12 @@ ion-col  { padding: 5px; }
 .exam-card {
   background: #ffffff;
   border-radius: 14px;
-  padding: 14px 8px;
+  padding: 14px 8px 10px;
   text-align: center;
   box-shadow: 0 3px 10px rgba(0,0,0,0.07);
   cursor: pointer;
   transition: transform 0.15s ease;
-  &.pressed { transform: scale(0.95); }
+  &.pressed { transform: scale(0.94); }
 }
 .exam-icon-wrap {
   width: 48px;
@@ -117,7 +126,7 @@ ion-col  { padding: 5px; }
   align-items: center;
   justify-content: center;
   margin: 0 auto 8px;
-  ion-icon { font-size: 24px; color: #ffffff; }
+  ion-icon { font-size: 22px; color: #ffffff; }
 }
 .exam-name {
   font-size: 11px;
@@ -127,6 +136,15 @@ ion-col  { padding: 5px; }
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.q-count {
+  font-size: 10px;
+  color: #6b7280;
+  font-weight: 500;
+  background: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 20px;
+  display: inline-block;
 }
 
 /* ===============================
@@ -142,7 +160,7 @@ ion-col  { padding: 5px; }
   transition: transform 0.15s ease;
   &.pressed { transform: scale(0.95); }
 }
-.icon-wrapper {
+.subject-icon-wrap {
   width: 58px;
   height: 58px;
   border-radius: 14px;
@@ -152,16 +170,16 @@ ion-col  { padding: 5px; }
   justify-content: center;
   margin: 0 auto 10px;
 
-  img { width: 34px; height: 34px; object-fit: contain; }
-  ion-icon { font-size: 28px; color: #16a34a; }
+  img       { width: 34px; height: 34px; object-fit: contain; }
+  ion-icon  { font-size: 26px; color: #16a34a; }
 
-  &.eco    { background: linear-gradient(135deg, #d1fae5, #6ee7b7); ion-icon { color: #10b981; } }
-  &.social { background: linear-gradient(135deg, #ede9fe, #c4b5fd); ion-icon { color: #8b5cf6; } }
-  &.geo    { background: linear-gradient(135deg, #cffafe, #67e8f9); ion-icon { color: #06b6d4; } }
-  &.hist   { background: linear-gradient(135deg, #fef3c7, #fcd34d); ion-icon { color: #f59e0b; } }
+  &.eco    { background: linear-gradient(135deg,#d1fae5,#6ee7b7); ion-icon{color:#10b981;} }
+  &.social { background: linear-gradient(135deg,#ede9fe,#c4b5fd); ion-icon{color:#8b5cf6;} }
+  &.geo    { background: linear-gradient(135deg,#cffafe,#67e8f9); ion-icon{color:#06b6d4;} }
+  &.hist   { background: linear-gradient(135deg,#fef3c7,#fcd34d); ion-icon{color:#f59e0b;} }
 }
 .subject-name {
-  font-size: clamp(11px, 2.5vw, 13px);
+  font-size: clamp(11px,2.5vw,13px);
   font-weight: 700;
   color: #1f2937;
   margin: 0 0 6px;
@@ -169,22 +187,14 @@ ion-col  { padding: 5px; }
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.q-count {
-  font-size: 10px;
-  color: #6b7280;
-  font-weight: 500;
-  background: #f3f4f6;
-  padding: 2px 8px;
-  border-radius: 20px;
-}
 
 /* ===============================
    SKELETON
    =============================== */
 .skeleton-card {
   background: #ffffff;
-  border-radius: 16px;
-  padding: 16px 10px;
+  border-radius: 14px;
+  padding: 14px 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
@@ -195,6 +205,6 @@ ion-col  { padding: 5px; }
   text-align: center;
   padding: 48px 16px;
   color: #9ca3af;
-  ion-icon { font-size: 52px; color: #bbf7d0; display: block; margin-bottom: 12px; }
+  ion-icon { font-size: 52px; color:#bbf7d0; display:block; margin-bottom:12px; }
   p { font-size: 14px; }
 }
