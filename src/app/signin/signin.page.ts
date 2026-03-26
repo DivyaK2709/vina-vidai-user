@@ -90,8 +90,14 @@ export class SigninPage {
       } else {
         await this.firebaseService.signInWithUsername(this.emailOrUsername, this.password);
       }
+
+      // ✅ Save session timestamp
+      localStorage.setItem('lastLoginTime', Date.now().toString());
+
       this.showToast('Welcome back!', 'success');
-      this.router.navigate(['/tabs']);
+
+      // ✅ Navigate inside try — only runs on success
+      this.router.navigate(['/tabs'], { replaceUrl: true });
 
     } catch (err: any) {
       const code = err?.code || '';
@@ -112,8 +118,8 @@ export class SigninPage {
     }
   }
 
-  goToSignup()          { this.router.navigate(['/login']); }
-  goToForgotPassword()  { this.router.navigate(['/forgot-password']); }
+  goToSignup()         { this.router.navigate(['/login']); }
+  goToForgotPassword() { this.router.navigate(['/forgot-password']); }
 
   showToast(message: string, color: 'success' | 'danger' | 'warning' | 'primary' = 'success') {
     this.toast.show(message, color);

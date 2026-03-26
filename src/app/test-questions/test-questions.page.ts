@@ -56,10 +56,12 @@ export class TestQuestionsPage implements OnInit, OnDestroy {
     this.loadQuestion(0);
     this.updateFormattedTime();
     this.startTimer();
+    document.addEventListener('visibilitychange', this.visibilityHandler);
   }
 
   ngOnDestroy() {
-    if (this.timer) clearInterval(this.timer);
+      if (this.timer) clearInterval(this.timer);
+       document.removeEventListener('visibilitychange', this.visibilityHandler);
   }
 
   // ======================
@@ -244,7 +246,15 @@ applyAlertCSS(alert: HTMLIonAlertElement) {
  
   
 
-
+private visibilityHandler = () => {
+  if (document.hidden) {
+    // Page hidden — pause timer
+    if (this.timer) clearInterval(this.timer);
+  } else {
+    // Page visible again — resume
+    if (this.timeLeft > 0) this.startTimer();
+  }
+};
   // ======================
   // SUMMARY
   // ======================

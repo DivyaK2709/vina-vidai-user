@@ -22,13 +22,48 @@
     <p class="section-label">Account</p>
     <div class="settings-list">
 
-      <div class="settings-row">
-        <div class="row-left">
-          <div class="row-icon green"><ion-icon name="person-circle-outline"></ion-icon></div>
-          <span>Edit Profile</span>
-        </div>
-        <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+<!-- Edit Profile row — opens modal -->
+<div class="settings-row" (click)="openEditProfile()">
+  <div class="row-left">
+    <div class="row-icon green"><ion-icon name="person-circle-outline"></ion-icon></div>
+    <span>Edit Profile</span>
+  </div>
+  <ion-icon name="chevron-forward-outline" class="chevron"></ion-icon>
+</div>
+
+<!-- EDIT PROFILE MODAL -->
+<ion-modal [isOpen]="showEditModal" (didDismiss)="showEditModal=false"
+  [breakpoints]="[0,0.6]" [initialBreakpoint]="0.6">
+  <ng-template>
+    <ion-content class="modal-body">
+      <div class="modal-handle"></div>
+      <h3 class="modal-title">Edit Profile</h3>
+
+      <div class="edit-field">
+        <label>Display Name</label>
+        <ion-item lines="none" class="edit-input">
+          <ion-icon slot="start" name="person-outline"></ion-icon>
+          <ion-input [(ngModel)]="editName" placeholder="Your name"></ion-input>
+        </ion-item>
       </div>
+
+      <div class="edit-field">
+        <label>Email</label>
+        <ion-item lines="none" class="edit-input disabled-input">
+          <ion-icon slot="start" name="mail-outline"></ion-icon>
+          <ion-input [value]="userEmail" readonly></ion-input>
+        </ion-item>
+        <p class="field-note">Email cannot be changed</p>
+      </div>
+
+      <ion-button expand="block" class="save-btn"
+        (click)="saveProfile()" [disabled]="isSaving">
+        <ion-spinner *ngIf="isSaving" name="crescent" slot="start"></ion-spinner>
+        {{ isSaving ? 'Saving...' : 'Save Changes' }}
+      </ion-button>
+    </ion-content>
+  </ng-template>
+</ion-modal>
 
       <div class="settings-row">
         <div class="row-left">
@@ -88,7 +123,17 @@
 
     </div>
   </div>
-
+ <!-- Add this row after Edit Profile row -->
+<div class="settings-row" (click)="goToRank()">
+  <div class="row-left">
+    <div class="row-icon gold"><ion-icon name="podium-outline"></ion-icon></div>
+    <span>My Rank</span>
+  </div>
+  <div class="rank-preview" *ngIf="myRank > 0">
+    <span class="rank-badge">#{{ myRank }}</span>
+  </div>
+  <ion-icon name="chevron-forward-outline" class="chevron" *ngIf="myRank === 0"></ion-icon>
+</div>
   <!-- LOGOUT -->
   <div class="logout-section">
     <ion-button class="logout-btn" (click)="confirmLogout()">

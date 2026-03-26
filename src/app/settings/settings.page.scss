@@ -170,3 +170,18 @@
   font-weight: 700;
   font-size: 13px;
 }
+.row-icon.gold { background: linear-gradient(135deg, #f59e0b, #d97706); }
+
+.rank-preview {
+  display: flex;
+  align-items: center;
+}
+
+.rank-badge {
+  font-size: 13px;
+  font-weight: 800;
+  color: #f59e0b;
+  background: #fef3c7;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
