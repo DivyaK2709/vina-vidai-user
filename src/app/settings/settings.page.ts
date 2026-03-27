@@ -23,7 +23,13 @@ export class SettingsPage implements OnInit {
   showEditModal        = false;
   editName             = '';
   isSaving             = false;
-  myRank               = 0;
+showRankPanel = false;
+rankLoading   = false;
+myRank        = 0;
+myScore       = 0;
+myTests       = 0;
+myUid         = '';
+allUsers      : any[] = [];
 
   // ✅ inject() MUST be at field level — not inside methods
   private auth      = inject(Auth);
@@ -56,29 +62,59 @@ export class SettingsPage implements OnInit {
     this.darkMode = localStorage.getItem('darkMode') === 'true';
   }
 
-  async loadMyRank(uid: string) {
-    try {
-      // ✅ Use this.firestore — already injected at field level
-      const usersSnap  = await getDocs(collection(this.firestore, 'users'));
-      const rankings: { uid: string; score: number }[] = [];
 
-      for (const userDoc of usersSnap.docs) {
-        const progressSnap = await getDocs(
-          collection(this.firestore, `users/${userDoc.id}/testProgress`)
-        );
-        let total = 0;
-        progressSnap.forEach(d => { total += (d.data() as any).score || 0; });
-        rankings.push({ uid: userDoc.id, score: total });
-      }
 
-      rankings.sort((a, b) => b.score - a.score);
-      const idx    = rankings.findIndex(r => r.uid === uid);
-      this.myRank  = idx !== -1 ? idx + 1 : 0;
-
-    } catch (err) {
-      console.error('Rank load error:', err);
-    }
+// Replace toggleRank + loadMyRank:
+async toggleRank() {
+  this.showRankPanel = !this.showRankPanel;
+  if (this.showRankPanel && this.allUsers.length === 0) {
+    await this.loadLeaderboard();
   }
+}
+
+async loadLeaderboard() {
+  this.rankLoading = true;
+  try {
+    const usersSnap  = await getDocs(collection(this.firestore, 'users'));
+    const rankings: any[] = [];
+
+    for (const userDoc of usersSnap.docs) {
+      const data         = userDoc.data() as any;
+      const progressSnap = await getDocs(
+        collection(this.firestore, `users/${userDoc.id}/testProgress`)
+      );
+      let total = 0, tests = 0;
+      progressSnap.forEach(d => {
+        total += (d.data() as any).score || 0;
+        tests++;
+      });
+      rankings.push({
+        uid       : userDoc.id,
+        name      : data.displayName || data.username || data.email?.split('@')[0] || 'User',
+        totalScore: total,
+        testsCount: tests
+      });
+    }
+
+    this.allUsers = rankings.sort((a, b) => b.totalScore - a.totalScore);
+
+    const idx    = this.allUsers.findIndex(u => u.uid === this.myUid);
+    this.myRank  = idx !== -1 ? idx + 1 : 0;
+    this.myScore = idx !== -1 ? this.allUsers[idx].totalScore : 0;
+    this.myTests = idx !== -1 ? this.allUsers[idx].testsCount : 0;
+
+  } catch (err) {
+    console.error('Leaderboard error:', err);
+  } finally {
+    this.rankLoading = false;
+  }
+}
+
+// Update loadMyRank to also set myUid:
+async loadMyRank(uid: string) {
+  this.myUid = uid;
+  await this.loadLeaderboard();
+}
 
   openEditProfile() {
     this.editName      = this.userName;

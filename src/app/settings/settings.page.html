@@ -124,15 +124,59 @@
     </div>
   </div>
  <!-- Add this row after Edit Profile row -->
-<div class="settings-row" (click)="goToRank()">
+<!-- ACCOUNT SECTION — add My Rank row inside settings-list -->
+<div class="settings-row" (click)="toggleRank()">
   <div class="row-left">
     <div class="row-icon gold"><ion-icon name="podium-outline"></ion-icon></div>
     <span>My Rank</span>
   </div>
-  <div class="rank-preview" *ngIf="myRank > 0">
-    <span class="rank-badge">#{{ myRank }}</span>
+  <div class="row-right">
+    <span class="rank-badge" *ngIf="myRank > 0">#{{ myRank }}</span>
+    <ion-icon [name]="showRankPanel ? 'chevron-up-outline' : 'chevron-down-outline'"
+      class="chevron"></ion-icon>
   </div>
-  <ion-icon name="chevron-forward-outline" class="chevron" *ngIf="myRank === 0"></ion-icon>
+</div>
+
+<!-- INLINE RANK PANEL -->
+<div class="rank-panel" *ngIf="showRankPanel">
+
+  <div *ngIf="rankLoading" class="rank-spinner">
+    <ion-spinner name="crescent" color="success"></ion-spinner>
+  </div>
+
+  <div *ngIf="!rankLoading">
+
+    <!-- MY SCORE CARD -->
+    <div class="my-score-card">
+      <div class="my-score-left">
+        <div class="score-avatar">{{ userName.charAt(0).toUpperCase() }}</div>
+        <div>
+          <p class="score-name">{{ userName }} <span class="you-tag">You</span></p>
+          <p class="score-pts">{{ myScore }} pts · {{ myTests }} tests</p>
+        </div>
+      </div>
+      <div class="rank-circle">
+        <span class="rank-num">#{{ myRank }}</span>
+      </div>
+    </div>
+
+    <!-- TOP LEADERBOARD -->
+    <p class="lb-title">Top Learners</p>
+    <div class="lb-row" *ngFor="let u of allUsers; let i = index"
+      [class.my-row]="u.uid === myUid">
+      <span class="lb-pos"
+        [class.gold]="i===0" [class.silver]="i===1" [class.bronze]="i===2">
+        {{ i + 1 }}
+      </span>
+      <div class="lb-avatar">{{ u.name?.charAt(0) }}</div>
+      <div class="lb-info">
+        <p class="lb-name">{{ u.name }}</p>
+        <p class="lb-sub">{{ u.testsCount }} tests</p>
+      </div>
+      <span class="lb-score">{{ u.totalScore }} pts</span>
+    </div>
+
+  </div>
 </div>
   <!-- LOGOUT -->
   <div class="logout-section">
