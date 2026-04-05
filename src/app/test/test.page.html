@@ -20,7 +20,7 @@
     </ion-segment>
   </div>
 
-  <!-- HISTORY -->
+  <!-- ==================== HISTORY ==================== -->
   <div *ngIf="selectedSegment==='history'" class="section-body">
 
     <div *ngIf="loadingHistory" class="center-spinner">
@@ -60,7 +60,8 @@
       </div>
 
       <div class="history-actions">
-        <ion-button size="small" fill="outline" class="view-btn" (click)="viewDetails(h)">
+        <ion-button size="small" fill="outline" class="view-btn"
+          (click)="viewDetails(h)">
           <ion-icon slot="start" name="eye-outline"></ion-icon>
           View
         </ion-button>
@@ -73,10 +74,11 @@
 
   </div>
 
-  <!-- CUSTOM TEST / SERIES -->
+  <!-- ==================== CUSTOM TEST ==================== -->
   <div *ngIf="selectedSegment==='series'" class="section-body">
 
     <div class="series-card">
+
       <div class="series-card-header">
         <div class="series-icon-wrap">
           <ion-icon name="flask-outline"></ion-icon>
@@ -88,63 +90,76 @@
       </div>
 
       <!-- SUBJECT -->
-      <!-- SUBJECT -->
-<div class="field-group">
-  <label class="field-label">
-    <ion-icon name="book-outline"></ion-icon> Subject
-  </label>
-  <ion-select interface="popover" placeholder="Choose a subject"
-    [(ngModel)]="selectedSubject" class="styled-select">
-
-    <!-- TNPSC -->
-    <ion-select-option disabled class="opt-header">── TNPSC ──</ion-select-option>
-    <ion-select-option value="Group 1">Group 1</ion-select-option>
-    <ion-select-option value="Group 2">Group 2</ion-select-option>
-    <ion-select-option value="Group 2A">Group 2A</ion-select-option>
-    <ion-select-option value="Group 4">Group 4</ion-select-option>
-    <ion-select-option value="Group 7">Group 7</ion-select-option>
-    <ion-select-option value="Group 8">Group 8</ion-select-option>
-
-    <!-- RRB -->
-    <ion-select-option disabled>── RRB ──</ion-select-option>
-    <ion-select-option value="NTPC Graduate">NTPC Graduate</ion-select-option>
-    <ion-select-option value="NTPC Undergraduate">NTPC Undergraduate</ion-select-option>
-    <ion-select-option value="Group D">Group D</ion-select-option>
-    <ion-select-option value="JE">JE</ion-select-option>
-    <ion-select-option value="ALP">ALP</ion-select-option>
-
-    <!-- UPSC -->
-    <ion-select-option disabled>── UPSC ──</ion-select-option>
-    <ion-select-option value="CDS">CDS</ion-select-option>
-    <ion-select-option value="EPFO">EPFO</ion-select-option>
-    <ion-select-option value="IAS">IAS</ion-select-option>
-    <ion-select-option value="IPS">IPS</ion-select-option>
-    <ion-select-option value="NDA">NDA</ion-select-option>
-    <ion-select-option value="CAPF">CAPF</ion-select-option>
-
-    <!-- SSC -->
-    <ion-select-option disabled>── SSC ──</ion-select-option>
-    <ion-select-option value="CGL">CGL</ion-select-option>
-    <ion-select-option value="CHSL">CHSL</ion-select-option>
-    <ion-select-option value="MTS">MTS</ion-select-option>
-    <ion-select-option value="CPO">CPO</ion-select-option>
-    <ion-select-option value="GD">GD</ion-select-option>
-
-    <!-- SUBJECTS -->
-    <ion-select-option disabled>── Subjects ──</ion-select-option>
-    <ion-select-option value="History">History</ion-select-option>
-    <ion-select-option value="Geography">Geography</ion-select-option>
-    <ion-select-option value="Economics">Economics</ion-select-option>
-    <ion-select-option value="Social Science">Social Science</ion-select-option>
-    <ion-select-option value="Current Affairs">Current Affairs</ion-select-option>
-    <ion-select-option value="English">English</ion-select-option>
-    <ion-select-option value="Science">Science</ion-select-option>
-    <ion-select-option value="Mathematics">Mathematics</ion-select-option>
-
-  </ion-select>
-</div>
-      <!-- QUESTIONS -->
       <div class="field-group">
+        <label class="field-label">
+          <ion-icon name="book-outline"></ion-icon> Subject
+        </label>
+        <ion-select interface="popover" placeholder="Choose a subject"
+          [(ngModel)]="selectedSubject" class="styled-select"
+          (ionChange)="onSubjectChange()">
+
+          <!-- TNPSC -->
+          <ion-select-option disabled>── TNPSC ──</ion-select-option>
+          <ion-select-option value="TNPSC Group 1">Group 1</ion-select-option>
+          <ion-select-option value="TNPSC Group 2">Group 2</ion-select-option>
+          <ion-select-option value="TNPSC Group 2A">Group 2A</ion-select-option>
+          <ion-select-option value="TNPSC Group 3">Group 3</ion-select-option>
+          <ion-select-option value="TNPSC Group 4">Group 4</ion-select-option>
+          <ion-select-option value="TNPSC Group 5">Group 5</ion-select-option>
+          <ion-select-option value="TNPSC Group 6">Group 6</ion-select-option>
+          <ion-select-option value="TNPSC Group 7">Group 7</ion-select-option>
+
+          <!-- RRB -->
+          <ion-select-option disabled>── RRB ──</ion-select-option>
+          <ion-select-option value="RRB NTPC Graduate">NTPC Graduate</ion-select-option>
+          <ion-select-option value="RRB NTPC Undergraduate">NTPC Undergraduate</ion-select-option>
+          <ion-select-option value="RRB Group D">Group D</ion-select-option>
+          <ion-select-option value="RRB JE">JE</ion-select-option>
+          <ion-select-option value="RRB ALP">ALP</ion-select-option>
+
+          <!-- UPSC -->
+          <ion-select-option disabled>── UPSC ──</ion-select-option>
+          <ion-select-option value="UPSC CDS">CDS</ion-select-option>
+          <ion-select-option value="UPSC EPFO">EPFO</ion-select-option>
+          <ion-select-option value="UPSC IAS">IAS</ion-select-option>
+          <ion-select-option value="UPSC IPS">IPS</ion-select-option>
+          <ion-select-option value="UPSC NDA">NDA</ion-select-option>
+          <ion-select-option value="UPSC CAPF">CAPF</ion-select-option>
+
+          <!-- SSC -->
+          <ion-select-option disabled>── SSC ──</ion-select-option>
+          <ion-select-option value="SSC CGL">CGL</ion-select-option>
+          <ion-select-option value="SSC CHSL">CHSL</ion-select-option>
+          <ion-select-option value="SSC MTS">MTS</ion-select-option>
+          <ion-select-option value="SSC CPO">CPO</ion-select-option>
+          <ion-select-option value="SSC GD">GD</ion-select-option>
+
+          <!-- SUBJECTS -->
+          <ion-select-option disabled>── Subjects ──</ion-select-option>
+          <ion-select-option value="History">History</ion-select-option>
+          <ion-select-option value="Geography">Geography</ion-select-option>
+          <ion-select-option value="Economics">Economics</ion-select-option>
+          <ion-select-option value="Social Science">Social Science</ion-select-option>
+          <ion-select-option value="Current Affairs">Current Affairs</ion-select-option>
+          <ion-select-option value="English">English</ion-select-option>
+          <ion-select-option value="Science">Science</ion-select-option>
+          <ion-select-option value="Mathematics">Mathematics</ion-select-option>
+
+        </ion-select>
+      </div>
+
+      <!-- AUTO CONFIG BANNER -->
+      <div class="auto-config-banner" *ngIf="isAutoConfig && selectedSubject">
+        <ion-icon name="information-circle-outline"></ion-icon>
+        <div class="auto-text">
+          <p class="auto-title">Auto configured for {{ getDisplayName(selectedSubject) }}</p>
+          <p class="auto-sub">{{ selectedQuestions }} Questions · {{ autoTimeLabel }}</p>
+        </div>
+        <ion-icon name="checkmark-circle" class="auto-check"></ion-icon>
+      </div>
+
+      <!-- QUESTIONS — only for manual subjects -->
+      <div class="field-group" *ngIf="!isAutoConfig">
         <label class="field-label">
           <ion-icon name="help-circle-outline"></ion-icon> Number of Questions
         </label>
@@ -161,8 +176,8 @@
         </ion-item>
       </div>
 
-      <!-- TIME -->
-      <div class="field-group">
+      <!-- TIME — only for manual subjects -->
+      <div class="field-group" *ngIf="!isAutoConfig">
         <label class="field-label">
           <ion-icon name="timer-outline"></ion-icon> Time Duration
         </label>
@@ -177,15 +192,18 @@
       </div>
 
       <!-- START -->
-      <ion-button expand="block" class="start-btn"
+      <ion-button class="start-btn"
         (click)="startCustomTest()"
-        [disabled]="!selectedSubject || !selectedQuestions || !selectedTime || loadingStart">
+        [disabled]="!selectedSubject ||
+          (!isAutoConfig && (!selectedQuestions || !selectedTime)) ||
+          loadingStart">
         <ion-spinner *ngIf="loadingStart" name="crescent" slot="start"></ion-spinner>
         <ion-icon *ngIf="!loadingStart" slot="start" name="play-outline"></ion-icon>
         {{ loadingStart ? 'Starting...' : 'Start Test' }}
       </ion-button>
 
-      <ion-button expand="block" fill="clear" class="view-more-btn" (click)="goToProgress()">
+      <ion-button expand="block" fill="clear" class="view-more-btn"
+        (click)="goToProgress()">
         <ion-icon slot="start" name="bar-chart-outline"></ion-icon>
         View Progress
       </ion-button>

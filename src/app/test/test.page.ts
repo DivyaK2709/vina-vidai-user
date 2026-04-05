@@ -13,23 +13,13 @@ import {
 } from '@angular/fire/firestore';
 
 interface HistoryItem {
-  id?: string;
-  title?: string;
-  subject?: string;
+  id?            : string;
+  title?         : string;
+  subject?       : string;
   questionsCount?: number;
-  timeSeconds?: number;
-  score?: number;
-  attemptNumber?: number;
-}
-
-interface SeriesItem {
-  id?: string;
-  title?: string;
-  description?: string;
-  subject?: string;
-  questionsCount?: number;
-  timeSeconds?: number;
-  icon?: string;
+  timeSeconds?   : number;
+  score?         : number;
+  attemptNumber? : number;
 }
 
 @Component({
@@ -43,54 +33,118 @@ export class TestPage implements OnInit {
 
   selectedSegment: 'history' | 'series' = 'history';
 
-  testHistory: HistoryItem[] = [];
-  testSeries: SeriesItem[] = [];
+  testHistory    : HistoryItem[] = [];
+  loadingHistory  = false;
+  loadingStart    = false;
 
-  selectedSubject: string | null = null;
+  selectedSubject  : string | null = null;
   selectedQuestions: number | null = null;
-  selectedTime: number | null = null;
+  selectedTime     : number | null = null;
+  isAutoConfig      = false;
+  autoTimeLabel     = '';
 
-  loadingHistory = false;
-  loadingSeries = false;
-  loadingStart = false;
+  quickCounts = [10, 15, 20, 25, 30];
+
+  timeOptions = [
+    { value: 600,  label: '10 min', icon: 'time-outline'      },
+    { value: 1200, label: '20 min', icon: 'hourglass-outline' },
+    { value: 1800, label: '30 min', icon: 'alarm-outline'     },
+    { value: 3600, label: '1 hour', icon: 'timer-outline'     },
+  ];
+
+  // ── Auto config map — keys must EXACTLY match Firestore subject field ──
+  private examConfig: Record<string, { questions: number; time: number; label: string }> = {
+    // TNPSC — 3 hrs, 300 Qs
+    'TNPSC Group 1'  : { questions: 300, time: 10800, label: '3 Hours' },
+    'TNPSC Group 2'  : { questions: 300, time: 10800, label: '3 Hours' },
+    'TNPSC Group 2A' : { questions: 300, time: 10800, label: '3 Hours' },
+    'TNPSC Group 3'  : { questions: 300, time: 10800, label: '3 Hours' },
+    'TNPSC Group 4'  : { questions: 300, time: 10800, label: '3 Hours' },
+    'TNPSC Group 5'  : { questions: 300, time: 10800, label: '3 Hours' },
+    'TNPSC Group 6'  : { questions: 300, time: 10800, label: '3 Hours' },
+    'TNPSC Group 7'  : { questions: 300, time: 10800, label: '3 Hours' },
+    // RRB — 2 hrs, 150 Qs
+    'RRB NTPC Graduate'      : { questions: 150, time: 7200, label: '2 Hours' },
+    'RRB NTPC Undergraduate' : { questions: 150, time: 7200, label: '2 Hours' },
+    'RRB Group D'            : { questions: 150, time: 7200, label: '2 Hours' },
+    'RRB JE'                 : { questions: 150, time: 7200, label: '2 Hours' },
+    'RRB ALP'                : { questions: 150, time: 7200, label: '2 Hours' },
+    // UPSC — 3 hrs, 300 Qs
+    'UPSC CDS'  : { questions: 300, time: 10800, label: '3 Hours' },
+    'UPSC EPFO' : { questions: 300, time: 10800, label: '3 Hours' },
+    'UPSC IAS'  : { questions: 300, time: 10800, label: '3 Hours' },
+    'UPSC IPS'  : { questions: 300, time: 10800, label: '3 Hours' },
+    'UPSC NDA'  : { questions: 300, time: 10800, label: '3 Hours' },
+    'UPSC CAPF' : { questions: 300, time: 10800, label: '3 Hours' },
+    // SSC — 3 hrs, 300 Qs
+    'SSC CGL'  : { questions: 300, time: 10800, label: '3 Hours' },
+    'SSC CHSL' : { questions: 300, time: 10800, label: '3 Hours' },
+    'SSC MTS'  : { questions: 300, time: 10800, label: '3 Hours' },
+    'SSC CPO'  : { questions: 300, time: 10800, label: '3 Hours' },
+    'SSC GD'   : { questions: 300, time: 10800, label: '3 Hours' },
+  };
 
   constructor(
-    private firestore: Firestore,
-    private alertCtrl: AlertController,
-    private toastCtrl: ToastController,
-    private router: Router,
-    private toast: ToastService
+    private firestore : Firestore,
+    private alertCtrl : AlertController,
+    private toastCtrl : ToastController,
+    private router    : Router,
+    private toast     : ToastService
   ) {}
-  
 
-  ngOnInit() {
-    this.loadHistory();
-    this.loadSeries();
-  }
+  ngOnInit() { this.loadHistory(); }
 
   onSegmentChange(ev: any) {
     this.selectedSegment = ev.detail.value;
   }
 
+  // ── Returns clean display name (removes prefix) ──────────────────
+  getDisplayName(subject: string): string {
+    return subject
+      .replace('TNPSC ', '')
+      .replace('RRB ', '')
+      .replace('UPSC ', '')
+      .replace('SSC ', '');
+  }
+
+  // ── Subject change — auto config or manual ───────────────────────
+  onSubjectChange() {
+    const config = this.examConfig[this.selectedSubject || ''];
+    if (config) {
+      this.isAutoConfig      = true;
+      this.selectedQuestions = config.questions;
+      this.selectedTime      = config.time;
+      this.autoTimeLabel     = config.label;
+    } else {
+      this.isAutoConfig      = false;
+      this.selectedQuestions = null;
+      this.selectedTime      = null;
+      this.autoTimeLabel     = '';
+    }
+  }
+
+  // ── Load test history ────────────────────────────────────────────
   async loadHistory() {
     this.loadingHistory = true;
     try {
-      const ref = collection(this.firestore, 'testHistory');
+      const ref  = collection(this.firestore, 'testHistory');
       const snap = await getDocs(ref);
-      const arr: HistoryItem[] = [];
-      snap.forEach((d) => {
+      const arr  : HistoryItem[] = [];
+      snap.forEach(d => {
         const data = d.data() as any;
         arr.push({
-          id: d.id,
-          title: data.title,
-          subject: data.subject,
+          id            : d.id,
+          title         : data.title,
+          subject       : data.subject,
           questionsCount: data.questionsCount ?? data.questions,
-          timeSeconds: data.timeSeconds ?? data.time,
-          score: data.score,
-          attemptNumber: data.attemptNumber
+          timeSeconds   : data.timeSeconds    ?? data.time,
+          score         : data.score,
+          attemptNumber : data.attemptNumber
         });
       });
-      this.testHistory = arr.sort((a,b) => (b.attemptNumber||0) - (a.attemptNumber||0));
+      this.testHistory = arr.sort(
+        (a, b) => (b.attemptNumber || 0) - (a.attemptNumber || 0)
+      );
     } catch (err) {
       console.error('loadHistory error', err);
       this.showToast('Failed to load history', 'danger');
@@ -98,150 +152,116 @@ export class TestPage implements OnInit {
       this.loadingHistory = false;
     }
   }
-// Add inside class:
-quickCounts = [10, 15, 20, 25, 30];
 
-timeOptions = [
-  { value: 600,  label: '10 min',  icon: 'time-outline'       },
-  { value: 1200, label: '20 min',  icon: 'hourglass-outline'  },
-  { value: 1800, label: '30 min',  icon: 'alarm-outline'      },
-  { value: 3600, label: '1 hour',  icon: 'timer-outline'      },
-];
-  async loadSeries() {
-    this.loadingSeries = true;
+  // ── Fetch questions from Firestore ───────────────────────────────
+  private async fetchQuestionsBySubject(
+    subject: string,
+    limit  : number
+  ): Promise<any[]> {
     try {
-      const ref = collection(this.firestore, 'testSeries');
-      const snap = await getDocs(ref);
-      const arr: SeriesItem[] = [];
-      snap.forEach((d) => {
-        const data = d.data() as any;
-        arr.push({
-          id: d.id,
-          title: data.title || 'Series',
-          description: data.description || '',
-          subject: data.subject || 'General',
-          questionsCount: data.questionsCount || data.questions || 10,
-          timeSeconds: data.timeSeconds || data.time || 600,
-          icon: data.icon || 'assets/icon/test.png',
-        });
-      });
-      this.testSeries = arr;
-    } catch (err) {
-      console.error('loadSeries error', err);
-      this.showToast('Failed to load series', 'danger');
-    } finally {
-      this.loadingSeries = false;
-    }
-  }
+      const ref         = collection(this.firestore, 'questions');
+      const fieldsToTry = ['subject', 'Subject', 'subjectName', 'subject name'];
+      let items         : any[] = [];
 
-private async fetchQuestionsBySubject(subject: string, limit: number): Promise<any[]> {
-  try {
-    const ref = collection(this.firestore, 'questions');
+      // 1) Try exact field match
+      for (const field of fieldsToTry) {
+        const q    = firestoreQuery(ref, where(field, '==', subject));
+        const snap = await getDocs(q);
+        if (!snap.empty) {
+          snap.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+        }
+      }
 
-    // 1) Try exact match fields
-    const fieldsToTry = [
-      'subject',
-      'Subject',
-      'subjectName',
-      'subject name'
-    ];
-
-    let items: any[] = [];
-
-    for (const field of fieldsToTry) {
-      const q = firestoreQuery(ref, where(field, '==', subject));
-      const snap = await getDocs(q);
-
-      if (!snap.empty) {
+      // 2) Fallback — load all and filter manually
+      if (items.length === 0) {
+        const snap = await getDocs(ref);
         snap.forEach(doc => {
-          items.push({ id: doc.id, ...doc.data() });
+          const d   = doc.data() as any;
+          const sub = (
+            d.subject || d.Subject ||
+            d.subjectName || d['subject name'] || ''
+          ).toLowerCase();
+          if (sub === subject.toLowerCase())
+            items.push({ id: doc.id, ...doc.data() });
         });
       }
+
+      // 3) Log for debugging
+      console.log(`📦 Found ${items.length} questions for "${subject}"`);
+
+      if (items.length === 0) return [];
+
+      // 4) Shuffle
+      for (let i = items.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [items[i], items[j]] = [items[j], items[i]];
+      }
+
+      return items.slice(0, limit);
+
+    } catch (err) {
+      console.error('fetchQuestionsBySubject ERROR:', err);
+      throw err;
     }
-
-    // 2) If still empty → load ALL questions and filter manually
-    if (items.length === 0) {
-      const snap = await getDocs(ref);
-      snap.forEach(doc => {
-        const d: any = doc.data();
-        const sub = (d.subject || d.Subject || d.subjectName || d["subject name"] || '').toLowerCase();
-        if (sub === subject.toLowerCase()) {
-          items.push({ id: doc.id, ...doc.data() });
-        }
-      });
-    }
-
-    // 3) If STILL empty → return []
-    if (items.length === 0) return [];
-
-    // 4) Shuffle
-    for (let i = items.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [items[i], items[j]] = [items[j], items[i]];
-    }
-
-    // 5) Return required number
-    return items.slice(0, limit);
-
-  } catch (err) {
-    console.error("fetchQuestionsBySubject ERROR :", err);
-    throw err;
-  }
-}
-
-
-
-  async confirmStart(s: SeriesItem) {
-    const alert = await this.alertCtrl.create({
-      header: 'Start Test',
-      message: `Start "${s.title}" — ${s.questionsCount} questions?`,
-      buttons: [
-        { text: 'Cancel', role: 'cancel' },
-        {
-          text: 'Start',
-          handler: async () => {
-            await this.startWithSubject(s.subject || 'General', s.questionsCount || 10, s.timeSeconds || 600);
-          },
-        },
-      ],
-    });
-    await alert.present();
   }
 
+  // ── Start custom test ────────────────────────────────────────────
+  async startCustomTest() {
+    if (!this.selectedSubject) {
+      this.toast.show('Please select a subject', 'warning');
+      return;
+    }
+    if (!this.isAutoConfig && (!this.selectedQuestions || !this.selectedTime)) {
+      this.toast.show('Please fill questions and time', 'warning');
+      return;
+    }
+    await this.startWithSubject(
+      this.selectedSubject,
+      this.selectedQuestions!,
+      this.selectedTime!
+    );
+  }
+
+  // ── Re-attempt ───────────────────────────────────────────────────
   async reAttempt(h: HistoryItem) {
     const alert = await this.alertCtrl.create({
-      header: 'Re-attempt Test',
+      header : 'Re-attempt Test',
       message: `Re-attempt ${h.title || 'this test'}?`,
       buttons: [
         { text: 'Cancel', role: 'cancel' },
         {
-          text: 'Start',
+          text   : 'Start',
           handler: async () => {
-            await this.startWithSubject(h.subject || 'General', h.questionsCount || 10, h.timeSeconds || 600);
+            await this.startWithSubject(
+              h.subject        || 'General',
+              h.questionsCount || 10,
+              h.timeSeconds    || 600
+            );
           }
         }
-      ],
+      ]
     });
     await alert.present();
   }
 
+  // ── View details ─────────────────────────────────────────────────
   viewDetails(h: HistoryItem) {
     this.alertCtrl.create({
-      header: h.title || 'Attempt details',
-      message: `Subject: ${h.subject || '-'}<br>Questions: ${h.questionsCount}<br>Time: ${this.formatSeconds(h.timeSeconds)}<br>Score: ${h.score ?? '-'}`,
-      buttons: ['OK'],
+      header : h.title || 'Attempt Details',
+      message: `Subject: ${h.subject || '-'}<br>
+                Questions: ${h.questionsCount}<br>
+                Time: ${this.formatSeconds(h.timeSeconds)}<br>
+                Score: ${h.score ?? '-'}`,
+      buttons: ['OK']
     }).then(a => a.present());
   }
 
-  async startCustomTest() {
-    if (!this.selectedSubject || !this.selectedQuestions || !this.selectedTime) {
-      this.toast.show('Please fill subject, questions and time', 'warning');
-      return;
-    }
-    await this.startWithSubject(this.selectedSubject, this.selectedQuestions, this.selectedTime);
-  }
-
-  private async startWithSubject(subject: string, questionsCount: number, timeSeconds: number) {
+  // ── Core start logic ─────────────────────────────────────────────
+  private async startWithSubject(
+    subject       : string,
+    questionsCount: number,
+    timeSeconds   : number
+  ) {
     this.loadingStart = true;
     try {
       const fetched = await this.fetchQuestionsBySubject(subject, questionsCount);
@@ -252,14 +272,21 @@ private async fetchQuestionsBySubject(subject: string, limit: number): Promise<a
       }
 
       if (fetched.length < questionsCount) {
-         this.toast.show(`Only ${fetched.length} questions found for "${subject}". Starting with available questions.`, 'warning');
+        this.toast.show(
+          `Only ${fetched.length} questions found. Starting with available.`,
+          'warning'
+        );
       }
 
       localStorage.setItem('current_test_questions', JSON.stringify(fetched));
       localStorage.setItem('current_test_meta', JSON.stringify({
-        subject, questionsCount: fetched.length, timeSeconds
+        subject,
+        questionsCount: fetched.length,
+        timeSeconds
       }));
+
       await this.showPopup('Your test has started successfully!');
+
       this.router.navigate(['/tabs/test-questions'], {
         queryParams: { subject, questions: fetched.length, time: timeSeconds }
       });
@@ -271,129 +298,73 @@ private async fetchQuestionsBySubject(subject: string, limit: number): Promise<a
       this.loadingStart = false;
     }
   }
-validateQuestionCount(ev: any) {
-  const value = Number(ev.target.value);
-  if (value < 10) {
-    this.selectedQuestions = 10;
-    ev.target.value = 10;
-    this.toast.show("Minimum 10 questions required", "warning");
+
+  // ── Validate question count ──────────────────────────────────────
+  validateQuestionCount(ev: any) {
+    const value = Number(ev.target.value);
+    if (value < 10) {
+      this.selectedQuestions = 10;
+      ev.target.value        = 10;
+      this.toast.show('Minimum 10 questions required', 'warning');
+    }
   }
-}
-goPrevious() {
-  this.toast.show("Previous clicked", "primary");
-}
 
-goNext() {
-  this.toast.show("Next clicked", "primary");
-}
-private async showPopup(message: string) {
+  // ── Start popup ──────────────────────────────────────────────────
+  private async showPopup(message: string) {
+    const alert = await this.alertCtrl.create({
+      header        : 'Test Started',
+      message       : `✔️ ${message}`,
+      cssClass      : 'custom-test-popup',
+      backdropDismiss: false,
+      buttons       : [{ text: 'OK', role: 'cancel' }]
+    });
+    await alert.present();
+    this.injectPopupStyles();
+  }
 
-  const popupMessage = `✔️ ${message}`;
-
-  const alert = await this.alertCtrl.create({
-    header: 'Test Started',
-    message: popupMessage,
-    cssClass: 'custom-test-popup',   // ✅ IMPORTANT
-    buttons: [
-      {
-        text: 'OK',
-        role: 'cancel'
+  injectPopupStyles() {
+    if (document.getElementById('custom-test-popup-style')) return;
+    const style     = document.createElement('style');
+    style.id        = 'custom-test-popup-style';
+    style.innerHTML = `
+      ion-alert.custom-test-popup {
+        --background: #fff; --width: 320px; --border-radius: 20px;
       }
-    ],
-    backdropDismiss: false
-  });
-
-  await alert.present();
-
-  // ✅ Inject styles AFTER alert exists
-  this.injectPopupStyles();
-}
-injectPopupStyles() {
-
-  // ❌ Prevent duplicate style injection
-  if (document.getElementById('custom-test-popup-style')) return;
-
-  const style = document.createElement('style');
-  style.id = 'custom-test-popup-style';
-
-  style.innerHTML = `
-    ion-alert.custom-test-popup {
-
-      --background: #ffffff;
-      --width: 320px;
-      --border-radius: 20px;
-      
-    }
-
-    ion-alert.custom-test-popup .alert-wrapper {
-      border-radius: 20px;
-       box-shadow:0 8px 20px rgba(34, 197, 94, 0.25);
-    }
-
-    ion-alert.custom-test-popup .alert-title {
-      text-align: center;
-      font-weight: 700;
-      font-size: 18px;
-    }
-
-    ion-alert.custom-test-popup .alert-message {
-     padding-top: 10px;
-    }
-       ion-alert.custom-test-popup .success-message {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      font-size: 16px;
-      font-weight: 500;
-      color: #16a34a;
-    }
-
-    ion-alert.custom-test-popup .success-message .tick {
-      font-size: 20px;
-      font-weight: bold;
-      line-height: 1;
-    }
-
-    ion-alert.custom-test-popup .success-message .text {
-      line-height: 1.6;
-    }
-   
-
-   
+      ion-alert.custom-test-popup .alert-wrapper {
+        border-radius: 20px;
+        box-shadow: 0 8px 20px rgba(34,197,94,0.25);
+      }
+      ion-alert.custom-test-popup .alert-title {
+        text-align: center; font-weight: 700; font-size: 18px;
+      }
       ion-alert.custom-test-popup .alert-button-group {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      padding-top: 14px;
-    }
+        display: flex; justify-content: center; padding-top: 14px;
+      }
+      ion-alert.custom-test-popup .alert-button {
+        border-radius: 10px; font-weight: 600;
+        background: #16a34a !important; color: #fff !important;
+      }
+    `;
+    document.head.appendChild(style);
+  }
 
-    ion-alert.custom-test-popup .alert-button {
-      border-radius: 10px;
-      font-weight: 600;
-       
-    background: #16a34a !important;
-      color: #ffffff !important;
-    }
-  `;
+  // ── Navigation ───────────────────────────────────────────────────
+  goToProgress() { this.router.navigate(['/tabs/progress']); }
 
-  document.head.appendChild(style);
-}
-
-
-goToProgress() {
-  this.router.navigate(['/tabs/progress']);
-}
-
-
+  // ── Format seconds ───────────────────────────────────────────────
   formatSeconds(sec?: number) {
-    sec = sec ?? 0;
-    const m = Math.floor(sec / 60);
-    const s = sec % 60;
+    sec      = sec ?? 0;
+    const h  = Math.floor(sec / 3600);
+    const m  = Math.floor((sec % 3600) / 60);
+    const s  = sec % 60;
+    if (h > 0) return `${h}h ${m}m`;
     return `${m}m ${s}s`;
   }
 
-  private async showToast(msg: string, color: 'danger'|'success'|'warning'|'primary' = 'primary') {
+  private async showToast(
+    msg  : string,
+    color: 'danger' | 'success' | 'warning' | 'primary' = 'primary'
+  ) {
     const t = await this.toastCtrl.create({ message: msg, duration: 2200, color });
     await t.present();
   }
